@@ -10,7 +10,7 @@ Organize your external code and follow Python packaging best practices. Set up t
 
 ```text
 src/
-|-- PYTHON_PROJ_NAME/
+|-- nucleisky/
 |   |-- __init__.py
 |   |-- my_script.py
 |   |-- subpackage/
@@ -24,7 +24,7 @@ Think of `__init__.py` as the file that tells Python “this folder is a package
  If you leave it empty, that is perfectly fine—the package will still import correctly. When you want to make notebooks feel friendlier, you can re-export helper functions so users can discover them more easily:
 
 ```python
-# src/PYTHON_PROJ_NAME/__init__.py
+# src/nucleisky/__init__.py
 from .my_script import run_analysis, load_config
 
 __all__ = ["run_analysis", "load_config"]
@@ -45,19 +45,19 @@ Once uploaded, your external code will be available to your notebooks as a packa
 
 **Import the whole package:**
 ```python  
-import PYTHON_PROJ_NAME
+import nucleisky
 ```
 
 If your folder under `src/` is called `celltools`, then `import celltools` will work because `src/celltools/__init__.py` exists.
 
 **Import function:**
 ```python  
-from PYTHON_PROJ_NAME import my_script
+from nucleisky import my_script
 ```
 
 **Import submodule:**
 ```python  
-from PYTHON_PROJ_NAME.subpackage import submodule1
+from nucleisky.subpackage import submodule1
 ```
 
 ---

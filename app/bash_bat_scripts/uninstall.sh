@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 PREFIX="BASE_PATH"
-echo "Uninstalling PROJECT_NAME from $PREFIX"
+echo "Uninstalling NucleiSky from $PREFIX"
 if [ -f "$PREFIX/pre_uninstall.sh" ]; then
     bash "$PREFIX/pre_uninstall.sh"
 fi
 rm -rf "$PREFIX"
 
-echo "PROJECT_NAME removed."
+echo "NucleiSky removed."
 
 if [ -t 0 ]; then
     echo

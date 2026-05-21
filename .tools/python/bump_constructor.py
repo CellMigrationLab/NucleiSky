@@ -39,7 +39,7 @@ def extract_project_folder(extra_files: list) -> str:
                     if parts:
                         return parts[0]
     # Fallback
-    return "PROJECT_NAME"
+    return "NucleiSky"
 
 def ensure_requirements_in_extra_files(construct_data: dict):
     extra_files = construct_data.get("extra_files")
@@ -52,7 +52,7 @@ def ensure_requirements_in_extra_files(construct_data: dict):
         isinstance(item, dict) and "requirements.txt" in item for item in extra_files
     )
     if not requirements_included:
-        extra_files.append({"requirements.txt": "PROJECT_NAME/requirements.txt"})
+        extra_files.append({"requirements.txt": "NucleiSky/requirements.txt"})
     
     # Check if requirements-linux.txt exists and is included, if not, add it
     if Path("requirements-linux.txt").exists():
@@ -60,14 +60,14 @@ def ensure_requirements_in_extra_files(construct_data: dict):
             isinstance(item, dict) and "requirements-linux.txt" in item for item in extra_files
         )
         if not linux_included:
-            extra_files.append({"requirements-linux.txt": "PROJECT_NAME/requirements-linux.txt"})
+            extra_files.append({"requirements-linux.txt": "NucleiSky/requirements-linux.txt"})
     # Check if requirements-windows.txt exists and is included, if not, add it
     if Path("requirements-windows.txt").exists():
         windows_included = any(
             isinstance(item, dict) and "requirements-windows.txt" in item for item in extra_files
         )
         if not windows_included:
-            extra_files.append({"requirements-windows.txt": "PROJECT_NAME/requirements-windows.txt"})
+            extra_files.append({"requirements-windows.txt": "NucleiSky/requirements-windows.txt"})
     
     # Check if requirements-macos.txt exists and is included, if not, add it
     if Path("requirements-macos.txt").exists():
@@ -75,7 +75,7 @@ def ensure_requirements_in_extra_files(construct_data: dict):
             isinstance(item, dict) and "requirements-macos.txt" in item for item in extra_files
         )
         if not macos_included:
-            extra_files.append({"requirements-macos.txt": "PROJECT_NAME/requirements-macos.txt"})
+            extra_files.append({"requirements-macos.txt": "NucleiSky/requirements-macos.txt"})
 
     # Update the construct data with the modified extra_files
     construct_data["extra_files"] = extra_files
@@ -127,7 +127,7 @@ def ensure_extra_files(construct_data: dict, notebooks_root: Path, src_root: Pat
 
     # First get the name of the package from setup.py
     setup_path = repo_root / "setup.py"
-    project_name = "PROJECT_NAME"
+    project_name = "NucleiSky"
     if setup_path.exists():
         setup_text = setup_path.read_text(encoding="utf-8")
         name_match = re.search(r'name\s*=\s*["\']([^"\']+)["\']', setup_text)
