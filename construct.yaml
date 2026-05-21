@@ -11,6 +11,7 @@ keep_pkgs: false
 register_python: false
 initialize_conda: false
 extra_files:
+- .tools/meta/src_change.yaml: NucleiSky/src_change.yaml
 - app/bash_bat_scripts/pre_uninstall.sh: pre_uninstall.sh
 - app/bash_bat_scripts/uninstall.sh: uninstall.sh
 - app/logo/Gemini_Generated_Image_kc5ezfkc5ezfkc5e.icns: NucleiSky/Gemini_Generated_Image_kc5ezfkc5ezfkc5e.icns
@@ -23,6 +24,42 @@ extra_files:
 - construct.yaml: NucleiSky/construct.yaml
 - notebooks/notebook_latest_versions.yaml: NucleiSky/notebook_latest_versions.yaml
 - requirements.txt: NucleiSky/requirements.txt
+- setup.py: NucleiSky/setup.py
+- src/nucleisky/__init__.py: NucleiSky/src/nucleisky/__init__.py
+- src/nucleisky/nucleisky2d/__init__.py: NucleiSky/src/nucleisky/nucleisky2d/__init__.py
+- src/nucleisky/nucleisky2d/config.py: NucleiSky/src/nucleisky/nucleisky2d/config.py
+- src/nucleisky/nucleisky2d/demo_utils.py: NucleiSky/src/nucleisky/nucleisky2d/demo_utils.py
+- src/nucleisky/nucleisky2d/export.py: NucleiSky/src/nucleisky/nucleisky2d/export.py
+- src/nucleisky/nucleisky2d/features.py: NucleiSky/src/nucleisky/nucleisky2d/features.py
+- src/nucleisky/nucleisky2d/io.py: NucleiSky/src/nucleisky/nucleisky2d/io.py
+- src/nucleisky/nucleisky2d/matching/__init__.py: NucleiSky/src/nucleisky/nucleisky2d/matching/__init__.py
+- src/nucleisky/nucleisky2d/matching/geometry.py: NucleiSky/src/nucleisky/nucleisky2d/matching/geometry.py
+- src/nucleisky/nucleisky2d/matching/graph.py: NucleiSky/src/nucleisky/nucleisky2d/matching/graph.py
+- src/nucleisky/nucleisky2d/matching/hashing.py: NucleiSky/src/nucleisky/nucleisky2d/matching/hashing.py
+- src/nucleisky/nucleisky2d/matching/quad.py: NucleiSky/src/nucleisky/nucleisky2d/matching/quad.py
+- src/nucleisky/nucleisky2d/matching/triangle.py: NucleiSky/src/nucleisky/nucleisky2d/matching/triangle.py
+- src/nucleisky/nucleisky2d/pipeline.py: NucleiSky/src/nucleisky/nucleisky2d/pipeline.py
+- src/nucleisky/nucleisky2d/preprocess.py: NucleiSky/src/nucleisky/nucleisky2d/preprocess.py
+- src/nucleisky/nucleisky2d/segmentation.py: NucleiSky/src/nucleisky/nucleisky2d/segmentation.py
+- src/nucleisky/nucleisky2d/types.py: NucleiSky/src/nucleisky/nucleisky2d/types.py
+- src/nucleisky/nucleisky2d/utils.py: NucleiSky/src/nucleisky/nucleisky2d/utils.py
+- src/nucleisky/nucleisky2d/visualization.py: NucleiSky/src/nucleisky/nucleisky2d/visualization.py
+- src/nucleisky/nucleisky3d/__init__.py: NucleiSky/src/nucleisky/nucleisky3d/__init__.py
+- src/nucleisky/nucleisky3d/config.py: NucleiSky/src/nucleisky/nucleisky3d/config.py
+- src/nucleisky/nucleisky3d/demo_utils.py: NucleiSky/src/nucleisky/nucleisky3d/demo_utils.py
+- src/nucleisky/nucleisky3d/export.py: NucleiSky/src/nucleisky/nucleisky3d/export.py
+- src/nucleisky/nucleisky3d/features.py: NucleiSky/src/nucleisky/nucleisky3d/features.py
+- src/nucleisky/nucleisky3d/io.py: NucleiSky/src/nucleisky/nucleisky3d/io.py
+- src/nucleisky/nucleisky3d/matching/__init__.py: NucleiSky/src/nucleisky/nucleisky3d/matching/__init__.py
+- src/nucleisky/nucleisky3d/matching/geometry.py: NucleiSky/src/nucleisky/nucleisky3d/matching/geometry.py
+- src/nucleisky/nucleisky3d/matching/hashing3d.py: NucleiSky/src/nucleisky/nucleisky3d/matching/hashing3d.py
+- src/nucleisky/nucleisky3d/matching/pyramid.py: NucleiSky/src/nucleisky/nucleisky3d/matching/pyramid.py
+- src/nucleisky/nucleisky3d/pipeline.py: NucleiSky/src/nucleisky/nucleisky3d/pipeline.py
+- src/nucleisky/nucleisky3d/preprocess.py: NucleiSky/src/nucleisky/nucleisky3d/preprocess.py
+- src/nucleisky/nucleisky3d/segmentation.py: NucleiSky/src/nucleisky/nucleisky3d/segmentation.py
+- src/nucleisky/nucleisky3d/types.py: NucleiSky/src/nucleisky/nucleisky3d/types.py
+- src/nucleisky/nucleisky3d/utils.py: NucleiSky/src/nucleisky/nucleisky3d/utils.py
+- src/nucleisky/nucleisky3d/visualization.py: NucleiSky/src/nucleisky/nucleisky3d/visualization.py
 post_install: app/bash_bat_scripts/post_install.bat # [win]
 post_install: app/bash_bat_scripts/post_install.sh # [unix]
 pre_uninstall: app/bash_bat_scripts/pre_uninstall.bat # [win]
