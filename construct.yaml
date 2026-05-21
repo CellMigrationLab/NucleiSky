@@ -22,6 +22,8 @@ extra_files:
 - app/python_scripts/hide_code_cells.py: NucleiSky/hide_code_cells.py
 - app/python_scripts/include_path.py: NucleiSky/include_path.py
 - construct.yaml: NucleiSky/construct.yaml
+- notebooks/NucleiSky2DApp/NucleiSky2DApp.ipynb: NucleiSky/notebooks/NucleiSky2DApp/NucleiSky2DApp.ipynb
+- notebooks/NucleiSky3DApp/NucleiSky3DApp.ipynb: NucleiSky/notebooks/NucleiSky3DApp/NucleiSky3DApp.ipynb
 - notebooks/notebook_latest_versions.yaml: NucleiSky/notebook_latest_versions.yaml
 - requirements.txt: NucleiSky/requirements.txt
 - setup.py: NucleiSky/setup.py
