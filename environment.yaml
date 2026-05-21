@@ -1,0 +1,11 @@
+name: LOWER_PROJ_NAME
+channels:
+  - conda-forge
+  - bioconda
+  - nodefaults
+dependencies:
+  - python=PYTHON_VERSION
+  - conda
+  - git
+  - pip
+  - jupyterlab=JUPYTERLAB_VERSION

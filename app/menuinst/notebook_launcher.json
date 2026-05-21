@@ -1,0 +1,31 @@
+{ 
+"$schema": "https://schemas.conda.org/menuinst/menuinst-1-1-3.schema.json", 
+"menu_name": "PROJECT_NAME", 
+"menu_items": [ { 
+    "name": "PROJECT_NAME", 
+    "activate": true, 
+    "terminal": true,
+    "platforms": { "win": {
+                        "icon": "ICON_ICO_IMAGE_PATH", 
+                        "command": [
+                                    "cmd.exe", "/c",
+                                    "echo Starting Jupyter Lab, please wait a moment... && python.exe -m jupyter lab \"BASE_PATH_KEYWORD/PROJECT_NAME/notebooks/Welcome.ipynb\" --ServerApp.shutdown_no_activity_timeout=30 \"--notebook-dir=~\" --FileContentsManager.always_delete_dir=True && exit && echo Jupyter Lab has exited."
+                                ]
+                    },
+                   "linux": {
+                        "icon": "ICON_IMAGE_PATH",
+                        "command": [
+                                    "bash", "-lc", 
+                                    "echo \"Starting Jupyter Lab, please wait a moment...\" && \"BASE_PATH_KEYWORD/bin/python\" -m jupyter lab \"BASE_PATH_KEYWORD/PROJECT_NAME/notebooks/Welcome.ipynb\" --ServerApp.shutdown_no_activity_timeout=30 \"--notebook-dir=~\" --FileContentsManager.always_delete_dir=True && exit"
+                                   ]
+                    }, 
+                   "osx": {
+                        "icon": "ICON_ICNS_IMAGE_PATH",
+                        "command": [
+                                    "bash", "-lc", 
+                                    "echo \"Starting Jupyter Lab, please wait a moment...\" && \"BASE_PATH_KEYWORD/bin/python\" -m jupyter lab \"BASE_PATH_KEYWORD/PROJECT_NAME/notebooks/Welcome.ipynb\" --ServerApp.shutdown_no_activity_timeout=30 \"--notebook-dir=~\" --FileContentsManager.always_delete_dir=True && exit"
+                                   ]
+                        } 
+                 }
+    } ] 
+}
