@@ -1,4 +1,4 @@
-name: LOWER_PROJ_NAME
+name: nucleisky
 channels:
   - conda-forge
   - bioconda

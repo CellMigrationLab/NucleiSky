@@ -1,16 +1,16 @@
 
-# ⬇️ Install PROJECT_NAME Locally
+# ⬇️ Install NucleiSky Locally
 
-Choose your operating system and follow the instructions below to install PROJECT_NAME on your computer.
+Choose your operating system and follow the instructions below to install NucleiSky on your computer.
 
 <details>
 <summary>
     <big>🪟 CLICK HERE TO DISPLAY WINDOWS GUIDELINES</big>
 </summary>
 
-## 1. Click the button to download PROJECT_NAME executable
+## 1. Click the button to download NucleiSky executable
 
-<a href="https://github.com/GITHUB_OWNER/GITHUB_REPO_NAME/releases/download/VERSION_NUMBER/PROJECT_NAME-VERSION_NUMBER-Windows-x86_64.exe">
+<a href="https://github.com/CellMigrationLab/NucleiSky-test/releases/download/0.0.1/NucleiSky-0.0.1-Windows-x86_64.exe">
     <img src="https://img.shields.io/badge/Download%20for%20Windows-Latest-blue?logo=windows&style=for-the-badge" alt="Download for Windows" width="250">
 </a>
 
@@ -28,11 +28,11 @@ After that, follow the on-screen prompts to complete the installation.
 
 ![Installation Dialog](https://github.com/CellMigrationLab/LabConstrictor/blob/doc_source/Windows_Installation_Dialog.gif)
 
-## 3. Launch PROJECT_NAME
+## 3. Launch NucleiSky
 
-After installation, you can launch PROJECT_NAME from your desktop app or from the Start Menu:
+After installation, you can launch NucleiSky from your desktop app or from the Start Menu:
 
-![Launch PROJECT_NAME](https://github.com/CellMigrationLab/LabConstrictor/blob/doc_source/Windows_Launch.gif)
+![Launch NucleiSky](https://github.com/CellMigrationLab/LabConstrictor/blob/doc_source/Windows_Launch.gif)
 
 Then, start using it following the instructions on the [Usage of Notebooks After Installation](./notebook_usage.md) guide.
 
@@ -46,9 +46,9 @@ Then, start using it following the instructions on the [Usage of Notebooks After
     <big>🐧 CLICK HERE TO DISPLAY UBUNTU GUIDELINES</big>
 </summary>
 
-## 1. Click the button to download PROJECT_NAME executable
+## 1. Click the button to download NucleiSky executable
 
-<a href="https://github.com/GITHUB_OWNER/GITHUB_REPO_NAME/releases/download/VERSION_NUMBER/PROJECT_NAME-VERSION_NUMBER-Linux-x86_64.sh">
+<a href="https://github.com/CellMigrationLab/NucleiSky-test/releases/download/0.0.1/NucleiSky-0.0.1-Linux-x86_64.sh">
     <img src="https://img.shields.io/badge/Download%20for%20Linux-Latest-green?logo=linux&style=for-the-badge" alt="Download for Linux" width="250">
 </a>
 
@@ -61,7 +61,7 @@ Then, start using it following the instructions on the [Usage of Notebooks After
 2.- Copy and paste the following command:
 
 ```bash
-bash PROJECT_NAME-VERSION_NUMBER-Linux-x86_64.sh
+bash NucleiSky-0.0.1-Linux-x86_64.sh
 ```
 
 3.- Click Enter to run the command.
@@ -78,9 +78,9 @@ bash PROJECT_NAME-VERSION_NUMBER-Linux-x86_64.sh
 
 ## 3. Follow the installation prompts
 
-## 4. Launch PROJECT_NAME
+## 4. Launch NucleiSky
 
-After installation, you can launch PROJECT_NAME from your applications menu and start using it following the instructions on the [Usage of Notebooks After Installation](./notebook_usage.md) guide.
+After installation, you can launch NucleiSky from your applications menu and start using it following the instructions on the [Usage of Notebooks After Installation](./notebook_usage.md) guide.
 
 ---
 </details>
@@ -108,13 +108,13 @@ First of all, you will need to choose whether you want to install it with **(A) 
 > 2. Select About This Mac.
 > 3. A window will pop up displaying your Mac’s information. Look into the `Chip` or `Processor` field. If `Intel` is mentioned, then download the Intel option. Otherwise, if `Mx` (e.g. M1 or M2) is mentioned, then download the ARM64 option. 
 
-<a href="https://github.com/GITHUB_OWNER/GITHUB_REPO_NAME/releases/download/VERSION_NUMBER/PROJECT_NAME-VERSION_NUMBER-MacOSX-arm64.pkg">
+<a href="https://github.com/CellMigrationLab/NucleiSky-test/releases/download/0.0.1/NucleiSky-0.0.1-MacOSX-arm64.pkg">
     <img src="https://img.shields.io/badge/Download%20for%20Mac%20(ARM64)-Latest-lightgrey?logo=apple&style=for-the-badge" alt="Download for Mac ARM64" width="250">
 </a>
 
 or 
     
-<a href="https://github.com/GITHUB_OWNER/GITHUB_REPO_NAME/releases/download/VERSION_NUMBER/PROJECT_NAME-VERSION_NUMBER-MacOSX-x86_64.pkg">
+<a href="https://github.com/CellMigrationLab/NucleiSky-test/releases/download/0.0.1/NucleiSky-0.0.1-MacOSX-x86_64.pkg">
     <img src="https://img.shields.io/badge/Download%20for%20Mac%20(Intel)-Latest-lightgrey?logo=apple&style=for-the-badge" alt="Download for Mac Intel" width="250">
 </a>
 
@@ -125,15 +125,15 @@ Follow the guidelines shown on the following GIF or the instructions bellow:
 
 ![MacOS PKG Installation](https://github.com/CellMigrationLab/LabConstrictor/blob/doc_source/MacOS_Install_Pkg.gif)
 
-1. Double-click the downloaded file to start the installation process. It might give some errors, as shown bellow, go to `Settings > Privacy & Security > Security` and there the PROJECT_NAME package should appear. Click on `Open Anyway`.
+1. Double-click the downloaded file to start the installation process. It might give some errors, as shown bellow, go to `Settings > Privacy & Security > Security` and there the NucleiSky package should appear. Click on `Open Anyway`.
 2. After that, follow the on-screen prompts to complete the installation.
     > This process may take around 6-8 minutes, don't worry you will only need to do this once.
 
     > We recommend you choosing `Install only for me`.
 
-## 4. Launch PROJECT_NAME
+## 4. Launch NucleiSky
 
-After installation, you can launch PROJECT_NAME from your Applications folder and start using it following the instructions on the [Usage of Notebooks After Installation](./notebook_usage.md) guide.
+After installation, you can launch NucleiSky from your Applications folder and start using it following the instructions on the [Usage of Notebooks After Installation](./notebook_usage.md) guide.
 
 </details>
 
@@ -149,13 +149,13 @@ After installation, you can launch PROJECT_NAME from your Applications folder an
 > 2. Select About This Mac.
 > 3. A window will pop up displaying your Mac’s information. Look into the `Chip` or `Processor` field. If `Intel` is mentioned, then download the Intel option. Otherwise, if `Mx` (e.g. M1 or M2) is mentioned, then download the ARM64 option. 
 
-<a href="https://github.com/GITHUB_OWNER/GITHUB_REPO_NAME/releases/download/VERSION_NUMBER/PROJECT_NAME-VERSION_NUMBER-MacOSX-arm64.sh">
+<a href="https://github.com/CellMigrationLab/NucleiSky-test/releases/download/0.0.1/NucleiSky-0.0.1-MacOSX-arm64.sh">
     <img src="https://img.shields.io/badge/Download%20for%20Mac%20(ARM64)-Latest-lightgrey?logo=apple&style=for-the-badge" alt="Download for Mac ARM64" width="250">
 </a>
 
 or 
     
-<a href="https://github.com/GITHUB_OWNER/GITHUB_REPO_NAME/releases/download/VERSION_NUMBER/PROJECT_NAME-VERSION_NUMBER-MacOSX-x86_64.sh">
+<a href="https://github.com/CellMigrationLab/NucleiSky-test/releases/download/0.0.1/NucleiSky-0.0.1-MacOSX-x86_64.sh">
     <img src="https://img.shields.io/badge/Download%20for%20Mac%20(Intel)-Latest-lightgrey?logo=apple&style=for-the-badge" alt="Download for Mac Intel" width="250">
 </a>
 
@@ -169,15 +169,15 @@ Follow the guidelines shown on the following GIF or the instructions bellow:
 1. Open a terminal on the folder where you downloaded the file.
 2. Copy and paste the following command:
     ```bash
-    bash PROJECT_NAME-VERSION_NUMBER-MacOSX-ARCHITECTURE.sh
+    bash NucleiSky-0.0.1-MacOSX-ARCHITECTURE.sh
     ```
 3. Click Enter to run the command.
 4. Follow the on-screen prompts to complete the installation.
     > This process may take around 6-8 minutes, don't worry you will only need to do this once.
 
-## 4. Launch PROJECT_NAME
+## 4. Launch NucleiSky
 
-After installation, you can launch PROJECT_NAME from your Applications folder and start using it following the instructions on the [Usage of Notebooks After Installation](./notebook_usage.md) guide.
+After installation, you can launch NucleiSky from your Applications folder and start using it following the instructions on the [Usage of Notebooks After Installation](./notebook_usage.md) guide.
 
 </details>
 
@@ -185,7 +185,7 @@ After installation, you can launch PROJECT_NAME from your Applications folder an
 
 ---
 
-# 🗑️ Uninstall PROJECT_NAME
+# 🗑️ Uninstall NucleiSky
 
 
 <details>
@@ -197,13 +197,13 @@ After installation, you can launch PROJECT_NAME from your Applications folder an
 
 You can do it clicking `Uninstall` in the Start Menu like on the image bellow:
 
-![Uninstall PROJECT_NAME](https://github.com/CellMigrationLab/LabConstrictor/blob/doc_source/Windows_Uninstall.png)
+![Uninstall NucleiSky](https://github.com/CellMigrationLab/LabConstrictor/blob/doc_source/Windows_Uninstall.png)
 
 or by directly going to `Settings` > `Apps` > `Installed apps`.
 
-## 2. Uninstall PROJECT_NAME
+## 2. Uninstall NucleiSky
 
-Once there, search for `PROJECT_NAME` and click the three dots on the right and select `Uninstall`.
+Once there, search for `NucleiSky` and click the three dots on the right and select `Uninstall`.
 
 ---
 </details>
@@ -220,7 +220,7 @@ Once there, search for `PROJECT_NAME` and click the three dots on the right and 
 The default installation folder is:
 
 ```
-~/LOWER_PROJ_NAME`
+~/nucleisky`
 ```
 
 You can navigate to this folder using your file explorer or terminal.
@@ -262,17 +262,17 @@ bash uninstall.sh
 ## 1. Uninstall the App
 
 1.- Go to the `Applications` folder.
-2.- Find PROJECT_NAME and delete it.
+2.- Find NucleiSky and delete it.
 
-## 2. Uninstall PROJECT_NAME folder
+## 2. Uninstall NucleiSky folder
 
-1.- On the installation process, you chose a folder where you would install PROJECT_NAME. Find it.
+1.- On the installation process, you chose a folder where you would install NucleiSky. Find it.
 2.- Delete that complete folder.
 
 ## 3. Check that the uninstallation has been correctly done
 
 1.- Go to your `Trash` folder.
-2.- Check that both PROJECT_NAME App and folder are there.
+2.- Check that both NucleiSky App and folder are there.
 
 </details>
 
