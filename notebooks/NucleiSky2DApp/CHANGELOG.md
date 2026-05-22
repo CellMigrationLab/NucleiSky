@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.0.9] - 2026-05-22
+
+### Changed
+- Version updated from 0.0.8 to 0.0.9
+
+**Commit Details:**
+- Hash: [`6ec00ca5`](https://github.com/CellMigrationLab/NucleiSky-test/commit/6ec00ca5d2d12454629840216aaa6b66c62b1ac2)
+- Author: Iván Hidalgo
+- Date: 2026-05-22 13:18:54 +0300
+- Message: Merge branch 'main' of https://github.com/CellMigrationLab/NucleiSky-test
+
+---
 ## [0.0.8] - 2026-05-22
 
 ### Changed
