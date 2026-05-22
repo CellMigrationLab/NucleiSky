@@ -14,7 +14,7 @@ if find_spec("tqdm") is not None:
 else:
     _tqdm = None
 
-from nucleisky2d.segmentation import get_global_segmentor, segment_nuclei_dispatch
+from ..nucleisky2d.segmentation import get_global_segmentor, segment_nuclei_dispatch
 
 logger = logging.getLogger(__name__)
 
