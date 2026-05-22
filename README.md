@@ -40,7 +40,7 @@ No installation required. Run our interactive apps directly in Google Colab:
 * [**Launch 3D App**](https://colab.research.google.com/github/cellmigrationlab/NucleiSky/blob/main/notebooks/NucleiSky3DApp.ipynb)
 
 ### 🖥️ No-Code Desktop GUI
-Prefer a local app? Use our standalone desktop interface: [**NucleiSkyApp**](https://github.com/cellmigrationlab/NucleiSkyApp)
+Prefer a local app? Use our standalone [desktop installer](.tools/docs/download_executable.md).
 
 ### 🐍 Python Workflows (Local Installation)
 To install the full toolkit for your own scripts: `pip install "nucleisky[all]"`
