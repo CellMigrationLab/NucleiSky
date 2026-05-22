@@ -1,0 +1,58 @@
+
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "nucleisky"
+version = "0.2.0"
+description = "NucleiSky2D matching and alignment utilities"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+  "numpy>=2.0.2",
+  "numba>=0.60.0",
+  "scipy>=1.16.3",
+  "scikit-image>=0.26.0",
+  "tifffile>=2026.1.28",
+  "networkx>=3.1",
+  "pandas>=2.2.2",
+  "matplotlib>=3.10.0",
+]
+
+[project.optional-dependencies]
+segmentation = [
+  "cellpose[all]",
+  "instanseg-torch==0.1.1",
+]
+zarr = [
+  "zarr",
+  "numcodecs",
+]
+instanseg = [
+  "instanseg-torch==0.1.1",
+  "torch",
+]
+simpleitk = [
+  "SimpleITK",
+]
+all = [
+  "cellpose[all]",
+  "zarr",
+  "numcodecs",
+  "torch",
+  "SimpleITK",
+  "instanseg-torch==0.1.1",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+markers = [
+  "geometry: numerical geometric regression tests",
+  "integration: multi-component workflow tests",
+  "slow: slower tests not intended for tight loops",
+  "stochastic: tests validating seeded stochastic behavior",
+  "optional_backend: requires optional dependency/backend",
+]
