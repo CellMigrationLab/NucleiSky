@@ -1,5 +1,5 @@
 name: NucleiSky
-version: 0.0.1
+version: 0.0.2
 environment_file: environment.yaml
 installer_type: all
 license_file: LICENSE
@@ -23,7 +23,10 @@ extra_files:
 - app/python_scripts/include_path.py: NucleiSky/include_path.py
 - construct.yaml: NucleiSky/construct.yaml
 - notebooks/NucleiSky2DApp/NucleiSky2DApp.ipynb: NucleiSky/notebooks/NucleiSky2DApp/NucleiSky2DApp.ipynb
+- notebooks/NucleiSky2DBenchmarking/NucleiSky2DBenchmarking.ipynb: NucleiSky/notebooks/NucleiSky2DBenchmarking/NucleiSky2DBenchmarking.ipynb
+- notebooks/NucleiSky2D_API_Workflow_Example/NucleiSky2D_API_Workflow_Example.ipynb: NucleiSky/notebooks/NucleiSky2D_API_Workflow_Example/NucleiSky2D_API_Workflow_Example.ipynb
 - notebooks/NucleiSky3DApp/NucleiSky3DApp.ipynb: NucleiSky/notebooks/NucleiSky3DApp/NucleiSky3DApp.ipynb
+- notebooks/NucleiSky3D_API_Workflow_Example/NucleiSky3D_API_Workflow_Example.ipynb: NucleiSky/notebooks/NucleiSky3D_API_Workflow_Example/NucleiSky3D_API_Workflow_Example.ipynb
 - notebooks/notebook_latest_versions.yaml: NucleiSky/notebook_latest_versions.yaml
 - requirements.txt: NucleiSky/requirements.txt
 - setup.py: NucleiSky/setup.py
