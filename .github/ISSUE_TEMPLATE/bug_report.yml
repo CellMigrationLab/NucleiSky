@@ -1,0 +1,110 @@
+name: "Bug report"
+description: "Report something that is broken or confusing."
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for helping us improve NucleiSky2D! The details below help us reproduce issues quickly.
+
+  - type: dropdown
+    id: workflow_type
+    attributes:
+      label: Workflow type
+      description: What are you aligning?
+      options:
+        - Restain
+        - Multi-round
+        - ROI-to-reference
+        - Other (describe below)
+    validations:
+      required: true
+
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: What went wrong? Include the specific error message if available.
+      placeholder: "Registration fails with a ValueError during matcher.fit".
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Reproduction steps
+      description: Minimal steps or a short script that reproduces the issue.
+      placeholder: |
+        1. Load sample data
+        2. Run nuclei segmentation
+        3. Call match_points with config ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+      description: What should have happened instead?
+      placeholder: "Matcher should return a valid transform and save overlays."
+    validations:
+      required: true
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Provide versions and system details.
+      value: |
+        - NucleiSky2D version/commit:
+        - OS:
+        - Python version:
+        - CPU/GPU (and CUDA version if applicable):
+    validations:
+      required: true
+
+  - type: textarea
+    id: data_details
+    attributes:
+      label: Data details
+      description: Share format and key metadata (no private data required).
+      value: |
+        - File format (TIFF/OME-TIFF/OME-Zarr):
+        - Full image shape + dtype:
+        - Crop image shape + dtype:
+        - Mask shape + dtype (if used):
+        - pixel_size_full_um:
+        - pixel_size_crop_um:
+        - Nuclei counts (full/crop):
+    validations:
+      required: true
+
+  - type: textarea
+    id: matcher_config
+    attributes:
+      label: Matcher configuration
+      description: Matcher name and the key settings you used.
+      placeholder: |
+        matcher=RANSACMatcher
+        frac_inliers_thresh=0.7
+        max_iters=5000
+    validations:
+      required: true
+
+  - type: textarea
+    id: qc
+    attributes:
+      label: QC artifacts
+      description: Add a QC overlay image from save_dir/original/ or a small screenshot if possible.
+      placeholder: "Drag and drop an image or paste a link."
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Pre-flight checks
+      options:
+        - label: I reviewed the troubleshooting guide.
+          required: false
+        - label: I can reproduce this issue with a minimal example.
+          required: false

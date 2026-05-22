@@ -1,0 +1,44 @@
+name: "Usage question"
+description: "Ask a how-to question about using NucleiSky2D."
+labels:
+  - question
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Have a usage question? Share enough context so we can point you to the right workflow step or doc.
+
+  - type: textarea
+    id: question
+    attributes:
+      label: Your question
+      description: What are you trying to accomplish?
+      placeholder: "How do I reuse a saved transform to align spots in a spatial transcriptomics dataset?"
+    validations:
+      required: true
+
+  - type: textarea
+    id: workflow_context
+    attributes:
+      label: Workflow context
+      description: Briefly describe your data, segmentation approach, and where you are in the workflow.
+      placeholder: "Aligning ROI to full slide. Have labels_full/labels_crop and pixel sizes. Running NucleiSky via Python."
+
+  - type: textarea
+    id: attempts
+    attributes:
+      label: What you’ve tried
+      description: Links to docs, code snippets, or commands you've already used.
+      placeholder: "Reviewed docs/workflow.md Step 8 and tried apply_transform_to_coords(...)."
+
+  - type: textarea
+    id: data_details
+    attributes:
+      label: Data details (optional)
+      description: Share format and key metadata (no private data required).
+      placeholder: |
+        - File format (TIFF/OME-TIFF/OME-Zarr):
+        - Full image shape + dtype:
+        - Crop image shape + dtype:
+        - pixel_size_full_um:
+        - pixel_size_crop_um:

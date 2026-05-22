@@ -1,0 +1,95 @@
+name: "Feature request or bug report"
+description: "Suggest an improvement, new capability, or report a bug."
+labels:
+  - enhancement
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for helping us shape NucleiSky2D! The prompts below mirror the pipeline so we can scope the request quickly.
+        If you're reporting a bug, share the relevant workflow details and expected behavior.
+
+  - type: dropdown
+    id: workflow_stage
+    attributes:
+      label: Workflow stage
+      description: Where in the NucleiSky2D workflow does this change belong?
+      options:
+        - Data preparation / inputs
+        - Segmentation & feature extraction
+        - Matching & alignment
+        - QC & visualization
+        - Exports & transform reuse
+        - Performance / scaling
+        - Documentation / examples
+        - Other (describe below)
+    validations:
+      required: true
+
+  - type: textarea
+    id: workflow_context
+    attributes:
+      label: Workflow context
+      description: Describe your current pipeline setup (what you align, how you segment, and how you run NucleiSky2D).
+      placeholder: |
+        Example: Multi-round IF restain workflow.
+        - Segment nuclei with Cellpose at 0.5 µm/px
+        - Run run_adaptive_matching_and_export on each round
+        - QC with show_alignment_original_and_rescaled and export ROI TIFFs
+    validations:
+      required: true
+
+  - type: textarea
+    id: pain_point
+    attributes:
+      label: Pain point or gap
+      description: What slows you down or blocks the workflow today?
+      placeholder: "It takes multiple runs to find the right matcher when nuclei counts vary across ROIs."
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposed_change
+    attributes:
+      label: Proposed change
+      description: What would you like to see added or changed?
+      placeholder: "Expose a config-driven matcher order override in the adaptive pipeline."
+    validations:
+      required: true
+
+  - type: textarea
+    id: inputs_outputs
+    attributes:
+      label: Inputs and outputs
+      description: What data should the feature accept, and what should it produce?
+      placeholder: |
+        Inputs: labels_full, labels_crop, optional features_* arrays, pixel sizes.
+        Outputs: transform JSON + QC overlay saved to save_dir/original/.
+
+  - type: textarea
+    id: success_criteria
+    attributes:
+      label: Success criteria
+      description: How will you know this feature works for your workflow?
+      placeholder: "Alignment success rate >90% across 50 ROIs without manual matcher tuning."
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives or workarounds
+      description: Any existing tools or manual steps you use today?
+      placeholder: "Export centroids to CSV and run custom RANSAC matching scripts."
+
+  - type: dropdown
+    id: workflow_type
+    attributes:
+      label: Alignment scenario
+      options:
+        - Restain
+        - Multi-round
+        - ROI-to-reference
+        - Cross-modality
+        - Cross-magnification
+        - Other (describe below)
+    validations:
+      required: true

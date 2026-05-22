@@ -1,0 +1,46 @@
+name: "Documentation request"
+description: "Suggest additions or corrections to the docs."
+labels:
+  - documentation
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for helping us improve the docs! Tell us what’s missing or unclear.
+
+  - type: textarea
+    id: doc_location
+    attributes:
+      label: Doc or section
+      description: Which page, section, or topic needs attention?
+      placeholder: "docs/workflow.md — Step 5 (matching constellations)"
+    validations:
+      required: true
+
+  - type: textarea
+    id: issue
+    attributes:
+      label: What’s unclear or missing?
+      description: Describe the gap or confusion.
+      placeholder: "The adaptive matcher order rules are not clear when nuclei counts are low."
+    validations:
+      required: true
+
+  - type: textarea
+    id: suggestion
+    attributes:
+      label: Suggested improvement
+      description: If you have a draft sentence, example, or diagram idea, share it here.
+      placeholder: "Add a short table mapping nuclei count ranges to matcher order."
+
+  - type: dropdown
+    id: workflow_stage
+    attributes:
+      label: Workflow stage (optional)
+      options:
+        - Data preparation / inputs
+        - Segmentation & feature extraction
+        - Matching & alignment
+        - QC & visualization
+        - Exports & transform reuse
+        - Other (describe below)
