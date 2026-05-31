@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.0.6] - 2026-05-31
+
+### Changed
+- Version updated from 0.0.5 to 0.0.6
+
+**Commit Details:**
+- Hash: [`c4eb33da`](https://github.com/CellMigrationLab/NucleiSky/commit/c4eb33dad6b1331c4827a10afa8b15d658e10793)
+- Author: guijacquemet
+- Date: 2026-05-31 20:25:09 +0300
+- Message: Add files via upload
+
+---
 ## [0.0.5] - 2026-05-22
 
 ### Changed
