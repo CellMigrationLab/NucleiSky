@@ -14,5 +14,8 @@ Indexed list of folders and notebooks:
 - [NucleiSky3DApp](NucleiSky3DApp):
     - [NucleiSky3DApp.ipynb](NucleiSky3DApp/NucleiSky3DApp.ipynb)
 
+- [NucleiSky3DBenchmarking](NucleiSky3DBenchmarking):
+    - [NucleiSky3DBenchmarking.ipynb](NucleiSky3DBenchmarking/NucleiSky3DBenchmarking.ipynb)
+
 - [NucleiSky3D_API_Workflow_Example](NucleiSky3D_API_Workflow_Example):
     - [NucleiSky3D_API_Workflow_Example.ipynb](NucleiSky3D_API_Workflow_Example/NucleiSky3D_API_Workflow_Example.ipynb)
