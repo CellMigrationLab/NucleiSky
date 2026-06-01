@@ -1,5 +1,5 @@
 name: NucleiSky
-version: 0.0.3
+version: 0.0.4
 environment_file: environment.yaml
 installer_type: all
 license_file: LICENSE
@@ -26,6 +26,7 @@ extra_files:
 - notebooks/NucleiSky2DBenchmarking/NucleiSky2DBenchmarking.ipynb: NucleiSky/notebooks/NucleiSky2DBenchmarking/NucleiSky2DBenchmarking.ipynb
 - notebooks/NucleiSky2D_API_Workflow_Example/NucleiSky2D_API_Workflow_Example.ipynb: NucleiSky/notebooks/NucleiSky2D_API_Workflow_Example/NucleiSky2D_API_Workflow_Example.ipynb
 - notebooks/NucleiSky3DApp/NucleiSky3DApp.ipynb: NucleiSky/notebooks/NucleiSky3DApp/NucleiSky3DApp.ipynb
+- notebooks/NucleiSky3DBenchmarking/NucleiSky3DBenchmarking.ipynb: NucleiSky/notebooks/NucleiSky3DBenchmarking/NucleiSky3DBenchmarking.ipynb
 - notebooks/NucleiSky3D_API_Workflow_Example/NucleiSky3D_API_Workflow_Example.ipynb: NucleiSky/notebooks/NucleiSky3D_API_Workflow_Example/NucleiSky3D_API_Workflow_Example.ipynb
 - notebooks/notebook_latest_versions.yaml: NucleiSky/notebook_latest_versions.yaml
 - requirements.txt: NucleiSky/requirements.txt
