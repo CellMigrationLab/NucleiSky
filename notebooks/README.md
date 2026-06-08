@@ -1,6 +1,6 @@
 # Notebooks
 
-These notebooks are retained as runnable examples and manuscript-support workflows. Prefer the package API documented under `docs/` for reusable scripts, and treat benchmark notebooks as analysis workflows that may require substantial runtime and manual parameter review.
+Runnable examples and analysis workflows for NucleiSky. For reusable scripting patterns, see the API docs under `docs/`. Benchmark notebooks may require long runtimes and manual parameter review.
 
 ## Notebook groups
 
@@ -31,5 +31,3 @@ Benchmark notebooks should record:
 * checkpoint/result CSV locations;
 * success definition used by the plot (matcher-reported inlier success versus image-level validation such as SSIM);
 * output plots and any reload cells used to regenerate figures.
-
-See `docs/DOCUMENTATION_AUDIT.md` for unresolved notebook-publication checks identified during the documentation audit.

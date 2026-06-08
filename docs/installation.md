@@ -46,9 +46,9 @@ pip install "nucleisky[instanseg]"
 
 ```
 
-### 3. 3D Volumetric Superpowers
+### 3. SimpleITK (3D Volumes)
 
-Adds **SimpleITK** (`SimpleITK`), required for specific 3D volumetric feature extraction paths.
+Adds **SimpleITK**, used for 3D volumetric I/O and feature extraction.
 
 ```bash
 pip install "nucleisky[simpleitk]"
@@ -75,9 +75,9 @@ pip install "nucleisky[notebooks]"
 
 For exact pinned notebook/app builds, use the repository-level `requirements.txt` or the per-notebook `requirements.yaml` files under `notebooks/*/`.
 
-### 6. Everything Bundle (Max Power Mode)
+### 6. Everything
 
-A convenience installation that bundles all of the optional backends above (`cellpose[all]`, `zarr`, `numcodecs`, `torch`, `SimpleITK`, `instanseg-torch==0.1.1`) plus notebook dependencies.
+Installs all optional backends (`cellpose[all]`, `zarr`, `numcodecs`, `torch`, `SimpleITK`, `instanseg-torch==0.1.1`) plus notebook dependencies.
 
 ```bash
 pip install "nucleisky[all]"

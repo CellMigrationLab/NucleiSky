@@ -30,7 +30,7 @@ Key terms used throughout this page:
 * **RANSAC**: repeatedly sample small candidate correspondence sets, fit a transform, and keep the transform with the most inliers.
 * **ICP**: refinement step that “nudges” the transform to better align the inliers once a good initialisation exists.
 
-Practical note: NucleiSky2D works in **2D** and expects centroid arrays in `(y, x)` order, preferably in calibrated physical coordinates (µm).
+Practical note: NucleiSky2D works in **2D** and expects centroid arrays in `(y, x)` order, typically in calibrated physical coordinates (µm).
 
 ---
 
@@ -40,7 +40,7 @@ Practical note: NucleiSky2D works in **2D** and expects centroid arrays in `(y, 
 
 * **`n_crop < 20`** → `quad` → `triangles` → `graph` → `hashing`
 * **`20 ≤ n_crop < 1000`** → `triangles` → `graph` → `quad` → `hashing`
-* **`n_crop ≥ 1000`** → `hashing` → `triangles` → `graph` → `quad`
+* **`n_crop ≥ 1000`** → `triangles` → `quad` → `graph` → `hashing`
 
 The adaptive loop stops at the first **successful** match.
 

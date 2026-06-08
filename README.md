@@ -20,19 +20,19 @@
 
 Microscopy alignment gets messy when images are rotated, scaled, or captured on completely different platforms. NucleiSky solves this by treating your nuclei like **stars in a constellation**. 
 
-Instead of relying on pixel intensity similarity, NucleiSky matches the *geometry* of the cells. Whether your data is a 2D field of view or a 3D tissue stack, NucleiSky asks: *Which calibrated similarity transform best overlaps these two landmark constellations?*
+Instead of relying on pixel intensity similarity, NucleiSky matches the *geometry* of the cells. Whether your data is a 2D field of view or a 3D tissue stack, NucleiSky finds the calibrated similarity transform that best overlaps two landmark constellations.
 
 ### 👩‍🔬 For the Biologist: The "Telescope" Setup
-Imagine looking through a small telescope at a random patch of the night sky. Even without seeing the whole galaxy, you can figure out exactly where you are by matching your small star pattern against a full sky map. NucleiSky does this for your tissue: it anchors your high-magnification ROIs into whole-slide scans, estimating the rotation, scale, and shift for downstream review.
+Imagine looking through a small telescope at a random patch of the night sky. Even without seeing the whole galaxy, you can figure out exactly where you are by matching your small star pattern against a full sky map. NucleiSky does the same for your tissue: it anchors high-magnification ROIs into whole-slide scans by estimating rotation, scale, and shift.
 
 ### 👨‍💻 For the Developer: The Constellation Engine
-NucleiSky is a robust, extensible point-set registration pipeline built for real-world microscopy noise. We provide modular feature extraction, dynamically scaled RANSAC, geometric hashing, and tetrahedral pyramid matchers, ready to be dropped into your automated spatial pipelines.
+NucleiSky is a robust point-set registration pipeline built for real-world microscopy noise. It provides modular feature extraction, dynamically scaled RANSAC, geometric hashing, and tetrahedral pyramid matchers — ready to slot into automated spatial analysis pipelines.
 
 ---
 
 ## ⚡ Quickstart
 
-Choose your launchpad and get aligning in minutes:
+Choose your setup and get aligning in minutes:
 
 ### 🌟 Try it in the Browser (Fastest)
 No installation required. Run our interactive apps directly in Google Colab:
@@ -67,7 +67,7 @@ Use `pip install "nucleisky[all]"` when you also need optional segmentation, OME
 
 ## 🔑 Key Capabilities
 
-* **2D & proof-of-concept 3D registration:** Shared constellation logic for flat slides and volumetric stacks.
+* **2D & 3D registration:** Shared constellation logic for flat slides and volumetric stacks. 3D workflows should be reviewed with manual QC before downstream use.
 * **Scale-aware:** Matches images captured at different pixel/voxel sizes when calibration metadata is correct.
 * **Rotation-aware:** Supports unrestricted rotations unless you configure an angle bound.
 * **Modality-Agnostic:** If you can segment the nuclei (or spots/cells), NucleiSky can match them.

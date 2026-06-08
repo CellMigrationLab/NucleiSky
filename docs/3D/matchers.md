@@ -8,30 +8,30 @@ Like its 2D counterpart, NucleiSky3D estimates a **similarity transform** in phy
 
 ---
 
-## 🔭 The Constellation Engines (For the Biologist)
+## Overview (For the Biologist)
 
-In 2D, NucleiSky offers a wide variety of geometry families (graphs, triangles, quads). In 3D, the math gets much heavier, so we intentionally streamlined the toolbox down to two highly optimized engines:
+In 2D, NucleiSky offers a range of geometry families (graphs, triangles, quads). In 3D the maths is heavier, so the toolbox is streamlined to two engines:
 
 ### 1. The `pyramid` Matcher (Default for most datasets)
 
 **How it works:** Imagine looking at 4 stars close to each other in the sky. If you connect them, they form a 3D pyramid (a tetrahedron). This matcher builds these little pyramids all over your crop and looks for identical pyramids in the full image.
-**When to use it:** This is the default. It is incredibly robust for small-to-medium crops (dozens to hundreds of cells) where the local arrangement of cells is distinct.
+**When to use it:** This is the default. It works well for small-to-medium crops (dozens to hundreds of cells) where the local arrangement of cells is distinct.
 
-### 2. The `hashing` Matcher (For massive galaxies)
+### 2. The `hashing` Matcher (For large point clouds)
 
 **How it works:** The matcher builds local anchor frames from 3 reference landmarks, bins the normalized coordinates of a 4th landmark in that frame, and uses the crop to query those bins and vote for candidate 3D similarity transforms.
-**When to use it:** Use this for very large, dense point clouds (thousands of cells) where finding individual pyramids takes too long, or where your segmentation is noisy and missing lots of cells.
+**When to use it:** Use this for large, dense point clouds (thousands of cells) where finding individual pyramids takes too long, or where segmentation is noisy and many cells are missing.
 
-### The "Auto-Pilot" Choice
+### The Adaptive Choice
 
-If you use the adaptive pipeline (`run_adaptive_matching_and_export_3d`), you don't even need to choose! The pipeline mirrors this logic automatically based on the number of detected nuclei in your crop:
+If you use the adaptive pipeline (`run_adaptive_matching_and_export_3d`), it picks for you based on the number of detected nuclei in the crop:
 
 * **`n_crop < 1000` cells** → Tries `pyramid`, falls back to `hashing`.
 * **`n_crop >= 1000` cells** → Tries `hashing`, falls back to `pyramid`.
 
 ---
 
-## 💻 Under the Hood (For the Developer)
+## Under the Hood (For the Developer)
 
 Both backends are called through the `NucleiSky3D(...)` orchestrator and share common parameters. They both end with a spatial inlier check (`inlier_radius_um`) and optional ICP (Iterative Closest Point) refinement.
 
@@ -51,7 +51,7 @@ Both backends are called through the `NucleiSky3D(...)` orchestrator and share c
 
 ---
 
-## ⚙️ Advanced Configuration
+## Advanced Configuration
 
 `NucleiSky3D(...)` supports two layers of configuration, allowing you to fine-tune RANSAC iterations, thresholds, and scale bounds.
 
@@ -106,7 +106,7 @@ result = NucleiSky3D(
 
 ---
 
-## 🎛️ Key Parameters Reference
+## Key Parameters Reference
 
 ### Common Parameters (`_common`)
 
