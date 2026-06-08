@@ -18,6 +18,9 @@ THANKS_LINE_RE = re.compile(r'(Thank you! You have successfully installed [^\n]*
 PKG_VERSION_RE = re.compile(r'^(\s*SET\s+"PKG_VERSION=)(\d+\.\d+\.\d+)("\s*)$', re.MULTILINE)
 POST_INSTALL = ROOT / "app" / "bash_bat_scripts" / "post_install.bat"
 
+def replace_version_placeholder(text: str, new_version: str) -> str:
+    """ Replace version placeholders 'VERSION_NUMBER' in the text with the new version."""
+    return text.replace("VERSION_NUMBER", new_version)
 
 def replace_version_in_file(file_path: pathlib.Path, old_version: str, new_version: str) -> bool:
     """Replace all occurrences of old_version with new_version in a file.
@@ -112,10 +115,25 @@ def bump_post_install_bat(new_version: str) -> None:
 
 def bump_version_in_download_executable_md(new_version: str) -> None:
     download_md = ROOT / "docs" / "download_executable.md"
-    if not download_md.exists():
+    template_md = ROOT / ".tools" / "templates" / "download_executable_template.md"
+
+    # On the first release replace download_executable.md with the template
+    # (but only if it exists)
+    if template_md.exists():
+        # Remove existing download_executable.md if present
+        if download_md.exists():
+            download_md.unlink()
+        # Copy the template to the docs folder using shutil for cross-platform support
+        shutil.copy(template_md, download_md)
+    else:
+        print("Template for download_executable.md not found! Skipping creation of download_executable.md")
         return
-    # This file may contain the version in various formats, so we use the flexible replacement function
-    if replace_version_in_file(download_md, new_version, new_version):
+    
+    # This file contains placeholders, update them with the new version
+    text = download_md.read_text(encoding="utf-8")
+    updated_text = replace_version_placeholder(text, new_version)
+    if updated_text != text:
+        download_md.write_text(updated_text, encoding="utf-8")
         print(f"Updated download_executable.md to version {new_version}")
     else:
         print("No version string found in download_executable.md to update.")
@@ -143,18 +161,6 @@ def main() -> None:
     if not re.fullmatch(r"\d+\.\d+\.\d+", args.new_version):
         sys.exit("Version must look like X.Y.Z")
 
-    # On the first release replace download_executable.md with the template
-    # (but only if it exists)
-    if pathlib.Path(".tools/templates/download_executable_template.md").exists():
-        # Remove existing download_executable.md if present
-        if pathlib.Path(".tools/docs/download_executable.md").exists():
-            pathlib.Path(".tools/docs/download_executable.md").unlink()
-        # Copy the template to the docs folder using shutil for cross-platform support
-        shutil.copy(
-            ".tools/templates/download_executable_template.md",
-            ".tools/docs/download_executable.md",
-        )
-
     text, current = read_current_version()
     if args.new_version == current:
         print(f"Version already at {current}; nothing to update.")
@@ -168,7 +174,7 @@ def main() -> None:
     # Also bump PKG_VERSION in post_install.bat
     bump_post_install_bat(args.new_version)
 
-    # Update download_executable.md if it exists
+    # Update download_executable.md
     bump_version_in_download_executable_md(args.new_version)
 
     # Update additional files if specified

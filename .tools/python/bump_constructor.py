@@ -142,7 +142,8 @@ def ensure_extra_files(construct_data: dict, notebooks_root: Path, src_root: Pat
     included_src_flag = False
     for py_file in src_root.rglob("*.py"):
         rel = py_file.relative_to(repo_root).as_posix()
-        if not rel.startswith("src/"):
+        # Avoid any python files that are not in the src/ directory or any __init__.py files that are not in the src/ directory 
+        if not rel.startswith("src/") or py_file.name == "__init__.py":
             continue
         src = rel
         dst = f"{project_folder}/{rel}"
@@ -153,6 +154,9 @@ def ensure_extra_files(construct_data: dict, notebooks_root: Path, src_root: Pat
         normalized_items.append({src: dst})
         included_src_flag = True
         src_added += 1
+
+    # For safety also remove setup.py and src_change.yaml if they exist in the extra_files to avoid duplicates, we will re-add them with correct paths if src/ is included
+    normalized_items = [item for item in normalized_items if not (isinstance(item, dict) and any(str(src) in ["setup.py", ".tools/meta/src_change.yaml"] for src in item.keys()))]  
 
     if included_src_flag:
         # Also include the setup.py file at the root if not already included
@@ -169,6 +173,14 @@ def ensure_extra_files(construct_data: dict, notebooks_root: Path, src_root: Pat
             if src_change_file not in existing_sources and src_change_dst not in existing_dests:
                 normalized_items.append({src_change_file: src_change_dst})
                 src_added += 1
+    else:
+        # If the user has removed the src/directory, remove the generated setup.py and src_change.yaml
+        setup_dst = Path(project_folder) / "setup.py"
+        if setup_dst.exists():
+            setup_dst.unlink()
+        src_change_dst = Path(project_folder) / "src_change.yaml"
+        if src_change_dst.exists():
+            src_change_dst.unlink()
 
     # Optionally sort entries (dicts by their single key) for determinism
     def sort_key(item):
