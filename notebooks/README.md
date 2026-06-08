@@ -1,21 +1,33 @@
 # Notebooks
 
-Indexed list of folders and notebooks:
+Runnable examples and analysis workflows for NucleiSky. For reusable scripting patterns, see the API docs under `docs/`. Benchmark notebooks may require long runtimes and manual parameter review.
 
-- [NucleiSky2DApp](NucleiSky2DApp):
-    - [NucleiSky2DApp.ipynb](NucleiSky2DApp/NucleiSky2DApp.ipynb)
+## Notebook groups
 
-- [NucleiSky2DBenchmarking](NucleiSky2DBenchmarking):
-    - [NucleiSky2DBenchmarking.ipynb](NucleiSky2DBenchmarking/NucleiSky2DBenchmarking.ipynb)
+| Folder | Notebook | Intended use | Notes |
+| --- | --- | --- | --- |
+| `NucleiSky2DApp` | `NucleiSky2DApp.ipynb` | Interactive 2D no-code app | Uses widgets and optional segmentation backends. |
+| `NucleiSky3DApp` | `NucleiSky3DApp.ipynb` | Interactive 3D no-code app | 3D support should be manually QC-reviewed before downstream analysis. |
+| `NucleiSky2D_API_Workflow_Example` | `NucleiSky2D_API_Workflow_Example.ipynb` | Script-like 2D API example | Good starting point for external users converting a workflow to Python. |
+| `NucleiSky3D_API_Workflow_Example` | `NucleiSky3D_API_Workflow_Example.ipynb` | Script-like 3D API example | Demonstrates synthetic fallback data and 3D exports. |
+| `NucleiSky2DBenchmarking` | `NucleiSky2DBenchmarking.ipynb` | Manuscript/benchmark analysis | Expects calibrated 2D image inputs and can checkpoint/reload result CSVs. |
+| `NucleiSky3DBenchmarking` | `NucleiSky3DBenchmarking.ipynb` | Manuscript/benchmark analysis | Reference-only 3D subvolume-localisation benchmark; not a full arbitrary-rotation validation. |
 
-- [NucleiSky2D_API_Workflow_Example](NucleiSky2D_API_Workflow_Example):
-    - [NucleiSky2D_API_Workflow_Example.ipynb](NucleiSky2D_API_Workflow_Example/NucleiSky2D_API_Workflow_Example.ipynb)
+## Environment
 
-- [NucleiSky3DApp](NucleiSky3DApp):
-    - [NucleiSky3DApp.ipynb](NucleiSky3DApp/NucleiSky3DApp.ipynb)
+For exact notebook dependencies, use each folder's `requirements.yaml` or the merged repository-level `requirements.txt`. For package installs, `pip install "nucleisky[notebooks]"` installs the common interactive/plotting dependencies, while `pip install "nucleisky[all]"` also installs optional segmentation and volumetric I/O backends.
 
-- [NucleiSky3DBenchmarking](NucleiSky3DBenchmarking):
-    - [NucleiSky3DBenchmarking.ipynb](NucleiSky3DBenchmarking/NucleiSky3DBenchmarking.ipynb)
+## Inputs and paths
 
-- [NucleiSky3D_API_Workflow_Example](NucleiSky3D_API_Workflow_Example):
-    - [NucleiSky3D_API_Workflow_Example.ipynb](NucleiSky3D_API_Workflow_Example/NucleiSky3D_API_Workflow_Example.ipynb)
+Replace placeholder paths such as `path/to/your/data` with your local files or mounted cloud paths. Avoid committing private absolute paths in executed notebook cells.
+
+## Benchmark reproducibility notes
+
+Benchmark notebooks should record:
+
+* input image/volume path and calibration (`pixel_size_um` for 2D, `voxel_size_um_zyx` for 3D);
+* segmentation method/settings or precomputed label/centroid tables;
+* matcher configuration and random seeds;
+* checkpoint/result CSV locations;
+* success definition used by the plot (matcher-reported inlier success versus image-level validation such as SSIM);
+* output plots and any reload cells used to regenerate figures.

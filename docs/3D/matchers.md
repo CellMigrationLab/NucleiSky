@@ -8,30 +8,30 @@ Like its 2D counterpart, NucleiSky3D estimates a **similarity transform** in phy
 
 ---
 
-## 🔭 The Constellation Engines (For the Biologist)
+## Overview (For the Biologist)
 
-In 2D, NucleiSky offers a wide variety of geometry families (graphs, triangles, quads). In 3D, the math gets much heavier, so we intentionally streamlined the toolbox down to two highly optimized engines:
+In 2D, NucleiSky offers a range of geometry families (graphs, triangles, quads). In 3D the maths is heavier, so the toolbox is streamlined to two engines:
 
 ### 1. The `pyramid` Matcher (Default for most datasets)
 
 **How it works:** Imagine looking at 4 stars close to each other in the sky. If you connect them, they form a 3D pyramid (a tetrahedron). This matcher builds these little pyramids all over your crop and looks for identical pyramids in the full image.
-**When to use it:** This is the default. It is incredibly robust for small-to-medium crops (dozens to hundreds of cells) where the local arrangement of cells is distinct.
+**When to use it:** This is the default. It works well for small-to-medium crops (dozens to hundreds of cells) where the local arrangement of cells is distinct.
 
-### 2. The `hashing3d` Matcher (For massive galaxies)
+### 2. The `hashing` Matcher (For large point clouds)
 
-**How it works:** Instead of looking for specific shapes, this matcher calculates the distances and angles between *every* group of stars and throws them into a massive lookup table (a hash map). The crop then "votes" on where it belongs.
-**When to use it:** Use this for very large, dense point clouds (thousands of cells) where finding individual pyramids takes too long, or where your segmentation is noisy and missing lots of cells.
+**How it works:** The matcher builds local anchor frames from 3 reference landmarks, bins the normalized coordinates of a 4th landmark in that frame, and uses the crop to query those bins and vote for candidate 3D similarity transforms.
+**When to use it:** Use this for large, dense point clouds (thousands of cells) where finding individual pyramids takes too long, or where segmentation is noisy and many cells are missing.
 
-### The "Auto-Pilot" Choice
+### The Adaptive Choice
 
-If you use the adaptive pipeline (`run_adaptive_matching_and_export_3d`), you don't even need to choose! The pipeline mirrors this logic automatically based on the number of detected nuclei in your crop:
+If you use the adaptive pipeline (`run_adaptive_matching_and_export_3d`), it picks for you based on the number of detected nuclei in the crop:
 
-* **`n_crop < 1000` cells** → Tries `pyramid`, falls back to `hashing3d`.
-* **`n_crop >= 1000` cells** → Tries `hashing3d`, falls back to `pyramid`.
+* **`n_crop < 1000` cells** → Tries `pyramid`, falls back to `hashing`.
+* **`n_crop >= 1000` cells** → Tries `hashing`, falls back to `pyramid`.
 
 ---
 
-## 💻 Under the Hood (For the Developer)
+## Under the Hood (For the Developer)
 
 Both backends are called through the `NucleiSky3D(...)` orchestrator and share common parameters. They both end with a spatial inlier check (`inlier_radius_um`) and optional ICP (Iterative Closest Point) refinement.
 
@@ -39,7 +39,7 @@ Both backends are called through the `NucleiSky3D(...)` orchestrator and share c
 
 **Entry point**: `run_pyramid_based_matching_um`
 
-* **Strategy:** Builds a spatial k-NN graph in both point clouds. For each node, it computes a local **tetrahedron descriptor** using combinations of 3 neighbors. The descriptor encodes normalized volume ratios and the 6 sorted normalized edge-length patterns.
+* **Strategy:** Builds a spatial k-NN graph in both point clouds. For each node, it computes local **tetrahedron descriptors** using combinations of 3 neighbors. Each 7-value descriptor stores a normalized volume term (`volume / mean_edge^3`, scaled internally) plus the 6 sorted edge lengths normalized by their mean edge length.
 * **Matching:** It Z-scores these descriptors, drastically filters candidates via a strict **Mutual Nearest Neighbors (MNN)** check in descriptor space, and runs a 4-point RANSAC to estimate the 3D similarity transform.
 
 ### `hashing` (Geometric Hashing)
@@ -47,11 +47,11 @@ Both backends are called through the `NucleiSky3D(...)` orchestrator and share c
 **Entry point**: `run_geometric_hashing_matching_3d_um`
 
 * **Strategy:** Builds a hash table on the full cloud using robust local 4-point geometries. It picks 3 anchors (`i, j, k`) to define a rigid local 3D coordinate frame, and encodes the relative position of a 4th point (`l`) into that frame.
-* **Matching:** It quantizes the 4th point's relative coordinates into `(x, y, z)` bins. The crop samples analogous tuples, queries the hash bins (with a neighbor-bin search radius to prevent quantization artifacts), and scores hypotheses by maximum inlier count. It includes fast pretest pruning (`pretest_n`) to skip bad hypotheses early.
+* **Matching:** It quantizes the 4th point's relative coordinates into `(x, y, z)` bins after normalizing by the anchor baseline length. The crop samples analogous tuples, queries the hash bins (with a neighbor-bin search radius to prevent quantization artifacts), and scores hypotheses by maximum inlier count. It includes fast pretest pruning (`pretest_n`) to skip bad hypotheses early.
 
 ---
 
-## ⚙️ Advanced Configuration
+## Advanced Configuration
 
 `NucleiSky3D(...)` supports two layers of configuration, allowing you to fine-tune RANSAC iterations, thresholds, and scale bounds.
 
@@ -60,7 +60,7 @@ Both backends are called through the `NucleiSky3D(...)` orchestrator and share c
 
 ### The Config Structure
 
-The configuration is a nested dictionary with a `_common` block (applied to all matchers) and backend-specific blocks (`pyramid`, `hashing3d`).
+The configuration is a nested dictionary with a `_common` block (applied to all matchers) and backend-specific blocks (`pyramid`, `hashing3d`). The public matcher name is `"hashing"`; the legacy config section name `"hashing3d"` is still accepted and used by the defaults.
 
 ```python
 matcher_config = {
@@ -106,7 +106,7 @@ result = NucleiSky3D(
 
 ---
 
-## 🎛️ Key Parameters Reference
+## Key Parameters Reference
 
 ### Common Parameters (`_common`)
 
@@ -127,7 +127,7 @@ result = NucleiSky3D(
 * **`max_candidate_pairs`** (Default: `None`): Cap on descriptor candidate matches before RANSAC (prevents memory blowouts if `None` is overridden).
 * **`early_stop_frac`** (Default: `None`): Stops RANSAC early if a hypothesis explains this fraction of the crop.
 
-### Hashing Specific Parameters (`hashing3d`)
+### Hashing Specific Parameters (`hashing` matcher; `hashing3d` config section)
 
 * **`base_distance_um`** (Default: `10.0`): The reference baseline used to normalize local geometry. *(Crucial to tune: strongly controls collision rate vs discriminability!)*
 * **`bin_size_xyz`** (Default: `0.15`): Hash quantization step in normalized coordinates.

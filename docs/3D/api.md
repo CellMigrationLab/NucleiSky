@@ -181,7 +181,7 @@ def extract_nuclear_features_3d(label_img_3d, pixel_size_um=1.0, k_neighbors=5):
 ```
 
 **Description**
-Extracts per-nucleus 3D geometric and local-neighborhood features from a labeled volume using SimpleITK shape statistics and KD-tree nearest-neighbor queries. *Note: This function explicitly requires the `SimpleITK` package to be installed in your environment, otherwise it will raise an `ImportError*`.
+Extracts per-nucleus 3D geometric and local-neighborhood features from a labeled volume using SimpleITK shape statistics and KD-tree nearest-neighbor queries. *Note: This function explicitly requires the `SimpleITK` package to be installed in your environment, otherwise it will raise an `ImportError`.
 
 **Arguments**
 
@@ -197,6 +197,73 @@ Extracts per-nucleus 3D geometric and local-neighborhood features from a labeled
 * Spatial context: `nn1_dist_um ... nn{k_neighbors}_dist_um`, `local_density_r20`, `local_density_norm`.
 * Matcher feature embedding: `feature_vector` (stacked `[volume_norm, sphericity, local_density_norm]`).
 
+
+
+### `centroids_from_df_3d`
+
+**Signature**
+
+```python
+def centroids_from_df_3d(df: pandas.DataFrame, use_um: bool = True) -> numpy.ndarray:
+```
+
+**Description**
+Extracts matcher-ready 3D centroids from a feature table. Use `use_um=True` for calibrated physical matching (recommended) and `use_um=False` only when you intentionally want pixel-space centroids.
+
+**Required columns**
+
+* `use_um=True`: `centroid_z_um`, `centroid_y_um`, `centroid_x_um`
+* `use_um=False`: `centroid_z_px`, `centroid_y_px`, `centroid_x_px`
+
+**Returns**
+
+* `numpy.ndarray`: `(N, 3)` array in `(z, y, x)` order.
+
+---
+
+### `segment_nuclei_2p5d`
+
+**Signature**
+
+```python
+def segment_nuclei_2p5d(
+    volume_zyx: numpy.ndarray,
+    method: str,
+    pixel_size_um_zyx: tuple[float, float, float],
+    settings: dict = None,
+    min_iou: float = 0.3,
+    show_progress: bool = True,
+    segmentor: object | None = None,
+) -> numpy.ndarray:
+```
+
+**Description**
+Runs the selected 2D segmentation backend slice-by-slice, then links labels between adjacent Z slices using an IoU threshold. This is a 2.5D workflow, not a fully volumetric neural-network segmenter.
+
+**Arguments**
+
+* **volume_zyx**: Input volume in `(z, y, x)` order.
+* **method**: 2D segmentation backend name passed to `segment_nuclei_dispatch` (`"threshold"`, `"cellpose"`, `"cellpose_sam"`, or `"instanseg"` when installed/supported).
+* **pixel_size_um_zyx**: Physical voxel size `(z, y, x)`; the mean of Y/X spacing is used for each 2D slice backend.
+* **settings**: Backend-specific segmentation settings.
+* **min_iou**: Adjacent-slice label-linking threshold; higher values are stricter.
+
+**Returns**
+
+* `numpy.ndarray`: Integer label volume in `(z, y, x)` order with background `0`.
+
+---
+
+### 3D volume I/O helpers
+
+```python
+from nucleisky3d.io import inspect_volume_header, load_volume, require_voxel_size_um_zyx, save_tiff_zyx
+```
+
+* `inspect_volume_header(path_str) -> dict`: inspects TIFF/NPY/OME-Zarr shape, axes, dtype, and physical-scale metadata without eagerly loading full voxel data where possible.
+* `load_volume(path_str, *, channel_axis=None, channel_index=0)`: loads a volume and coerces supported 3D/4D inputs to `(z, y, x)`, selecting one channel from multichannel data.
+* `require_voxel_size_um_zyx(path_str, fallback=None, ...)`: returns a strict `(z, y, x)` voxel-size tuple and raises when required metadata is missing unless a fallback is supplied.
+* `save_tiff_zyx(path, arr, voxel_size_um_zyx=None, axes="ZYX", ...)`: writes a pre-ordered `(z, y, x)` TIFF and embeds ImageJ-compatible spacing metadata when provided.
 
 
 ## Demo utilities

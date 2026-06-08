@@ -59,7 +59,7 @@ It is intentionally **not** a general-purpose deformable registration framework.
 ## 3D-Specific Limitations
 
 1. **Absolute Minimum Nuclei Count**
-* Unlike 2D, 3D spatial geometry requires more points to lock in a coordinate frame. Both the `pyramid` and `hashing3d` matchers strictly require a minimum of **4 non-degenerate nuclei** to compute a 3D hypothesis (forming a tetrahedron or a local 3D basis frame). If fewer than 4 points are found, the matchers will instantly return a failure.
+* Unlike 2D, 3D spatial geometry requires more points to lock in a coordinate frame. Both the `pyramid` and `hashing` matchers strictly require a minimum of **4 non-degenerate nuclei** to compute a 3D hypothesis (forming a tetrahedron or a local 3D basis frame). If fewer than 4 points are found, the matchers will instantly return a failure.
 
 
 2. **Severe Z-Anisotropy and Biological Shrinkage**

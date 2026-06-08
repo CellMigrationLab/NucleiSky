@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "nucleisky"
 version = "0.2.0"
-description = "NucleiSky2D matching and alignment utilities"
+description = "Constellation-based point-set registration utilities for microscopy in 2D and 3D"
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
@@ -36,6 +36,15 @@ instanseg = [
 simpleitk = [
   "SimpleITK",
 ]
+notebooks = [
+  "ipywidgets>=8.1",
+  "jupyterlab>=4.4",
+  "nbformat>=5.10",
+  "seaborn>=0.13",
+  "tqdm>=4.67",
+  "PyYAML>=6.0",
+  "requests>=2.32",
+]
 all = [
   "cellpose[all]",
   "zarr",
@@ -43,7 +52,19 @@ all = [
   "torch",
   "SimpleITK",
   "instanseg-torch==0.1.1",
+  "ipywidgets>=8.1",
+  "jupyterlab>=4.4",
+  "nbformat>=5.10",
+  "seaborn>=0.13",
+  "tqdm>=4.67",
+  "PyYAML>=6.0",
+  "requests>=2.32",
 ]
+
+[project.urls]
+Homepage = "https://github.com/cellmigrationlab/NucleiSky"
+Issues = "https://github.com/cellmigrationlab/NucleiSky/issues"
+Documentation = "https://github.com/cellmigrationlab/NucleiSky/tree/main/docs"
 
 [tool.setuptools.packages.find]
 where = ["src"]

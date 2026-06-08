@@ -30,7 +30,7 @@ Key terms used throughout this page:
 * **RANSAC**: repeatedly sample small candidate correspondence sets, fit a transform, and keep the transform with the most inliers.
 * **ICP**: refinement step that “nudges” the transform to better align the inliers once a good initialisation exists.
 
-Practical note: NucleiSky2D works in **2D** and expects centroid arrays in `(y, x)` order (typically in microns).
+Practical note: NucleiSky2D works in **2D** and expects centroid arrays in `(y, x)` order, typically in calibrated physical coordinates (µm).
 
 ---
 
@@ -113,7 +113,7 @@ This provides a reasonable inlier requirement for both sparse and dense constell
 ### Graph matcher
 
 **Description**
-The graph matcher builds geometric kNN graphs in both crop and full constellations, derives rotation-robust node descriptors, and optionally fuses those graph features with provided nucleus features (for example morphology). It proposes feature-consistent correspondences, estimates a similarity transform via sampling, and can refine the result with ICP.
+The graph matcher builds geometric kNN graphs in both crop and full constellations, derives rotation-robust node descriptors, and optionally fuses those graph features with provided nucleus features (for example morphology). The graph descriptor stores nearest-neighbor distances normalized by each node's local median neighbor distance, rotation-normalized angle terms (`cos Δ`, `sin Δ`), the local/global median-distance ratio, and degree information. It proposes feature-consistent correspondences, estimates a similarity transform via sampling, and can refine the result with ICP.
 
 **When it shines**
 
@@ -163,7 +163,7 @@ The graph matcher builds geometric kNN graphs in both crop and full constellatio
 ### Triangle matcher
 
 **Description**
-The triangle matcher builds local triangle descriptors from kNN neighbourhoods, matches crop triangles to full-image triangles in feature space, and estimates a similarity transform via sampling. It includes guards against degenerate triangles and can refine with ICP.
+The triangle matcher builds local triangle descriptors from kNN neighbourhoods, matches crop triangles to full-image triangles in feature space, and estimates a similarity transform via sampling. Each triangle descriptor is the two-component `(v_b, v_h)` representation computed from two edge vectors: `v_b` is the normalized projection of one edge onto the other, and signed `v_h` is the normalized perpendicular height. It includes guards against degenerate triangles and can refine with ICP.
 
 **When it shines**
 
@@ -197,7 +197,7 @@ The triangle matcher builds local triangle descriptors from kNN neighbourhoods, 
 ### Quad matcher
 
 **Description**
-The quad matcher forms local quads, builds quad descriptors, proposes correspondences via descriptor matching, and estimates a similarity transform via sampling. It can optionally test 3-of-4 subsets (“triplet hypotheses”) to tolerate one bad point inside a quad, then refine with ICP.
+The quad matcher forms local center-plus-neighbor quads: for each center point, it samples triplets from nearby points. The descriptor sorts the three neighbors by distance from the center, normalizes coordinates by the farthest neighbor distance, aligns the farthest neighbor to a canonical axis, stores normalized distance ratios, aligned coordinates for the two nearer neighbors, and three internal angles. It proposes correspondences via descriptor matching and estimates a similarity transform via sampling. It can optionally test 3-of-4 subsets (“triplet hypotheses”) to tolerate one bad point inside a quad, then refine with ICP.
 
 **When it shines**
 
@@ -231,7 +231,7 @@ The quad matcher forms local quads, builds quad descriptors, proposes correspond
 ### Geometric hashing matcher
 
 **Description**
-The hashing matcher builds a geometric hash table on the full constellation using normalised distance-and-angle relationships derived from local neighbourhoods. It samples crop triplets, looks up compatible bins (including nearby bins to reduce quantisation sensitivity), proposes transforms, and scores them by inlier count. Optional pretesting and early stopping are used to keep runtime manageable on large constellations.
+The hashing matcher builds a geometric hash table on the full constellation using anchor pairs `(i, j)` whose baseline is near `base_distance_um`. For each third point `k`, it projects the vector from `i` to `k` into the local 2D frame defined by `i→j`, stores normalized radius `r_norm = ||rel|| / ||i-j||` and angle `theta`, and bins them with `bin_size_r` and `angle_bin_deg`. It samples analogous crop triplets, looks up compatible bins (including nearby bins to reduce quantisation sensitivity), proposes transforms, and scores them by inlier count. Optional pretesting and early stopping are used to keep runtime manageable on large constellations.
 
 **When it shines**
 
