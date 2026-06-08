@@ -71,7 +71,7 @@ To install the full toolkit for your own scripts: `pip install "nucleisky[all]"`
 
 ## ⚠️ The Two Golden Rules (Make or Break)
 
-1. **Pixel and Voxel size matter immensely.** NucleiSky measures physical distances in micrometers. If your scale metadata (µm/px) is missing or wrong, the search bounds break and alignment fails. Always verify your metadata! See [Data Preparation](docs/2D/data_preparation.md).
+1. **Pixel and Voxel size matter immensely.** NucleiSky measures physical distances in micrometres. If your scale metadata (µm/px) is missing or wrong, the search bounds break, and alignment fails. Always verify your metadata! See [Data Preparation](docs/2D/data_preparation.md).
 2. **Segmentation quality drives match quality.** NucleiSky registers point sets. Missing, massively merged, or noisy nuclei obscure the constellation and make matching much harder. See [Segmentation](docs/segmentation.md).
 
 ---
@@ -96,20 +96,6 @@ To install the full toolkit for your own scripts: `pip install "nucleisky[all]"`
 ---
 
 
-## 🧪 Testing (Contributor Quick Matrix)
-
-```bash
-pytest -q -m "not slow"
-pytest -q
-pytest -q -m slow
-pytest -q -m "optional_backend or slow"
-pytest -q -W error::FutureWarning
-```
-
-Marker meanings: `geometry` (numerical geometry regressions), `integration` (multi-component workflows), `slow` (longer-running suites), `stochastic` (seeded stochastic behavior), `optional_backend` (requires optional deps). Optional-backend tests are expected to skip when extras (e.g., SimpleITK/Cellpose/InstanSeg) are not installed.
-
-For transform artifact interpretation and canonical transform field names, see [Exports → Canonical transform schema](docs/exports.md#5-canonical-transform-schema-2d-and-3d).
-
 ## 🤝 Contributing
 
 We welcome PRs, feature ideas, and bug reports! For the fastest triage, please use our GitHub issue forms.
@@ -131,7 +117,7 @@ If you find this tool useful in your research, please cite:
 @misc{nucleisky,
   title        = {NucleiSky: Constellation-based Point-Set Registration for Microscopy},
   author       = {CellMigrationLab},
-  year         = {2024},
+  year         = {2026},
   howpublished = {\url{[https://github.com/cellmigrationlab/NucleiSky](https://github.com/cellmigrationlab/NucleiSky)}},
   note         = {Version X.Y.Z}
 }
