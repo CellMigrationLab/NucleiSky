@@ -1,11 +1,11 @@
-from setuptools import setup, find_packages
+"""Compatibility shim for editable installs.
 
-setup(
-    name="nucleisky",
-    version="0.0.1",
-    package_dir={"": "src"},
-    packages=find_packages(where="src"),
-    python_requires=">=3.12.13",
-    install_requires=[
-    ],
-)
+Package metadata, dependencies, and Python-version constraints are defined in
+``pyproject.toml``. Keeping this file minimal prevents legacy ``setup.py``
+metadata from drifting out of sync with the release metadata.
+"""
+
+from setuptools import setup
+
+
+setup()

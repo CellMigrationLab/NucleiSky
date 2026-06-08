@@ -4,13 +4,13 @@
 
 # NucleiSky ✨🔬
 
-**Constellation-based point-set registration for microscopy in 2D and 3D** *Align partial views to whole-slide images or thick tissue volumes — scale, rotation, and origin don’t matter.*
+**Constellation-based point-set registration for microscopy in 2D and 3D** *Align calibrated partial views to whole-slide images or thick tissue volumes using landmark geometry.*
 
 [![PyPI](https://img.shields.io/pypi/v/nucleisky)](https://pypi.org/project/nucleisky/)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 [![Downloads](https://img.shields.io/pypi/dm/nucleisky)](https://pypi.org/project/nucleisky/)
-[![Open 2D App in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/cellmigrationlab/NucleiSky/blob/main/notebooks/NucleiSky2DApp.ipynb)
-[![Open 3D App in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/cellmigrationlab/NucleiSky/blob/main/notebooks/NucleiSky3DApp.ipynb)
+[![Open 2D App in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/cellmigrationlab/NucleiSky/blob/main/notebooks/NucleiSky2DApp/NucleiSky2DApp.ipynb)
+[![Open 3D App in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/cellmigrationlab/NucleiSky/blob/main/notebooks/NucleiSky3DApp/NucleiSky3DApp.ipynb)
 
 </div>
 
@@ -20,10 +20,10 @@
 
 Microscopy alignment gets messy when images are rotated, scaled, or captured on completely different platforms. NucleiSky solves this by treating your nuclei like **stars in a constellation**. 
 
-Instead of relying on pixel intensity similarity, NucleiSky matches the *geometry* of the cells. Whether your data is a 2D field of view or a thick 3D tissue stack, NucleiSky asks: *Which mathematical transform makes these two constellations overlap perfectly?*
+Instead of relying on pixel intensity similarity, NucleiSky matches the *geometry* of the cells. Whether your data is a 2D field of view or a 3D tissue stack, NucleiSky asks: *Which calibrated similarity transform best overlaps these two landmark constellations?*
 
 ### 👩‍🔬 For the Biologist: The "Telescope" Setup
-Imagine looking through a small telescope at a random patch of the night sky. Even without seeing the whole galaxy, you can figure out exactly where you are by matching your small star pattern against a full sky map. NucleiSky does this for your tissue: it anchors your high-magnification ROIs into whole-slide scans, perfectly recovering the rotation, zoom, and shift.
+Imagine looking through a small telescope at a random patch of the night sky. Even without seeing the whole galaxy, you can figure out exactly where you are by matching your small star pattern against a full sky map. NucleiSky does this for your tissue: it anchors your high-magnification ROIs into whole-slide scans, estimating the rotation, scale, and shift for downstream review.
 
 ### 👨‍💻 For the Developer: The Constellation Engine
 NucleiSky is a robust, extensible point-set registration pipeline built for real-world microscopy noise. We provide modular feature extraction, dynamically scaled RANSAC, geometric hashing, and tetrahedral pyramid matchers, ready to be dropped into your automated spatial pipelines.
@@ -36,14 +36,20 @@ Choose your launchpad and get aligning in minutes:
 
 ### 🌟 Try it in the Browser (Fastest)
 No installation required. Run our interactive apps directly in Google Colab:
-* [**Launch 2D App**](https://colab.research.google.com/github/cellmigrationlab/NucleiSky/blob/main/notebooks/NucleiSky2DApp.ipynb)
-* [**Launch 3D App**](https://colab.research.google.com/github/cellmigrationlab/NucleiSky/blob/main/notebooks/NucleiSky3DApp.ipynb)
+* [**Launch 2D App**](https://colab.research.google.com/github/cellmigrationlab/NucleiSky/blob/main/notebooks/NucleiSky2DApp/NucleiSky2DApp.ipynb)
+* [**Launch 3D App**](https://colab.research.google.com/github/cellmigrationlab/NucleiSky/blob/main/notebooks/NucleiSky3DApp/NucleiSky3DApp.ipynb)
 
 ### 🖥️ No-Code Desktop GUI
 Prefer a local app? Use our standalone [desktop installer](.tools/docs/download_executable.md).
 
 ### 🐍 Python Workflows (Local Installation)
-To install the full toolkit for your own scripts: `pip install "nucleisky[all]"`
+To install the package for your own scripts:
+
+```bash
+pip install nucleisky
+```
+
+Use `pip install "nucleisky[all]"` when you also need optional segmentation, OME-Zarr, SimpleITK, and notebook dependencies. Core matching runs on CPU; GPU support only affects optional deep-learning segmentation backends such as Cellpose and InstanSeg.
 
 **2D Pipeline (ROI → Whole Slide)**
 1. [2D Data Preparation](docs/2D/data_preparation.md)
@@ -61,9 +67,9 @@ To install the full toolkit for your own scripts: `pip install "nucleisky[all]"`
 
 ## 🔑 Key Capabilities
 
-* **2D & 3D Registration:** Unified logic for flat slides and thick tissue volumes.
-* **Scale-Invariant:** Matches a 10x overview to a 60x confocal crop effortlessly.
-* **Rotation-Invariant:** Completely robust across full 0 to 360-degree rotations.
+* **2D & proof-of-concept 3D registration:** Shared constellation logic for flat slides and volumetric stacks.
+* **Scale-aware:** Matches images captured at different pixel/voxel sizes when calibration metadata is correct.
+* **Rotation-aware:** Supports unrestricted rotations unless you configure an angle bound.
 * **Modality-Agnostic:** If you can segment the nuclei (or spots/cells), NucleiSky can match them.
 * **Export-Ready:** Saves transforms, warped hyperstacks, and QC overlays for downstream analysis.
 
@@ -118,7 +124,9 @@ If you find this tool useful in your research, please cite:
   title        = {NucleiSky: Constellation-based Point-Set Registration for Microscopy},
   author       = {CellMigrationLab},
   year         = {2026},
-  howpublished = {\url{[https://github.com/cellmigrationlab/NucleiSky](https://github.com/cellmigrationlab/NucleiSky)}},
+  howpublished = {\url{https://github.com/cellmigrationlab/NucleiSky}},
   note         = {Version X.Y.Z}
 }
 ```
+
+A manuscript-specific citation and DOI should be added before public release.
