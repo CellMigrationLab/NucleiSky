@@ -22,7 +22,7 @@ dependencies = [
 
 [project.optional-dependencies]
 segmentation = [
-  "cellpose[all]",
+  "cellpose==4.1.1",
   "instanseg-torch==0.1.1",
 ]
 zarr = [
@@ -46,7 +46,7 @@ notebooks = [
   "requests>=2.32",
 ]
 all = [
-  "cellpose[all]",
+  "cellpose==4.1.1",
   "zarr",
   "numcodecs",
   "torch",
