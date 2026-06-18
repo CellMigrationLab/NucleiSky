@@ -36,14 +36,14 @@ On [Step 3](#step-3-adjust-it-to-your-microscope-and-camera-settings) we will in
 
 Click on the following buttons bellow to download the files and take them to the computer where you have NIS-Elements AR installed.
 
-<a href="https://raw.githubusercontent.com/CellMigrationLab/NucleiSky/main/smart_microscopy/NucleiSky_JOBS.bin" target="_blank">
-    <img src="img.shields.io/badge/Download JOBS file-gray?logo=nikon&style=for-the-badge" alt="Download JOBS file" width="250">
+<a href="https://raw.githubusercontent.com/CellMigrationLab/NucleiSky/blob/main/smart_microscopy/NucleiSky_JOBS.bin" target="_blank">
+    <img src="https://img.shields.io/badge/Download JOBS file-gray?logo=nikon&style=for-the-badge" alt="Download JOBS file" width="250">
 </a>
 
 > You can interactively take a look into the NucleiSky JOBS in the following [website](./assets/JOBS_HTML.html)
 
-<a href="https://raw.githubusercontent.com/CellMigrationLab/NucleiSky/main/smart_microscopy/NucleiSky_GA3.ga3" target="_blank">
-    <img src="img.shields.io/badge/Download GA3 file-gray?logo=nikon&style=for-the-badge" alt="Download GA3 file" width="250">
+<a href="https://raw.githubusercontent.com/CellMigrationLab/NucleiSky/blob/main/smart_microscopy/NucleiSky_GA3.ga3" target="_blank">
+    <img src="https://img.shields.io/badge/Download GA3 file-gray?logo=nikon&style=for-the-badge" alt="Download GA3 file" width="250">
 </a>
 
 > You can interactively take a look into the NucleiSky GA3 in the following [website](./assets/GA3_HTML.html)
@@ -154,8 +154,8 @@ There, the first thing that you will need to do is to point the Python interpret
 Once that is done, you will need to include the Python code. Most probably, the code will be already loaded, but in case it is not, you can copy and paste the code from the [GA3_Python.py](../../smart_microscopy/GA3_Python.py) file. 
 
 Once loaded, there are some lines that you will need to adjust:
- - 
- - 
+ - [`sys.path.insert(0, r"H:\github\nucleisky-main\src")`](https://github.com/CellMigrationLab/NucleiSky/blob/cfa172d7980446db51224423d896746d75dd88e7/smart_microscopy/GA3_Python.py#L14): Download the NucleiSky repository into the USB and point to the `src` folder in your computer.
+ - [output_path = r"G:"](https://github.com/CellMigrationLab/NucleiSky/blob/cfa172d7980446db51224423d896746d75dd88e7/smart_microscopy/GA3_Python.py#L25): Replace the path with the one where you want to save the results of the NucleiSky run. This should be a folder in your computer or in the USB stick.
 
 Finally, remember to save it. In order to do that you will need to save it in three different places: 
 
