@@ -40,13 +40,13 @@ Click on the following buttons bellow to download the files and take them to the
     <img src="https://img.shields.io/badge/Download JOBS file-gray?logo=nikon&style=for-the-badge" alt="Download JOBS file" width="250">
 </a>
 
-> You can interactively take a look into the NucleiSky JOBS in the following [website](./assets/JOBS_HTML.html)
+> You can interactively take a look into the NucleiSky JOBS in the following [website](https://htmlpreview.github.io/?https://github.com/CellMigrationLab/NucleiSky/blob/main/docs/smart_microscopy/assets/JOBS_HTML.html)
 
 <a href="https://raw.githubusercontent.com/CellMigrationLab/NucleiSky/blob/main/smart_microscopy/NucleiSky_GA3.ga3" target="_blank">
     <img src="https://img.shields.io/badge/Download GA3 file-gray?logo=nikon&style=for-the-badge" alt="Download GA3 file" width="250">
 </a>
 
-> You can interactively take a look into the NucleiSky GA3 in the following [website](./assets/GA3_HTML.html)
+> You can interactively take a look into the NucleiSky GA3 in the following [website]([./assets/GA3_HTML.html](https://htmlpreview.github.io/?https://github.com/CellMigrationLab/NucleiSky/blob/main/docs/smart_microscopy/assets/GA3_HTML.html))
 
 #### 2. Open NIS-Elements AR and go to the JOBS tab
 
