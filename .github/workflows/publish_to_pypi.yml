@@ -1,0 +1,213 @@
+name: Publish to PyPI on version change
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "pyproject.toml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  detect-version-change:
+    name: Detect pyproject.toml version change
+    runs-on: ubuntu-latest
+
+    outputs:
+      changed: ${{ steps.detect.outputs.changed }}
+      version: ${{ steps.detect.outputs.version }}
+      package_name: ${{ steps.detect.outputs.package_name }}
+      exists_on_pypi: ${{ steps.check_pypi.outputs.exists_on_pypi }}
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Detect whether project.version changed
+        id: detect
+        run: |
+          python - <<'PY'
+          import os
+          import subprocess
+          import tomllib
+          from pathlib import Path
+
+          def set_output(name, value):
+              with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as f:
+                  f.write(f"{name}={value}\n")
+
+          def read_current_pyproject():
+              return Path("pyproject.toml").read_text(encoding="utf-8")
+
+          def read_previous_pyproject():
+              before_sha = os.environ.get("GITHUB_EVENT_BEFORE", "")
+
+              if not before_sha or set(before_sha) == {"0"}:
+                  return None
+
+              try:
+                  return subprocess.check_output(
+                      ["git", "show", f"{before_sha}:pyproject.toml"],
+                      text=True,
+                      stderr=subprocess.DEVNULL,
+                  )
+              except subprocess.CalledProcessError:
+                  return None
+
+          current_text = read_current_pyproject()
+          current = tomllib.loads(current_text)
+
+          package_name = current["project"]["name"]
+          current_version = current["project"]["version"]
+
+          previous_text = reaFd_previous_pyproject()
+
+          if previous_text is None:
+              previous_version = None
+              changed = "true"
+          else:
+              previous = tomllib.loads(previous_text)
+              previous_version = previous["project"]["version"]
+              changed = str(previous_version != current_version).lower()
+
+          print(f"Package: {package_name}")
+          print(f"Previous version: {previous_version}")
+          print(f"Current version: {current_version}")
+          print(f"Version changed: {changed}")
+
+          set_output("package_name", package_name)
+          set_output("version", current_version)
+          set_output("changed", changed)
+          PY
+        env:
+          GITHUB_EVENT_BEFORE: ${{ github.event.before }}
+
+      - name: Check whether this version already exists on PyPI
+        id: check_pypi
+        if: steps.detect.outputs.changed == 'true'
+        run: |
+          python - <<'PY'
+          import os
+          import urllib.error
+          import urllib.request
+
+          package_name = "${{ steps.detect.outputs.package_name }}"
+          version = "${{ steps.detect.outputs.version }}"
+
+          url = f"https://pypi.org/pypi/{package_name}/{version}/json"
+
+          exists = "false"
+
+          try:
+              with urllib.request.urlopen(url) as response:
+                  if response.status == 200:
+                      exists = "true"
+          except urllib.error.HTTPError as error:
+              if error.code == 404:
+                  exists = "false"
+              else:
+                  raise
+
+          print(f"{package_name} {version} exists on PyPI: {exists}")
+
+          with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as f:
+              f.write(f"exists_on_pypi={exists}\n")
+          PY
+
+  test:
+    name: Test package
+    needs: detect-version-change
+    if: needs.detect-version-change.outputs.changed == 'true' && needs.detect-version-change.outputs.exists_on_pypi != 'true'
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.11", "3.12"]
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install package and test dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e .
+          python -m pip install pytest
+
+      - name: Run tests
+        run: |
+          pytest
+
+  build:
+    name: Build distribution
+    needs:
+      - detect-version-change
+      - test
+    if: needs.detect-version-change.outputs.changed == 'true' && needs.detect-version-change.outputs.exists_on_pypi != 'true'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.x"
+
+      - name: Install build
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install build
+
+      - name: Build wheel and source distribution
+        run: |
+          python -m build
+
+      - name: Store built distributions
+        uses: actions/upload-artifact@v5
+        with:
+          name: python-package-distributions
+          path: dist/
+
+  publish-to-pypi:
+    name: Publish to PyPI
+    needs:
+      - detect-version-change
+      - build
+    if: needs.detect-version-change.outputs.changed == 'true' && needs.detect-version-change.outputs.exists_on_pypi != 'true'
+    runs-on: ubuntu-latest
+
+    environment:
+      name: pypi
+      url: https://pypi.org/p/nucleisky
+
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - name: Download built distributions
+        uses: actions/download-artifact@v6
+        with:
+          name: python-package-distributions
+          path: dist/
+
+      - name: Publish package distributions to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1

@@ -26,15 +26,15 @@ segmentation = [
   "instanseg-torch==0.1.1",
 ]
 zarr = [
-  "zarr",
-  "numcodecs",
+  "zarr==3.2.1",
+  "numcodecs==0.16.5",
 ]
 instanseg = [
   "instanseg-torch==0.1.1",
-  "torch",
+  "torch==2.10.0",
 ]
 simpleitk = [
-  "SimpleITK",
+  "SimpleITK==2.5.5",
 ]
 notebooks = [
   "ipywidgets>=8.1",
@@ -47,10 +47,10 @@ notebooks = [
 ]
 all = [
   "cellpose==4.1.1",
-  "zarr",
-  "numcodecs",
-  "torch",
-  "SimpleITK",
+  "zarr==3.2.1",
+  "numcodecs==0.16.5",
+  "torch==2.10.0",
+  "SimpleITK==2.5.5",
   "instanseg-torch==0.1.1",
   "ipywidgets>=8.1",
   "jupyterlab>=4.4",
