@@ -22,5 +22,5 @@ description: 'This notebook ''NucleiSky3DApp.ipynb'' is for running NucleiSky3D 
   segmentation noise, or differing magnifications. '
 linux_dependencies: []
 macos_dependencies: []
-python_version: 3.12.13
+python_version: 3.12.12
 windows_dependencies: []
