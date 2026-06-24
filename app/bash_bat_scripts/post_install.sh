@@ -1,8 +1,8 @@
 #!/bin/bash
 set -e
 echo "Running post_install" > "$PREFIX/menuinst_debug.log"
-BASE_REQUIREMENTS="$PREFIX/PROJECT_NAME/requirements.txt"
-GPU_REQUIREMENTS="$PREFIX/PROJECT_NAME/requirements_gpu.txt"
+BASE_REQUIREMENTS="$PREFIX/NucleiSky/requirements.txt"
+GPU_REQUIREMENTS="$PREFIX/NucleiSky/requirements_gpu.txt"
 SELECTED_REQUIREMENTS="$BASE_REQUIREMENTS"
 
 if [ -f "$GPU_REQUIREMENTS" ]; then

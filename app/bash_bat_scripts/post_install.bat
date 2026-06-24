@@ -1,8 +1,8 @@
 @ECHO OFF
 SETLOCAL
 echo Running post_install > "%PREFIX%\menuinst_debug.log"
-SET "BASE_REQUIREMENTS=%PREFIX%\PROJECT_NAME\requirements.txt"
-SET "GPU_REQUIREMENTS=%PREFIX%\PROJECT_NAME\requirements_gpu.txt"
+SET "BASE_REQUIREMENTS=%PREFIX%\NucleiSky\requirements.txt"
+SET "GPU_REQUIREMENTS=%PREFIX%\NucleiSky\requirements_gpu.txt"
 SET "SELECTED_REQUIREMENTS=%BASE_REQUIREMENTS%"
 
 IF EXIST "%GPU_REQUIREMENTS%" (
