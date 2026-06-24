@@ -14,7 +14,10 @@ VERSION_LINE_RE = re.compile(
     r'^(version:\s*)(?P<quote>["\']?)(?P<version>\d+\.\d+\.\d+)(?P=quote)(?P<trailing>\s*(?:#.*)?)$',
     re.MULTILINE,
 )
-THANKS_LINE_RE = re.compile(r'(Thank you! You have successfully installed [^\n]*)(\d+\.\d+\.\d+)(!)')
+CONCLUSION_LINE_RE = re.compile(
+    r'^(conclusion_text:\s*)(?P<quote>["\'])(?P<body>.*?)(?P=quote)(?P<trailing>\s*(?:#.*)?)$',
+    re.MULTILINE,
+)
 PKG_VERSION_RE = re.compile(r'^(\s*SET\s+"PKG_VERSION=)(\d+\.\d+\.\d+)("\s*)$', re.MULTILINE)
 POST_INSTALL = ROOT / "app" / "bash_bat_scripts" / "post_install.bat"
 
@@ -88,8 +91,8 @@ def bump_construct_text(text: str, old_version: str, new_version: str) -> str:
     """Return updated file text with bumped version, preserving YAML structure/comments.
 
     - Updates the `version: "X.Y.Z"` line.
-    - Updates the version inside the 'Thank you for installing ... vX.Y.Z!' line
-      within `conclusion_text` if present.
+    - Updates the version inside `conclusion_text`, replacing either
+      `VERSION_NUMBER` or the previous explicit version if present.
     """
     # 1) Update the explicit version line
     def _repl_version(m: re.Match) -> str:
@@ -98,11 +101,17 @@ def bump_construct_text(text: str, old_version: str, new_version: str) -> str:
 
     text = VERSION_LINE_RE.sub(_repl_version, text, count=1)
 
-    # 2) Update the thank-you line version (only first occurrence)
-    text = THANKS_LINE_RE.sub(lambda m: f"{m.group(1)}{new_version}{m.group(3)}", text, count=1)
+    # 2) Update the version inside conclusion_text if present.
+    def _repl_conclusion(m: re.Match) -> str:
+        body = m.group("body")
+        if "VERSION_NUMBER" in body:
+            updated_body = body.replace("VERSION_NUMBER", new_version)
+        else:
+            updated_body = body.replace(old_version, new_version)
+        return f"{m.group(1)}{m.group('quote')}{updated_body}{m.group('quote')}{m.group('trailing')}"
+
+    text = CONCLUSION_LINE_RE.sub(_repl_conclusion, text, count=1)
     return text
-
-
 def bump_post_install_bat(new_version: str) -> None:
     if not POST_INSTALL.exists():
         return
