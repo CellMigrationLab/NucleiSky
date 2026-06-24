@@ -18,4 +18,4 @@ dependencies:
 - numba==0.60.0
 description: This notebook 'NucleiSky3DBenchmarking.ipynb' is for identify the minimal
   number of nuclei required to identify a patch in a large image.
-python_version: 3.12.12
+python_version: 3.12.13
