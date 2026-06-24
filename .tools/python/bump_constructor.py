@@ -3,6 +3,13 @@ from pathlib import Path
 import yaml
 import re
 
+DEBUG_PREFIX = "[bump_constructor]"
+
+
+def debug(message: str) -> None:
+    print(f"{DEBUG_PREFIX} {message}")
+
+
 def load_construct(path: Path) -> dict:
     return yaml.safe_load(path.read_text(encoding="utf-8"))
 
@@ -94,6 +101,7 @@ def ensure_extra_files(construct_data: dict, notebooks_root: Path, src_root: Pat
 
     # Extract the project folder name from existing mappings
     project_folder = extract_project_folder(extra_files)
+    debug(f"Using project folder: {project_folder}")
 
     # Normalize existing entries into a dict for quick lookup
     existing_sources = set()
@@ -199,6 +207,9 @@ def ensure_extra_files(construct_data: dict, notebooks_root: Path, src_root: Pat
     normalized_items.sort(key=sort_key)
     construct_data["extra_files"] = normalized_items
 
+    debug(f"Final extra_files entries: {len(normalized_items)}")
+    for item in normalized_items:
+        debug(f"extra_files entry: {item}")
     return ntbk_added, src_added
 
 
