@@ -1,6 +1,23 @@
 @ECHO OFF
+SETLOCAL
 echo Running post_install > "%PREFIX%\menuinst_debug.log"
-"%PREFIX%\python.exe" -m pip install -r "%PREFIX%\NucleiSky\requirements.txt" >> "%PREFIX%\menuinst_debug.log"
+SET "BASE_REQUIREMENTS=%PREFIX%\PROJECT_NAME\requirements.txt"
+SET "GPU_REQUIREMENTS=%PREFIX%\PROJECT_NAME\requirements_gpu.txt"
+SET "SELECTED_REQUIREMENTS=%BASE_REQUIREMENTS%"
+
+IF EXIST "%GPU_REQUIREMENTS%" (
+    where nvidia-smi >NUL 2>&1
+    IF ERRORLEVEL 1 (
+        echo NVIDIA GPU not detected, installing CPU requirements from "%BASE_REQUIREMENTS%" >> "%PREFIX%\menuinst_debug.log"
+    ) ELSE (
+        echo NVIDIA GPU detected, installing GPU requirements from "%GPU_REQUIREMENTS%" >> "%PREFIX%\menuinst_debug.log"
+        SET "SELECTED_REQUIREMENTS=%GPU_REQUIREMENTS%"
+    )
+) ELSE (
+    echo GPU requirements file not found, installing CPU requirements from "%BASE_REQUIREMENTS%" >> "%PREFIX%\menuinst_debug.log"
+)
+
+"%PREFIX%\python.exe" -m pip install -r "%SELECTED_REQUIREMENTS%" >> "%PREFIX%\menuinst_debug.log"
 
 IF EXIST "%PREFIX%\NucleiSky\requirements-windows.txt" (
     "%PREFIX%\python.exe" -m pip install -r "%PREFIX%\NucleiSky\requirements-windows.txt" >> "%PREFIX%\menuinst_debug.log"
@@ -35,4 +52,4 @@ reg add "%ARP_KEY%" /v NoModify /t REG_DWORD /d 1 /f >> "%PREFIX%\menuinst_debug
 reg add "%ARP_KEY%" /v NoRepair /t REG_DWORD /d 1 /f >> "%PREFIX%\menuinst_debug.log" 2>&1
 
 echo Post-install completed!
-SetLocal EnableDelayedExpansion
+ENDLOCAL

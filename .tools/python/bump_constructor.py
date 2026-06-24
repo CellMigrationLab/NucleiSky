@@ -45,6 +45,12 @@ def ensure_requirements_in_extra_files(construct_data: dict):
     extra_files = construct_data.get("extra_files")
     if extra_files is None:
         extra_files = []
+    gpu_requirements_included = any(
+        isinstance(item, dict) and "requirements_gpu.txt" in item for item in extra_files
+    )
+    if not gpu_requirements_included and Path("requirements_gpu.txt").exists():
+        extra_files.append({"requirements_gpu.txt": "PROJECT_NAME/requirements_gpu.txt"})
+
         construct_data["extra_files"] = extra_files
 
     # Check if requirements.txt is included, if not, add it

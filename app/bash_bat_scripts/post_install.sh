@@ -1,8 +1,25 @@
 #!/bin/bash
 set -e
 echo "Running post_install" > "$PREFIX/menuinst_debug.log"
+BASE_REQUIREMENTS="$PREFIX/PROJECT_NAME/requirements.txt"
+GPU_REQUIREMENTS="$PREFIX/PROJECT_NAME/requirements_gpu.txt"
+SELECTED_REQUIREMENTS="$BASE_REQUIREMENTS"
 
-"$PREFIX/bin/python" -m pip install -r "$PREFIX/NucleiSky/requirements.txt" >> "$PREFIX/menuinst_debug.log"
+if [ -f "$GPU_REQUIREMENTS" ]; then
+    if [[ "$OSTYPE" == "darwin"* ]]; then
+        echo "macOS detected, installing CPU requirements from $BASE_REQUIREMENTS" >> "$PREFIX/menuinst_debug.log"
+    elif command -v nvidia-smi >/dev/null 2>&1; then
+        echo "NVIDIA GPU detected, installing GPU requirements from $GPU_REQUIREMENTS" >> "$PREFIX/menuinst_debug.log"
+        SELECTED_REQUIREMENTS="$GPU_REQUIREMENTS"
+    else
+        echo "NVIDIA GPU not detected, installing CPU requirements from $BASE_REQUIREMENTS" >> "$PREFIX/menuinst_debug.log"
+    fi
+else
+    echo "GPU requirements file not found, installing CPU requirements from $BASE_REQUIREMENTS" >> "$PREFIX/menuinst_debug.log"
+fi
+
+
+"$PREFIX/bin/python" -m pip install -r "$SELECTED_REQUIREMENTS" >> "$PREFIX/menuinst_debug.log"
 
 # Check if the running platform is macOS or Linux and install additional requirements if the corresponding file exists
 if [[ "$OSTYPE" == "darwin"* ]]; then
