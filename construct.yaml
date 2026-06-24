@@ -11,7 +11,6 @@ keep_pkgs: false
 register_python: false
 initialize_conda: false
 extra_files:
-- .tools/meta/src_change.yaml: NucleiSky/src_change.yaml
 - app/bash_bat_scripts/pre_uninstall.sh: pre_uninstall.sh
 - app/bash_bat_scripts/uninstall.sh: uninstall.sh
 - app/logo/Gemini_Generated_Image_kc5ezfkc5ezfkc5e.icns: NucleiSky/Gemini_Generated_Image_kc5ezfkc5ezfkc5e.icns
@@ -31,7 +30,6 @@ extra_files:
 - notebooks/notebook_latest_versions.yaml: NucleiSky/notebook_latest_versions.yaml
 - requirements.txt: NucleiSky/requirements.txt
 - requirements_gpu.txt: NucleiSky/requirements_gpu.txt
-- setup.py: NucleiSky/setup.py
 - src/nucleisky/nucleisky2d/config.py: NucleiSky/src/nucleisky/nucleisky2d/config.py
 - src/nucleisky/nucleisky2d/demo_utils.py: NucleiSky/src/nucleisky/nucleisky2d/demo_utils.py
 - src/nucleisky/nucleisky2d/export.py: NucleiSky/src/nucleisky/nucleisky2d/export.py
