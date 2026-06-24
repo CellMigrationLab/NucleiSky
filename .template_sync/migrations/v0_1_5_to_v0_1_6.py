@@ -31,59 +31,263 @@ def update_bump_constructor(repo_root: Path) -> bool:
 
     original_text = read_text(path)
     newline = detect_newline(original_text)
-    lines = original_text.splitlines(keepends=True)
+    updated_text = original_text
     changed = False
 
     if "DEBUG_PREFIX = \"[bump_constructor]\"" not in original_text:
-        for index, line in enumerate(lines):
-            if line.rstrip("\r\n") == "import re":
-                helper_lines = [
-                    "",
-                    'DEBUG_PREFIX = "[bump_constructor]"',
-                    "",
-                    "",
-                    "def debug(message: str) -> None:",
-                    '    print(f"{DEBUG_PREFIX} {message}")',
-                    "",
-                ]
-                insertion = [entry + newline for entry in helper_lines]
-                for offset, entry in enumerate(insertion, start=1):
-                    lines.insert(index + offset, entry)
-                changed = True
-                break
-        else:
+        helper_anchor = "import re" + newline
+        helper_block = newline.join(
+            [
+                "import re",
+                "",
+                'DEBUG_PREFIX = "[bump_constructor]"',
+                "",
+                "",
+                "def debug(message: str) -> None:",
+                '    print(f"{DEBUG_PREFIX} {message}")',
+                "",
+            ]
+        )
+        if helper_anchor not in updated_text:
             raise ValueError(f"Unable to find import insertion point in {BUMP_CONSTRUCTOR_PATH}")
+        updated_text = updated_text.replace(helper_anchor, helper_block + newline, 1)
+        changed = True
 
-    if 'debug(f"Using project folder: {project_folder}")' not in "".join(lines):
-        for index, line in enumerate(lines):
-            if line.rstrip("\r\n") == "    project_folder = extract_project_folder(extra_files)":
-                lines.insert(index + 1, '    debug(f"Using project folder: {project_folder}")' + newline)
-                changed = True
-                break
-        else:
-            raise ValueError(f"Unable to find project folder insertion point in {BUMP_CONSTRUCTOR_PATH}")
+    requirements_start = "def ensure_requirements_in_extra_files(construct_data: dict):"
+    requirements_end = "def ensure_extra_files(construct_data: dict, notebooks_root: Path, src_root: Path) -> int:"
+    requirements_replacement = newline.join(
+        [
+            "def ensure_requirements_in_extra_files(construct_data: dict):",
+            '    extra_files = construct_data.get("extra_files")',
+            "    if extra_files is None:",
+            "        extra_files = []",
+            '        construct_data["extra_files"] = extra_files',
+            "",
+            "    # Check if requirements.txt is included, if not, add it",
+            "    requirements_included = any(",
+            '        isinstance(item, dict) and "requirements.txt" in item for item in extra_files',
+            "    )",
+            "    if not requirements_included:",
+            '        extra_files.append({"requirements.txt": "PROJECT_NAME/requirements.txt"})',
+            '        debug("Added mapping for requirements.txt")',
+            "    else:",
+            '        debug("requirements.txt mapping already present")',
+            "",
+            "    gpu_requirements_included = any(",
+            '        isinstance(item, dict) and "requirements_gpu.txt" in item for item in extra_files',
+            "    )",
+            '    if not gpu_requirements_included and Path("requirements_gpu.txt").exists():',
+            '        extra_files.append({"requirements_gpu.txt": "PROJECT_NAME/requirements_gpu.txt"})',
+            '        debug("Added mapping for requirements_gpu.txt")',
+            '    elif Path("requirements_gpu.txt").exists():',
+            '        debug("requirements_gpu.txt mapping already present")',
+            "    else:",
+            '        debug("requirements_gpu.txt not found, skipping GPU requirements mapping")',
+            "    ",
+            "    # Check if requirements-linux.txt exists and is included, if not, add it",
+            '    if Path("requirements-linux.txt").exists():',
+            "        linux_included = any(",
+            '            isinstance(item, dict) and "requirements-linux.txt" in item for item in extra_files',
+            "        )",
+            "        if not linux_included:",
+            '            extra_files.append({"requirements-linux.txt": "PROJECT_NAME/requirements-linux.txt"})',
+            '            debug("Added mapping for requirements-linux.txt")',
+            "        else:",
+            '            debug("requirements-linux.txt mapping already present")',
+            "    else:",
+            '        debug("requirements-linux.txt not found, skipping Linux requirements mapping")',
+            "    # Check if requirements-windows.txt exists and is included, if not, add it",
+            '    if Path("requirements-windows.txt").exists():',
+            "        windows_included = any(",
+            '            isinstance(item, dict) and "requirements-windows.txt" in item for item in extra_files',
+            "        )",
+            "        if not windows_included:",
+            '            extra_files.append({"requirements-windows.txt": "PROJECT_NAME/requirements-windows.txt"})',
+            '            debug("Added mapping for requirements-windows.txt")',
+            "        else:",
+            '            debug("requirements-windows.txt mapping already present")',
+            "    else:",
+            '        debug("requirements-windows.txt not found, skipping Windows requirements mapping")',
+            "    ",
+            "    # Check if requirements-macos.txt exists and is included, if not, add it",
+            '    if Path("requirements-macos.txt").exists():',
+            "        macos_included = any(",
+            '            isinstance(item, dict) and "requirements-macos.txt" in item for item in extra_files',
+            "        )",
+            "        if not macos_included:",
+            '            extra_files.append({"requirements-macos.txt": "PROJECT_NAME/requirements-macos.txt"})',
+            '            debug("Added mapping for requirements-macos.txt")',
+            "        else:",
+            '            debug("requirements-macos.txt mapping already present")',
+            "    else:",
+            '        debug("requirements-macos.txt not found, skipping macOS requirements mapping")',
+            "",
+            "    # Update the construct data with the modified extra_files",
+            '    construct_data["extra_files"] = extra_files',
+            "",
+        ]
+    )
 
-    summary_marker = '    debug(f"Final extra_files entries: {len(normalized_items)}")'
-    if summary_marker not in "".join(lines):
-        summary_lines = [
+    if 'debug("Added mapping for requirements.txt")' not in updated_text:
+        start_index = updated_text.find(requirements_start)
+        end_index = updated_text.find(requirements_end)
+        if start_index == -1 or end_index == -1 or end_index <= start_index:
+            raise ValueError(f"Unable to replace ensure_requirements_in_extra_files() in {BUMP_CONSTRUCTOR_PATH}")
+        updated_text = updated_text[:start_index] + requirements_replacement + updated_text[end_index:]
+        changed = True
+
+    extra_start = "def ensure_extra_files(construct_data: dict, notebooks_root: Path, src_root: Path) -> int:"
+    extra_end = "def main():"
+    extra_replacement = newline.join(
+        [
+            "def ensure_extra_files(construct_data: dict, notebooks_root: Path, src_root: Path) -> int:",
+            '    extra_files = construct_data.get("extra_files")',
+            "    if extra_files is None:",
+            "        extra_files = []",
+            '        construct_data["extra_files"] = extra_files',
+            "",
+            "    # Extract the project folder name from existing mappings",
+            "    project_folder = extract_project_folder(extra_files)",
+            '    debug(f"Using project folder: {project_folder}")',
+            "",
+            "    # Normalize existing entries into a dict for quick lookup",
+            "    existing_sources = set()",
+            "    existing_dests = set()",
+            "    normalized_items = []",
+            "",
+            "    for item in extra_files:",
+            "        # Items can be either dicts (k: v) or strings with mapping? Assume dicts per example",
+            "        if isinstance(item, dict):",
+            "            for src, dst in item.items():",
+            "                existing_sources.add(str(src))",
+            "                existing_dests.add(str(dst))",
+            "                normalized_items.append({str(src): str(dst)})",
+            "        else:",
+            "            # If strings are present, keep them",
+            "            normalized_items.append(item)",
+            "",
+            "    ntbk_added = 0",
+            '    repo_root = Path(".").resolve()',
+            "",
+            "    # For safety, remove any existing notebooks/*.ipynb entries to avoid duplicates, we will re-add them with correct paths",
+            '    normalized_items = [item for item in normalized_items if not (isinstance(item, dict) and any(str(src).startswith("notebooks/") and src.endswith(".ipynb") for src in item.keys()))]',
+            "",
+            "    # Include all notebooks under notebooks/ directory",
+            "    for ipynb in notebooks_root.rglob(\"*.ipynb\"):",
+            "        rel = ipynb.relative_to(repo_root).as_posix()",
+            '        if not rel.startswith("notebooks/"):',
+            "            continue",
+            "        src = rel",
+            '        dst = f"{project_folder}/{rel}"',
+            "",
+            "        # if src in existing_sources or dst in existing_dests:",
+            "        #     continue",
+            "",
+            "        normalized_items.append({src: dst})",
+            "        ntbk_added += 1",
+            '        debug(f"Included notebook: {src} -> {dst}")',
+            "",
+            "    # First get the name of the package from setup.py",
+            '    setup_path = repo_root / "setup.py"',
+            '    project_name = "PROJECT_NAME"',
+            "    if setup_path.exists():",
+            '        setup_text = setup_path.read_text(encoding="utf-8")',
+            '        name_match = re.search(r\'name\\s*=\\s*["\\\']([^"\\\']+)["\\\']\', setup_text)',
+            "        if name_match:",
+            "            project_name = name_match.group(1)",
+            '        debug(f"Detected setup.py package name: {project_name}")',
+            "    else:",
+            '        debug("setup.py not found at repository root")',
+            "",
+            "    # For safety, remove any existing src/ entries to avoid duplicates, we will re-add them with correct paths",
+            '    normalized_items = [item for item in normalized_items if not (isinstance(item, dict) and any(str(src).startswith("src/") for src in item.keys()))]',
+            "",
+            "    # Include all the Python scripts under src/ directory",
+            "    src_added = 0",
+            "    included_src_flag = False",
+            '    for py_file in src_root.rglob("*.py"):',
+            "        rel = py_file.relative_to(repo_root).as_posix()",
+            "        # Avoid any python files that are not in the src/ directory or any __init__.py files that are not in the src/ directory ",
+            '        if not rel.startswith("src/") or py_file.name == "__init__.py":',
+            "            continue",
+            "        src = rel",
+            '        dst = f"{project_folder}/{rel}"',
+            "",
+            "        # if src in existing_sources or dst in existing_dests:",
+            "        #     continue",
+            "",
+            "        normalized_items.append({src: dst})",
+            "        included_src_flag = True",
+            "        src_added += 1",
+            '        debug(f"Included source file: {src} -> {dst}")',
+            "",
+            "    # For safety also remove setup.py and src_change.yaml if they exist in the extra_files to avoid duplicates, we will re-add them with correct paths if src/ is included",
+            '    normalized_items = [item for item in normalized_items if not (isinstance(item, dict) and any(str(src) in ["setup.py", ".tools/meta/src_change.yaml"] for src in item.keys()))]  ',
+            "",
+            "    if included_src_flag:",
+            "        # Also include the setup.py file at the root if not already included",
+            '        setup_src = "setup.py"',
+            '        setup_dst = f"{project_folder}/setup.py"',
+            "        if setup_src not in existing_sources and setup_dst not in existing_dests:",
+            "            normalized_items.append({setup_src: setup_dst})",
+            "            src_added += 1",
+            '            debug(f"Included setup.py: {setup_src} -> {setup_dst}")',
+            "        else:",
+            '            debug("setup.py mapping already present")',
+            "",
+            "        # Include the external code change tracking file if it exists",
+            '        src_change_file = ".tools/meta/src_change.yaml"',
+            "        if Path(src_change_file).exists():",
+            '            src_change_dst = f"{project_folder}/src_change.yaml"',
+            "            if src_change_file not in existing_sources and src_change_dst not in existing_dests:",
+            "                normalized_items.append({src_change_file: src_change_dst})",
+            "                src_added += 1",
+            '                debug(f"Included src change marker: {src_change_file} -> {src_change_dst}")',
+            "            else:",
+            '                debug("src change marker mapping already present")',
+            "        else:",
+            '            debug("src change marker not found, skipping")',
+            "    else:",
+            "        # If the user has removed the src/directory, remove the generated setup.py and src_change.yaml",
+            '        debug("No non-__init__.py files found under src/, skipping setup.py and src change marker packaging")',
+            '        setup_dst = Path(project_folder) / "setup.py"',
+            "        if setup_dst.exists():",
+            "            setup_dst.unlink()",
+            '        src_change_dst = Path(project_folder) / "src_change.yaml"',
+            "        if src_change_dst.exists():",
+            "            src_change_dst.unlink()",
+            "",
+            "    # Optionally sort entries (dicts by their single key) for determinism",
+            "    def sort_key(item):",
+            "        if isinstance(item, dict):",
+            "            # single-key dict",
+            "            k = next(iter(item.keys()))",
+            "            return (0, k)",
+            "        return (1, str(item))",
+            "",
+            "    normalized_items.sort(key=sort_key)",
+            '    construct_data["extra_files"] = normalized_items',
             '    debug(f"Final extra_files entries: {len(normalized_items)}")',
             "    for item in normalized_items:",
             '        debug(f"extra_files entry: {item}")',
+            "",
+            "    return ntbk_added, src_added",
+            "",
         ]
-        for index, line in enumerate(lines):
-            if line.rstrip("\r\n") == "    return ntbk_added, src_added":
-                insertion = [entry + newline for entry in summary_lines]
-                for offset, entry in enumerate(insertion):
-                    lines.insert(index + offset, entry)
-                changed = True
-                break
-        else:
-            raise ValueError(f"Unable to find summary insertion point in {BUMP_CONSTRUCTOR_PATH}")
+    )
+
+    if 'debug(f"Included notebook: {src} -> {dst}")' not in updated_text:
+        start_index = updated_text.find(extra_start)
+        end_index = updated_text.find(extra_end)
+        if start_index == -1 or end_index == -1 or end_index <= start_index:
+            raise ValueError(f"Unable to replace ensure_extra_files() in {BUMP_CONSTRUCTOR_PATH}")
+        updated_text = updated_text[:start_index] + extra_replacement + updated_text[end_index:]
+        changed = True
 
     if not changed:
         return False
 
-    write_text(path, "".join(lines))
+    write_text(path, updated_text)
     print(f"Updated {BUMP_CONSTRUCTOR_PATH}")
     return True
 
