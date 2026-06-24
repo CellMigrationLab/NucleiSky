@@ -52,13 +52,19 @@ def ensure_requirements_in_extra_files(construct_data: dict):
     extra_files = construct_data.get("extra_files")
     if extra_files is None:
         extra_files = []
+
     gpu_requirements_included = any(
         isinstance(item, dict) and "requirements_gpu.txt" in item for item in extra_files
     )
     if not gpu_requirements_included and Path("requirements_gpu.txt").exists():
         extra_files.append({"requirements_gpu.txt": "PROJECT_NAME/requirements_gpu.txt"})
+        debug("Added mapping for requirements_gpu.txt")
+    elif Path("requirements_gpu.txt").exists():
+        debug("requirements_gpu.txt mapping already present")
+    else:
+        debug("requirements_gpu.txt not found, skipping GPU requirements mapping")
 
-        construct_data["extra_files"] = extra_files
+    construct_data["extra_files"] = extra_files
 
     # Check if requirements.txt is included, if not, add it
     requirements_included = any(
@@ -66,6 +72,9 @@ def ensure_requirements_in_extra_files(construct_data: dict):
     )
     if not requirements_included:
         extra_files.append({"requirements.txt": "NucleiSky/requirements.txt"})
+        debug("Added mapping for requirements.txt")
+    else:
+        debug("requirements.txt mapping already present")
     
     # Check if requirements-linux.txt exists and is included, if not, add it
     if Path("requirements-linux.txt").exists():
@@ -74,6 +83,12 @@ def ensure_requirements_in_extra_files(construct_data: dict):
         )
         if not linux_included:
             extra_files.append({"requirements-linux.txt": "NucleiSky/requirements-linux.txt"})
+            debug("Added mapping for requirements-linux.txt")
+        else:
+            debug("requirements-linux.txt mapping already present")
+    else:
+        debug("requirements-linux.txt not found, skipping Linux requirements mapping")
+
     # Check if requirements-windows.txt exists and is included, if not, add it
     if Path("requirements-windows.txt").exists():
         windows_included = any(
@@ -81,6 +96,11 @@ def ensure_requirements_in_extra_files(construct_data: dict):
         )
         if not windows_included:
             extra_files.append({"requirements-windows.txt": "NucleiSky/requirements-windows.txt"})
+            debug("Added mapping for requirements-windows.txt")
+        else:
+            debug("requirements-windows.txt mapping already present")
+    else:
+        debug("requirements-windows.txt not found, skipping Windows requirements mapping")
     
     # Check if requirements-macos.txt exists and is included, if not, add it
     if Path("requirements-macos.txt").exists():
@@ -89,6 +109,11 @@ def ensure_requirements_in_extra_files(construct_data: dict):
         )
         if not macos_included:
             extra_files.append({"requirements-macos.txt": "NucleiSky/requirements-macos.txt"})
+            debug("Added mapping for requirements-macos.txt")
+        else:
+            debug("requirements-macos.txt mapping already present")
+    else:
+        debug("requirements-macos.txt not found, skipping macOS requirements mapping")
 
     # Update the construct data with the modified extra_files
     construct_data["extra_files"] = extra_files
@@ -138,6 +163,7 @@ def ensure_extra_files(construct_data: dict, notebooks_root: Path, src_root: Pat
 
         normalized_items.append({src: dst})
         ntbk_added += 1
+        debug(f"Included notebook: {src} -> {dst}")
 
     # First get the name of the package from setup.py
     setup_path = repo_root / "setup.py"
@@ -147,6 +173,9 @@ def ensure_extra_files(construct_data: dict, notebooks_root: Path, src_root: Pat
         name_match = re.search(r'name\s*=\s*["\']([^"\']+)["\']', setup_text)
         if name_match:
             project_name = name_match.group(1)
+        debug(f"Detected setup.py package name: {project_name}")
+    else:
+        debug("setup.py not found at repository root")
 
     # For safety, remove any existing src/ entries to avoid duplicates, we will re-add them with correct paths
     normalized_items = [item for item in normalized_items if not (isinstance(item, dict) and any(str(src).startswith("src/") for src in item.keys()))]
@@ -168,6 +197,7 @@ def ensure_extra_files(construct_data: dict, notebooks_root: Path, src_root: Pat
         normalized_items.append({src: dst})
         included_src_flag = True
         src_added += 1
+        debug(f"Included source file: {src} -> {dst}")
 
     # For safety also remove setup.py and src_change.yaml if they exist in the extra_files to avoid duplicates, we will re-add them with correct paths if src/ is included
     normalized_items = [item for item in normalized_items if not (isinstance(item, dict) and any(str(src) in ["setup.py", ".tools/meta/src_change.yaml"] for src in item.keys()))]  
@@ -179,6 +209,9 @@ def ensure_extra_files(construct_data: dict, notebooks_root: Path, src_root: Pat
         if setup_src not in existing_sources and setup_dst not in existing_dests:
             normalized_items.append({setup_src: setup_dst})
             src_added += 1
+            debug(f"Included setup.py: {setup_src} -> {setup_dst}")
+        else:
+            debug("setup.py mapping already present")
 
         # Include the external code change tracking file if it exists
         src_change_file = ".tools/meta/src_change.yaml"
@@ -187,8 +220,14 @@ def ensure_extra_files(construct_data: dict, notebooks_root: Path, src_root: Pat
             if src_change_file not in existing_sources and src_change_dst not in existing_dests:
                 normalized_items.append({src_change_file: src_change_dst})
                 src_added += 1
+                debug(f"Included src change marker: {src_change_file} -> {src_change_dst}")
+            else:
+                debug("src change marker mapping already present")
+        else:
+            debug("src change marker not found, skipping")
     else:
         # If the user has removed the src/directory, remove the generated setup.py and src_change.yaml
+        debug("No non-__init__.py files found under src/, skipping setup.py and src change marker packaging")
         setup_dst = Path(project_folder) / "setup.py"
         if setup_dst.exists():
             setup_dst.unlink()
@@ -210,6 +249,7 @@ def ensure_extra_files(construct_data: dict, notebooks_root: Path, src_root: Pat
     debug(f"Final extra_files entries: {len(normalized_items)}")
     for item in normalized_items:
         debug(f"extra_files entry: {item}")
+
     return ntbk_added, src_added
 
 
@@ -235,6 +275,7 @@ def main():
     # Write using surgical update to preserve platform-specific scripts
     save_construct_surgical(construct_path, data, original_text)
     print(f"Added {ntbk_added} notebook(s) and {src_added} source file(s) to extra_files.")
+
 
 if __name__ == "__main__":
     main()
