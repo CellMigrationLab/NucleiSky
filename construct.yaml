@@ -30,6 +30,7 @@ extra_files:
 - notebooks/NucleiSky3D_API_Workflow_Example/NucleiSky3D_API_Workflow_Example.ipynb: NucleiSky/notebooks/NucleiSky3D_API_Workflow_Example/NucleiSky3D_API_Workflow_Example.ipynb
 - notebooks/notebook_latest_versions.yaml: NucleiSky/notebook_latest_versions.yaml
 - requirements.txt: NucleiSky/requirements.txt
+- requirements_gpu.txt: NucleiSky/requirements_gpu.txt
 - setup.py: NucleiSky/setup.py
 - src/nucleisky/__init__.py: NucleiSky/src/nucleisky/__init__.py
 - src/nucleisky/nucleisky2d/__init__.py: NucleiSky/src/nucleisky/nucleisky2d/__init__.py
