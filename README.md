@@ -9,6 +9,7 @@
 [![PyPI](https://img.shields.io/pypi/v/nucleisky)](https://pypi.org/project/nucleisky/)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 [![Downloads](https://img.shields.io/pypi/dm/nucleisky)](https://pypi.org/project/nucleisky/)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.21071485.svg)](https://doi.org/10.5281/zenodo.21071485)
 [![Open 2D App in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/cellmigrationlab/NucleiSky/blob/main/notebooks/NucleiSky2DApp/NucleiSky2DApp.ipynb)
 [![Open 3D App in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/cellmigrationlab/NucleiSky/blob/main/notebooks/NucleiSky3DApp/NucleiSky3DApp.ipynb)
 
