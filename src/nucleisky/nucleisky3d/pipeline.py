@@ -345,18 +345,22 @@ def evaluate_match_quality_3d(
 
 
 def NucleiSky3D(
-    centroids_crop_um,
-    centroids_full_um,
-    full_shape_px_zyx,
-    crop_shape_px_zyx,
-    pixel_size_full_um_zyx,
-    pixel_size_crop_um_zyx,
+    centroids_crop_um=None,
+    centroids_full_um=None,
+    full_shape_px_zyx=None,
+    crop_shape_px_zyx=None,
+    pixel_size_full_um_zyx=None,
+    pixel_size_crop_um_zyx=None,
     matcher: str = "pyramid",
     *,
     matcher_config: Dict[str, Any] | None = None,
     matcher_kwargs: Dict[str, Any] | None = None,
     df_full=None,
     df_crop=None,
+    label_full=None,
+    label_crop=None,
+    pixel_size_full_um=None,
+    pixel_size_crop_um=None,
     return_dists: bool = False,
 ) -> Dict[str, Any]:
     """High-level 3D matching orchestrator.
@@ -364,8 +368,56 @@ def NucleiSky3D(
     Strictly handles point-cloud matching. Segmentation and feature extraction
     must be performed prior to calling this function.
     """
+    if (df_full is None) != (df_crop is None):
+        raise ValueError("df_full and df_crop must both be provided when using precomputed dataframes.")
+
+    if pixel_size_full_um_zyx is None:
+        pixel_size_full_um_zyx = pixel_size_full_um
+    if pixel_size_crop_um_zyx is None:
+        pixel_size_crop_um_zyx = pixel_size_crop_um
+
     voxel_full_um = _normalize_voxel_size(pixel_size_full_um_zyx, name="pixel_size_full_um_zyx")
     voxel_crop_um = _normalize_voxel_size(pixel_size_crop_um_zyx, name="pixel_size_crop_um_zyx")
+
+    labels_full = None if label_full is None else _ensure_3d_array(label_full, "label_full")
+    labels_crop = None if label_crop is None else _ensure_3d_array(label_crop, "label_crop")
+
+    if full_shape_px_zyx is None and labels_full is not None:
+        full_shape_px_zyx = tuple(int(v) for v in labels_full.shape)
+    if crop_shape_px_zyx is None and labels_crop is not None:
+        crop_shape_px_zyx = tuple(int(v) for v in labels_crop.shape)
+
+    if full_shape_px_zyx is not None:
+        full_shape_px_zyx = tuple(int(v) for v in full_shape_px_zyx)
+    if crop_shape_px_zyx is not None:
+        crop_shape_px_zyx = tuple(int(v) for v in crop_shape_px_zyx)
+
+    if centroids_full_um is None or centroids_crop_um is None:
+        if df_full is not None and df_crop is not None:
+            centroids_full_um = centroids_from_df_3d(
+                df_full,
+                voxel_size_um_zyx=voxel_full_um,
+                name="df_full",
+            )
+            centroids_crop_um = centroids_from_df_3d(
+                df_crop,
+                voxel_size_um_zyx=voxel_crop_um,
+                name="df_crop",
+            )
+        elif labels_full is not None and labels_crop is not None:
+            _, centroids_full_um = _extract_features_and_centroids(labels_full, voxel_full_um)
+            _, centroids_crop_um = _extract_features_and_centroids(labels_crop, voxel_crop_um)
+        else:
+            raise ValueError(
+                "Provide centroids_*_um directly, both df_full and df_crop, "
+                "or both label_full and label_crop."
+            )
+
+    if (full_shape_px_zyx is None or crop_shape_px_zyx is None) and (labels_full is not None or labels_crop is not None):
+        raise ValueError(
+            "full_shape_px_zyx and crop_shape_px_zyx are required unless "
+            "they can be inferred from label_full and label_crop."
+        )
 
     matcher_config = matcher_config or {}
     matcher_kwargs = matcher_kwargs or {}
@@ -882,12 +934,22 @@ def run_adaptive_matching_and_export_3d(
 
         # 6) Export transform + bbox + optional aligned crop TIFF
         if best_out.get("success") and best_out.get("best_scale") is not None:
-            if (
-                best_out.get("best_R") is not None
+            should_recompute_bbox = (
+                img_full_orig is not None
+                and img_crop_orig is not None
+                and best_out.get("best_R") is not None
                 and best_out.get("best_t") is not None
                 and match_full_shape is not None
                 and match_crop_shape is not None
-            ):
+            )
+            should_fill_missing_bbox = (
+                best_out.get("best_bbox") is None
+                and best_out.get("best_R") is not None
+                and best_out.get("best_t") is not None
+                and match_full_shape is not None
+                and match_crop_shape is not None
+            )
+            if should_recompute_bbox or should_fill_missing_bbox:
                 best_out = dict(best_out)
                 best_out["best_bbox"] = tuple(
                     int(v) for v in bbox_full_px_from_similarity_um_3d(

@@ -203,6 +203,8 @@ def geometric_hashing_match_similarity_3d(
         cap_frac=float(min_inliers_cap_frac),
     )
 
+    vote_thresh_eff = min(max(1, int(vote_thresh)), max(1, min(Np, Nf) - 3))
+
     early_stop_inliers = int(np.ceil(float(early_stop_frac) * Np))
     early_stop_inliers = max(int(min_inliers_eff), min(early_stop_inliers, Np))
 
@@ -286,7 +288,7 @@ def geometric_hashing_match_similarity_3d(
 
         if not cand:
             continue
-        if int(vote_thresh) > 1 and len(cand) < int(vote_thresh):
+        if vote_thresh_eff > 1 and len(cand) < vote_thresh_eff:
             continue
 
         # ==========================================
@@ -365,10 +367,10 @@ def geometric_hashing_match_similarity_3d(
 def run_geometric_hashing_matching_3d_um(
     centroids_crop_um,
     centroids_full_um,
-    full_shape_px,
-    patch_shape_px,
-    pixel_size_full_um_zyx,
-    pixel_size_patch_um_zyx,
+    full_shape_px=None,
+    patch_shape_px=None,
+    pixel_size_full_um_zyx=None,
+    pixel_size_patch_um_zyx=None,
     inlier_radius_um=2.0,
     scale_min=0.8,
     scale_max=1.2,
@@ -469,18 +471,25 @@ def run_geometric_hashing_matching_3d_um(
         print("Geometric hashing 3D result rejected: rotation angle exceeds angle_max_deg.")
         return None, None, None, None
 
-    Zf, Yf, Xf = full_shape_px[:3]
-    Zc, Yc, Xc = patch_shape_px[:3]
+    bbox = None
+    if (
+        full_shape_px is not None
+        and patch_shape_px is not None
+        and pixel_size_full_um_zyx is not None
+        and pixel_size_patch_um_zyx is not None
+    ):
+        Zf, Yf, Xf = full_shape_px[:3]
+        Zc, Yc, Xc = patch_shape_px[:3]
 
-    bbox = bbox_full_px_from_similarity_um_3d(
-        crop_shape_px=(Zc, Yc, Xc),
-        pixel_size_full_um_zyx=pixel_size_full_um_zyx,
-        pixel_size_crop_um_zyx=pixel_size_patch_um_zyx,
-        scale=float(scale),
-        R_zyx=np.asarray(R),
-        t_um_zyx=np.asarray(t),
-        margin_um=float(margin_um),
-        full_shape_px=(Zf, Yf, Xf),
-    )
+        bbox = bbox_full_px_from_similarity_um_3d(
+            crop_shape_px=(Zc, Yc, Xc),
+            pixel_size_full_um_zyx=pixel_size_full_um_zyx,
+            pixel_size_crop_um_zyx=pixel_size_patch_um_zyx,
+            scale=float(scale),
+            R_zyx=np.asarray(R),
+            t_um_zyx=np.asarray(t),
+            margin_um=float(margin_um),
+            full_shape_px=(Zf, Yf, Xf),
+        )
 
     return scale, R, t, bbox

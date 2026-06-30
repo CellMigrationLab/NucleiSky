@@ -153,7 +153,7 @@ def test_docs_style_2d_and_3d_smoke_workflows(tmp_path):
 @pytest.mark.geometry
 def test_notebooks_are_parseable_and_reference_public_api():
     nb_dir = Path("notebooks")
-    notebooks = sorted(nb_dir.glob("*.ipynb"))
+    notebooks = sorted(nb_dir.glob("*/*.ipynb"))
     assert notebooks, "expected at least one notebook under notebooks/"
 
     api_tokens = ["nucleisky", "nucleisky2d", "nucleisky3d", "NucleiSky", "NucleiSky3D"]

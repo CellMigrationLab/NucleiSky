@@ -30,6 +30,28 @@ def _mip_z(vol_zyx: np.ndarray) -> np.ndarray:
     return np.max(vol_zyx, axis=0)
 
 
+def _mip(vol_zyx: np.ndarray, axis: int = 0, downsample: int = 1) -> np.ndarray:
+    """Compute a max-intensity projection with optional strided downsampling."""
+    vol_zyx = _as_zyx(vol_zyx, "volume")
+
+    axis = int(axis)
+    if axis not in (0, 1, 2):
+        raise ValueError(f"axis must be 0, 1, or 2. Got {axis}")
+
+    downsample = int(downsample)
+    if downsample < 1:
+        raise ValueError(f"downsample must be >= 1. Got {downsample}")
+
+    view = vol_zyx[::downsample, ::downsample, ::downsample]
+    try:
+        return np.max(view, axis=axis)
+    except MemoryError as exc:
+        raise MemoryError(
+            "3D max-intensity projection ran out of memory. "
+            "Retry with mip_downsample=2 or 4."
+        ) from exc
+
+
 def _display_step(h: int, w: int, max_dim: int) -> int:
     return int(max(1, int(np.ceil(max(h, w) / float(max_dim)))))
 
@@ -463,5 +485,4 @@ def plot_warp_overlay3d(
 
 # Convenience alias (matches your requested name)
 plot_warp_overlay3D = plot_warp_overlay3d
-
 
