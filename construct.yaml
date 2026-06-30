@@ -30,7 +30,7 @@ extra_files:
 - notebooks/notebook_latest_versions.yaml: NucleiSky/notebook_latest_versions.yaml
 - requirements.txt: NucleiSky/requirements.txt
 - requirements_gpu.txt: NucleiSky/requirements_gpu.txt
-- setup.py: NucleiSky/setup.py
+
 - src/nucleisky/nucleisky2d/config.py: NucleiSky/src/nucleisky/nucleisky2d/config.py
 - src/nucleisky/nucleisky2d/demo_utils.py: NucleiSky/src/nucleisky/nucleisky2d/demo_utils.py
 - src/nucleisky/nucleisky2d/export.py: NucleiSky/src/nucleisky/nucleisky2d/export.py
