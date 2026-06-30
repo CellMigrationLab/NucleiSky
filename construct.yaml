@@ -6,7 +6,7 @@ license_file: LICENSE
 welcome_image: app/logo/Gemini_Generated_Image_fga0qrfga0qrfga0.png
 header_image: app/logo/Gemini_Generated_Image_27i68r27i68r27i6.png
 icon_image: app/logo/Gemini_Generated_Image_kc5ezfkc5ezfkc5e.png
-conclusion_text: Thank you! You have successfully installed NucleiSky 0.0.5.
+conclusion_text: Thank you! You have successfully installed NucleiSky 0.1.0.
 keep_pkgs: false
 register_python: false
 initialize_conda: false
@@ -30,6 +30,7 @@ extra_files:
 - notebooks/notebook_latest_versions.yaml: NucleiSky/notebook_latest_versions.yaml
 - requirements.txt: NucleiSky/requirements.txt
 - requirements_gpu.txt: NucleiSky/requirements_gpu.txt
+- setup.py: NucleiSky/setup.py
 - src/nucleisky/nucleisky2d/config.py: NucleiSky/src/nucleisky/nucleisky2d/config.py
 - src/nucleisky/nucleisky2d/demo_utils.py: NucleiSky/src/nucleisky/nucleisky2d/demo_utils.py
 - src/nucleisky/nucleisky2d/export.py: NucleiSky/src/nucleisky/nucleisky2d/export.py
