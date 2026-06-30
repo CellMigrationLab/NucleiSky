@@ -36,8 +36,8 @@ Choose your setup and align your images in minutes:
 
 ### 🌟 Try it in the Browser (Fastest)
 No installation required. Run our interactive apps directly in Google Colab:
-* [**Launch 2D App**](https://colab.research.google.com/github/cellmigrationlab/NucleiSky/blob/main/notebooks/NucleiSky2DApp/NucleiSky2DApp.ipynb)
-* [**Launch 3D App**](https://colab.research.google.com/github/cellmigrationlab/NucleiSky/blob/main/notebooks/NucleiSky3DApp/NucleiSky3DApp.ipynb)
+* [**Launch 2D App on Colab**](https://colab.research.google.com/github/cellmigrationlab/NucleiSky/blob/main/notebooks/NucleiSky2DApp/NucleiSky2DApp.ipynb)
+* [**Launch 3D App on Colab**](https://colab.research.google.com/github/cellmigrationlab/NucleiSky/blob/main/notebooks/NucleiSky3DApp/NucleiSky3DApp.ipynb)
 
 ### 🖥️ No-Code Desktop GUI
 Prefer a local app? Use our standalone [desktop installer](.tools/docs/download_executable.md).
