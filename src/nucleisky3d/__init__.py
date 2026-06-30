@@ -7,8 +7,10 @@ notebooks and user scripts.
 
 from __future__ import annotations
 
+from pathlib import Path
+
 from nucleisky import nucleisky3d as _impl
 from nucleisky.nucleisky3d import *  # noqa: F401,F403
 
 __all__ = list(getattr(_impl, "__all__", []))
-__path__ = _impl.__path__
+__path__ = [str(Path(__file__).resolve().parent), *list(_impl.__path__)]
