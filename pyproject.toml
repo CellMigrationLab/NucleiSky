@@ -5,10 +5,10 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "nucleisky"
-version = "0.2.0"
+version = "0.0.1"
 description = "Constellation-based point-set registration utilities for microscopy in 2D and 3D"
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.12"
 dependencies = [
   "numpy>=2.0.2",
   "numba>=0.60.0",
