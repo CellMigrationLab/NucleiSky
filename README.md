@@ -32,7 +32,7 @@ NucleiSky is a robust point-set registration pipeline built for real-world micro
 
 ## ⚡ Quickstart
 
-Choose your setup and get aligning in minutes:
+Choose your setup and align your images in minutes:
 
 ### 🌟 Try it in the Browser (Fastest)
 No installation required. Run our interactive apps directly in Google Colab:
@@ -119,14 +119,24 @@ If you’re using NucleiSky in a new workflow, drop an issue and tell us:
 
 If you find this tool useful in your research, please cite:
 
+**NucleiSky enables cross-scale multimodal registration of microscopy data using nuclei constellations.** 
+
+Iván Hidalgo Cenalmor, Adán Olguín-Olguín, Carolina Prieto, Johannes Kumra Ahnlide, Pontus Nordenfelt, Ricardo Henriques, Mario Del Rosario, Guillaume Jacquemet
+bioRxiv 2026.06.29.735028; 
+
+doi: https://doi.org/10.64898/2026.06.29.735028
+
+
 ```bibtex
-@misc{nucleisky,
-  title        = {NucleiSky: Constellation-based Point-Set Registration for Microscopy},
-  author       = {CellMigrationLab},
-  year         = {2026},
-  howpublished = {\url{https://github.com/cellmigrationlab/NucleiSky}},
-  note         = {Version X.Y.Z}
+@article {Cenalmor2026,
+	author = {Cenalmor, Iv{\'a}n Hidalgo and Olgu{\'\i}n-Olgu{\'\i}n, Ad{\'a}n and Prieto, Carolina and Ahnlide, Johannes Kumra and Nordenfelt, Pontus and Henriques, Ricardo and Del Rosario, Mario and Jacquemet, Guillaume},
+	title = {NucleiSky enables cross-scale multimodal registration of microscopy data using nuclei constellations},
+	elocation-id = {2026.06.29.735028},
+	year = {2026},
+	doi = {10.64898/2026.06.29.735028},
+	publisher = {Cold Spring Harbor Laboratory},	
+	URL = {https://www.biorxiv.org/content/early/2026/06/29/2026.06.29.735028},
+	eprint = {https://www.biorxiv.org/content/early/2026/06/29/2026.06.29.735028.full.pdf},
+	journal = {bioRxiv}
 }
 ```
-
-A manuscript-specific citation and DOI should be added before public release.
