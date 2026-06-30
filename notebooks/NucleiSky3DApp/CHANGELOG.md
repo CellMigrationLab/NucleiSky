@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.1.0] - 2026-06-30
+
+### Changed
+- Version updated from 0.0.3 to 0.1.0
+
+**Commit Details:**
+- Hash: [`5941a05c`](https://github.com/CellMigrationLab/NucleiSky/commit/5941a05cbb622a5056b4b998fd7877bd6ab60bb7)
+- Author: Iván Hidalgo
+- Date: 2026-06-30 15:47:42 +0300
+- Message: Notebooks updated to install nucleisky on Colab
+
+---
 ## [0.0.3] - 2026-05-22
 
 ### Changed
