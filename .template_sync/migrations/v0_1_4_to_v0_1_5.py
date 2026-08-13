@@ -27,6 +27,19 @@ def write_text(path: Path, text: str) -> None:
         fh.write(text)
 
 
+def detect_project_folder(repo_root: Path) -> str:
+    construct_path = repo_root / CONSTRUCT_PATH
+    if construct_path.is_file():
+        for raw_line in read_text(construct_path).splitlines():
+            stripped = raw_line.strip()
+            if stripped.startswith("name:"):
+                value = stripped.split(":", 1)[1].strip().strip("\"'")
+                if value:
+                    return value
+
+    return "PROJECT_NAME"
+
+
 def replace_text(
     text: str,
     old: str,
@@ -330,6 +343,7 @@ def update_bump_constructor(repo_root: Path) -> bool:
         return False
 
     lines = original_text.splitlines(keepends=True)
+    project_folder = detect_project_folder(repo_root)
     gpu_block = (
         newline.join(
             [
@@ -337,7 +351,7 @@ def update_bump_constructor(repo_root: Path) -> bool:
                 '        isinstance(item, dict) and "requirements_gpu.txt" in item for item in extra_files',
                 "    )",
                 '    if not gpu_requirements_included and Path("requirements_gpu.txt").exists():',
-                '        extra_files.append({"requirements_gpu.txt": "PROJECT_NAME/requirements_gpu.txt"})',
+                f'        extra_files.append({{"requirements_gpu.txt": "{project_folder}/requirements_gpu.txt"}})',
             ]
         )
         + newline
@@ -413,12 +427,14 @@ def update_post_install_bat(repo_root: Path) -> bool:
     lines = original_text.splitlines(keepends=True)
     changed = False
 
-    if 'SET "GPU_REQUIREMENTS=%PREFIX%\\PROJECT_NAME\\requirements_gpu.txt"' not in original_text:
+    project_folder = detect_project_folder(repo_root)
+    gpu_requirements_line = f'SET "GPU_REQUIREMENTS=%PREFIX%\\{project_folder}\\requirements_gpu.txt"'
+    if gpu_requirements_line not in original_text:
         echo_line = 'echo Running post_install > "%PREFIX%\\menuinst_debug.log"'
         selected_install_line = '"%PREFIX%\\python.exe" -m pip install -r "%SELECTED_REQUIREMENTS%" >> "%PREFIX%\\menuinst_debug.log"'
         block_lines = [
-            'SET "BASE_REQUIREMENTS=%PREFIX%\\PROJECT_NAME\\requirements.txt"',
-            'SET "GPU_REQUIREMENTS=%PREFIX%\\PROJECT_NAME\\requirements_gpu.txt"',
+            f'SET "BASE_REQUIREMENTS=%PREFIX%\\{project_folder}\\requirements.txt"',
+            gpu_requirements_line,
             'SET "SELECTED_REQUIREMENTS=%BASE_REQUIREMENTS%"',
             "",
             'IF EXIST "%GPU_REQUIREMENTS%" (',
@@ -507,15 +523,17 @@ def update_post_install_sh(repo_root: Path) -> bool:
 
     original_text = read_text(path)
     newline = detect_newline(original_text)
-    if 'GPU_REQUIREMENTS="$PREFIX/PROJECT_NAME/requirements_gpu.txt"' in original_text:
+    project_folder = detect_project_folder(repo_root)
+    gpu_requirements_line = f'GPU_REQUIREMENTS="$PREFIX/{project_folder}/requirements_gpu.txt"'
+    if gpu_requirements_line in original_text:
         return False
 
     lines = original_text.splitlines(keepends=True)
     echo_line = 'echo "Running post_install" > "$PREFIX/menuinst_debug.log"'
     selected_install_line = '"$PREFIX/bin/python" -m pip install -r "$SELECTED_REQUIREMENTS" >> "$PREFIX/menuinst_debug.log"'
     block_lines = [
-        'BASE_REQUIREMENTS="$PREFIX/PROJECT_NAME/requirements.txt"',
-        'GPU_REQUIREMENTS="$PREFIX/PROJECT_NAME/requirements_gpu.txt"',
+        f'BASE_REQUIREMENTS="$PREFIX/{project_folder}/requirements.txt"',
+        gpu_requirements_line,
         'SELECTED_REQUIREMENTS="$BASE_REQUIREMENTS"',
         "",
         'if [ -f "$GPU_REQUIREMENTS" ]; then',

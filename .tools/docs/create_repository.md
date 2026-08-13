@@ -29,6 +29,11 @@ Write a brief description of what your notebooks do (for example, "Automated cel
 
 4. Click **Create repository**. 🎉 That’s it! Your repository is now set up and ready to go.
 
+
+## Enable future template updates
+
+Before initialising the project, complete the one-time [automatic template synchronization setup](template_synchronization.md). It lets LabConstrictor prepare safe pull requests when the template receives fixes, including changes to GitHub Actions workflows.
+
 ---
 
 <div align="center">

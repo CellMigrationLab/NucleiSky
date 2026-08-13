@@ -62,13 +62,17 @@ def update_bump_constructor(repo_root: Path) -> bool:
             "            continue",
         ]
     )
-    updated_text, did_change = replace_text(
-        updated_text,
-        old_src_filter,
-        new_src_filter,
-        already_updated=new_src_filter,
-    )
-    changed = did_change or changed
+    # Later template versions deliberately include __init__.py files and track
+    # whether they are the only source files. Treat that feature as newer than
+    # this migration instead of rewriting it back to the 0.1.4 intermediate form.
+    if "only_init_files = True" not in updated_text:
+        updated_text, did_change = replace_text(
+            updated_text,
+            old_src_filter,
+            new_src_filter,
+            already_updated=new_src_filter,
+        )
+        changed = did_change or changed
 
     old_setup_cleanup_anchor = newline.join(
         [
@@ -91,13 +95,15 @@ def update_bump_constructor(repo_root: Path) -> bool:
             "    if included_src_flag:",
         ]
     )
-    updated_text, did_change = replace_text(
-        updated_text,
-        old_setup_cleanup_anchor,
-        new_setup_cleanup_anchor,
-        already_updated=new_setup_cleanup_anchor,
-    )
-    changed = did_change or changed
+    cleanup_feature = 'any(str(src) in ["setup.py", ".tools/meta/src_change.yaml"]'
+    if cleanup_feature not in updated_text:
+        updated_text, did_change = replace_text(
+            updated_text,
+            old_setup_cleanup_anchor,
+            new_setup_cleanup_anchor,
+            already_updated=new_setup_cleanup_anchor,
+        )
+        changed = did_change or changed
 
     old_else_anchor = newline.join(
         [
@@ -129,13 +135,15 @@ def update_bump_constructor(repo_root: Path) -> bool:
             "    # Optionally sort entries (dicts by their single key) for determinism",
         ]
     )
-    updated_text, did_change = replace_text(
-        updated_text,
-        old_else_anchor,
-        new_else_anchor,
-        already_updated=new_else_anchor,
-    )
-    changed = did_change or changed
+    removal_feature = 'setup_dst = Path(project_folder) / "setup.py"'
+    if removal_feature not in updated_text:
+        updated_text, did_change = replace_text(
+            updated_text,
+            old_else_anchor,
+            new_else_anchor,
+            already_updated=new_else_anchor,
+        )
+        changed = did_change or changed
 
     if not changed:
         return False
@@ -167,13 +175,12 @@ def update_bump_version(repo_root: Path) -> bool:
             "",
         ]
     )
-    updated_text, did_change = replace_text(
-        updated_text,
-        old_helper_anchor,
-        new_helper_anchor,
-        already_updated="def replace_version_placeholder(text: str, new_version: str) -> str:",
-    )
-    changed = did_change or changed
+    helper_signature = "def replace_version_placeholder(text: str, new_version: str) -> str:"
+    if helper_signature not in updated_text:
+        if old_helper_anchor not in updated_text:
+            raise ValueError(f"Unable to find helper insertion point in {BUMP_VERSION_PATH}")
+        updated_text = updated_text.replace(old_helper_anchor, new_helper_anchor, 1)
+        changed = True
 
     old_download_function = newline.join(
         [
@@ -216,13 +223,20 @@ def update_bump_version(repo_root: Path) -> bool:
             '        print("No version string found in download_executable.md to update.")',
         ]
     )
-    updated_text, did_change = replace_text(
-        updated_text,
-        old_download_function,
-        new_download_function,
-        already_updated='    template_md = ROOT / ".tools" / "templates" / "download_executable_template.md"',
-    )
-    changed = did_change or changed
+    if old_download_function in updated_text:
+        updated_text = updated_text.replace(old_download_function, new_download_function, 1)
+        changed = True
+    elif '    template_md = ROOT / ".tools" / "templates" / "download_executable_template.md"' not in updated_text:
+        # Early initialized repositories did not yet have this helper at all.
+        main_anchor = "def main() -> None:"
+        if main_anchor not in updated_text:
+            raise ValueError(f"Unable to find main() insertion point in {BUMP_VERSION_PATH}")
+        updated_text = updated_text.replace(
+            main_anchor,
+            new_download_function + newline + newline + main_anchor,
+            1,
+        )
+        changed = True
 
     old_main_template_copy = newline.join(
         [
@@ -265,13 +279,30 @@ def update_bump_version(repo_root: Path) -> bool:
         updated_text = updated_text.replace(extra_blank_line, normalized_spacing, 1)
         changed = True
 
-    updated_text, did_change = replace_text(
-        updated_text,
-        "    # Update download_executable.md if it exists",
-        "    # Update download_executable.md",
-        already_updated="    # Update download_executable.md",
+    old_download_comment = "    # Update download_executable.md if it exists"
+    new_download_block = newline.join(
+        [
+            "    # Update download_executable.md",
+            "    bump_version_in_download_executable_md(args.new_version)",
+        ]
     )
-    changed = did_change or changed
+    if old_download_comment in updated_text:
+        updated_text = updated_text.replace(
+            old_download_comment,
+            "    # Update download_executable.md",
+            1,
+        )
+        changed = True
+    elif "bump_version_in_download_executable_md(args.new_version)" not in updated_text:
+        post_install_call = "    bump_post_install_bat(args.new_version)"
+        if post_install_call not in updated_text:
+            raise ValueError(f"Unable to find post-install call in {BUMP_VERSION_PATH}")
+        updated_text = updated_text.replace(
+            post_install_call,
+            post_install_call + newline + newline + new_download_block,
+            1,
+        )
+        changed = True
 
     if not changed:
         return False

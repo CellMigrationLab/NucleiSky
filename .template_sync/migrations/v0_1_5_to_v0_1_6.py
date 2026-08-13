@@ -7,6 +7,7 @@ import re
 
 BUMP_CONSTRUCTOR_PATH = Path(".tools/python/bump_constructor.py")
 BUMP_VERSION_PATH = Path(".tools/python/bump_version.py")
+CONSTRUCT_PATH = Path("construct.yaml")
 
 
 def detect_newline(text: str) -> str:
@@ -23,6 +24,18 @@ def write_text(path: Path, text: str) -> None:
         fh.write(text)
 
 
+def detect_project_folder(repo_root: Path) -> str:
+    construct_path = repo_root / CONSTRUCT_PATH
+    if construct_path.is_file():
+        for raw_line in read_text(construct_path).splitlines():
+            stripped = raw_line.strip()
+            if stripped.startswith("name:"):
+                value = stripped.split(":", 1)[1].strip().strip("\"'")
+                if value:
+                    return value
+    return "PROJECT_NAME"
+
+
 def update_bump_constructor(repo_root: Path) -> bool:
     path = repo_root / BUMP_CONSTRUCTOR_PATH
     if not path.exists():
@@ -33,8 +46,9 @@ def update_bump_constructor(repo_root: Path) -> bool:
     newline = detect_newline(original_text)
     updated_text = original_text
     changed = False
+    project_folder = detect_project_folder(repo_root)
 
-    if "DEBUG_PREFIX = \"[bump_constructor]\"" not in original_text:
+    if 'DEBUG_PREFIX = "[bump_constructor]"' not in original_text:
         helper_anchor = "import re" + newline
         helper_block = newline.join(
             [
@@ -126,7 +140,7 @@ def update_bump_constructor(repo_root: Path) -> bool:
             '    construct_data["extra_files"] = extra_files',
             "",
         ]
-    )
+    ).replace("PROJECT_NAME", project_folder)
 
     if 'debug("Added mapping for requirements.txt")' not in updated_text:
         start_index = updated_text.find(requirements_start)
@@ -274,7 +288,7 @@ def update_bump_constructor(repo_root: Path) -> bool:
             "    return ntbk_added, src_added",
             "",
         ]
-    )
+    ).replace("PROJECT_NAME", project_folder)
 
     if 'debug(f"Included notebook: {src} -> {dst}")' not in updated_text:
         start_index = updated_text.find(extra_start)

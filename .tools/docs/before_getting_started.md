@@ -40,6 +40,11 @@ To get started with LabConstrictor, you only need the following:
 - **(Optional) 🖼️ Images, logo and icons:** for branding your executable installer. We recommend following the [images guidelines](./installer_images.md) for further information and guidance.
 
 
+
+## 🔄 One-time update setup
+
+After creating your repository, complete the [automatic template synchronization setup](template_synchronization.md). This allows future template improvements to be delivered as pull requests, including necessary GitHub Actions workflow updates.
+
 ---
 
 <div align="center">

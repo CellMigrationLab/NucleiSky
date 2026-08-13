@@ -3,7 +3,7 @@ set -euo pipefail
 
 LOG_FILE="$PREFIX/menuinst_debug.log"
 PYTHON_EXE="$PREFIX/bin/python"
-PROJECT_ROOT="$PREFIX/NucleiSky"
+PROJECT_ROOT="$PREFIX/PROJECT_NAME"
 BASE_REQUIREMENTS="$PROJECT_ROOT/requirements.txt"
 GPU_REQUIREMENTS="$PROJECT_ROOT/requirements_gpu.txt"
 SELECTED_REQUIREMENTS="$BASE_REQUIREMENTS"
@@ -63,9 +63,9 @@ fi
 # External Python code is optional. Verify the generated package only when the
 # constructor bundled setup.py and src/.
 if [ -f "$PROJECT_ROOT/setup.py" ]; then
-    echo "Found setup.py, installing NucleiSky package locally without build isolation" >> "$LOG_FILE"
+    echo "Found setup.py, installing PROJECT_NAME package locally without build isolation" >> "$LOG_FILE"
     "$PYTHON_EXE" -m pip install --no-deps --no-build-isolation "$PROJECT_ROOT" >> "$LOG_FILE" 2>&1
-    "$PYTHON_EXE" -c "import PYTHON_PROJ_NAME; print('NucleiSky import successful:', PYTHON_PROJ_NAME.__file__)" >> "$LOG_FILE" 2>&1
+    "$PYTHON_EXE" -c "import PYTHON_PROJ_NAME; print('PROJECT_NAME import successful:', PYTHON_PROJ_NAME.__file__)" >> "$LOG_FILE" 2>&1
 else
     echo "No setup.py detected; this project does not bundle an optional Python package." >> "$LOG_FILE"
 fi
@@ -86,7 +86,7 @@ fi
 echo "Launcher preflight completed successfully." >> "$LOG_FILE"
 
 "$PYTHON_EXE" -c "import os, sys; print('Python:', sys.executable); print('Prefix:', os.environ.get('PREFIX'))" >> "$LOG_FILE" 2>&1
-"$PYTHON_EXE" -c "from menuinst.api import install; import os; print(install(os.path.join('$PREFIX', 'NucleiSky', 'notebook_launcher.json')))" >> "$LOG_FILE" 2>&1
+"$PYTHON_EXE" -c "from menuinst.api import install; import os; print(install(os.path.join('$PREFIX', 'PROJECT_NAME', 'notebook_launcher.json')))" >> "$LOG_FILE" 2>&1
 
 echo "Post-install completed successfully." >> "$LOG_FILE"
 
