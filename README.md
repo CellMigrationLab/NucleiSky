@@ -103,6 +103,11 @@ Use `pip install "nucleisky[all]"` when you also need optional segmentation, OME
 ---
 
 
+
+## 🔄 Automatic Template Updates
+
+LabConstrictor can prepare pull requests that keep this repository aligned with improvements in the main template, including updates to GitHub Actions workflows. Complete the one-time [automatic synchronization setup](.tools/docs/template_synchronization.md) to enable these updates.
+
 ## 🤝 Contributing
 
 We welcome PRs, feature ideas, and bug reports! For the fastest triage, please use our GitHub issue forms.

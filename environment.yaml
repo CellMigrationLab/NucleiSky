@@ -7,5 +7,10 @@ dependencies:
 - python=3.12.13
 - conda
 - git
-- pip
+- pip>=24.2
+- setuptools
+- wheel
+- menuinst>=2
+- truststore>=0.10.4
+- certifi
 - jupyterlab=4.4.0

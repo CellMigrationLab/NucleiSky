@@ -1,5 +1,8 @@
 # Initialising your repository
 
+
+> Before continuing, complete the one-time [automatic template synchronization setup](template_synchronization.md). This allows future template migrations to update workflow files safely.
+
 Now that your repository is set up, you can start to customise it (bellow you can find a GIF with the whole process). To get started, you will need:
 
 - A name for your project/application (e.g., `CellAnalyzer`).

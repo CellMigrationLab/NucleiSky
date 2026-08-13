@@ -1,5 +1,8 @@
 from __future__ import annotations
 
+import json
+import re
+
 from pathlib import Path
 from typing import Any
 
@@ -93,13 +96,110 @@ def update_bump_constructor(repo_root: Path) -> bool:
 
 
 def update_welcome_template(repo_root: Path) -> bool:
-    return replace_text(
-        repo_root,
-        WELCOME_TEMPLATE_PATH,
-        '    "        src_folder = Path(\\"..\\") / \\"src\\" / \\"PYTHON_PROJ_NAME\\"\\n",',
-        '    "        src_folder = Path(\\"..\\") / \\"src\\"\\n",',
-        already_updated='    "        src_folder = Path(\\"..\\") / \\"src\\"\\n",',
+    path = repo_root / WELCOME_TEMPLATE_PATH
+    if not path.exists():
+        print(f"Skipping missing file: {WELCOME_TEMPLATE_PATH}")
+        return False
+
+    original_text = read_text(path)
+    newline = detect_newline(original_text)
+
+    try:
+        notebook = json.loads(original_text)
+    except json.JSONDecodeError as exc:
+        raise ValueError(f"Unable to parse {WELCOME_TEMPLATE_PATH} as JSON") from exc
+
+    legacy_assignment = re.compile(
+        r"^(?P<indent>[ \t]*)src_folder\s*=\s*"
+        r"Path\((?P<quote1>['\"])\.\.(?P=quote1)\)\s*/\s*"
+        r"(?P<quote2>['\"])src(?P=quote2)\s*/\s*"
+        r"(?P<quote3>['\"])[^'\"]+(?P=quote3)\s*$"
     )
+    current_assignment = re.compile(
+        r"^[ \t]*src_folder\s*=\s*"
+        r"Path\((?P<quote1>['\"])\.\.(?P=quote1)\)\s*/\s*"
+        r"(?P<quote2>['\"])src(?P=quote2)\s*$"
+    )
+
+    found_current = False
+    changed = False
+
+    for cell in notebook.get("cells", []):
+        if cell.get("cell_type") != "code":
+            continue
+
+        source = cell.get("source", [])
+        source_is_list = isinstance(source, list)
+        lines = source if source_is_list else str(source).splitlines(keepends=True)
+        updated_lines = []
+        cell_changed = False
+
+        for line in lines:
+            line_ending = "\r\n" if line.endswith("\r\n") else "\n" if line.endswith("\n") else ""
+            body = line[:-len(line_ending)] if line_ending else line
+
+            if current_assignment.match(body):
+                found_current = True
+                updated_lines.append(line)
+                continue
+
+            match = legacy_assignment.match(body)
+            if match:
+                updated_lines.append(
+                    f'{match.group("indent")}src_folder = Path("..") / "src"{line_ending}'
+                )
+                changed = True
+                cell_changed = True
+                continue
+
+            updated_lines.append(line)
+
+        if cell_changed:
+            cell["source"] = updated_lines if source_is_list else "".join(updated_lines)
+
+    if not changed:
+        if found_current:
+            return False
+        print(
+            f"Skipping {WELCOME_TEMPLATE_PATH}: no legacy src_folder assignment was found"
+        )
+        return False
+
+    rendered = json.dumps(notebook, ensure_ascii=False, indent=1)
+    if original_text.endswith(("\n", "\r\n")):
+        rendered += newline
+    write_text(path, rendered)
+    print(f"Updated {WELCOME_TEMPLATE_PATH}")
+    return True
+
+
+def detect_python_package_name(repo_root: Path, text: str = "") -> str:
+    src_root = repo_root / "src"
+    if src_root.is_dir():
+        candidates = sorted(
+            child.name
+            for child in src_root.iterdir()
+            if child.is_dir()
+            and child.name.isidentifier()
+            and (child / "__init__.py").is_file()
+        )
+        if len(candidates) == 1:
+            return candidates[0]
+
+    setup_path = repo_root / "setup.py"
+    if setup_path.is_file():
+        setup_text = read_text(setup_path)
+        match = re.search(r'name\s*=\s*["\']([^"\']+)["\']', setup_text)
+        if match:
+            return match.group(1).replace("-", "_")
+
+    import_match = re.search(
+        r"(?m)^import\s+([A-Za-z_][A-Za-z0-9_]*)\s*$", text
+    )
+    if import_match:
+        return import_match.group(1)
+
+    return "PYTHON_PROJ_NAME"
 
 
 def update_external_code_docs(repo_root: Path) -> bool:
@@ -110,6 +210,7 @@ def update_external_code_docs(repo_root: Path) -> bool:
 
     original_text = read_text(path)
     newline = detect_newline(original_text)
+    package_name = detect_python_package_name(repo_root, original_text)
 
     changed = False
     updated_text = original_text
@@ -130,7 +231,7 @@ def update_external_code_docs(repo_root: Path) -> bool:
         [
             "```text",
             "src/",
-            "|-- PYTHON_PROJ_NAME/",
+            f"|-- {package_name}/",
             "|   |-- __init__.py",
             "|   |-- my_script.py",
             "|   |-- subpackage/",
@@ -143,18 +244,24 @@ def update_external_code_docs(repo_root: Path) -> bool:
         updated_text = updated_text.replace(old_tree, new_tree, 1)
         changed = True
     elif new_tree not in updated_text:
-        raise ValueError(f"Unable to find directory tree block in {EXTERNAL_CODE_DOC_PATH}")
+        print(
+            f"Skipping directory tree update in {EXTERNAL_CODE_DOC_PATH}: "
+            "the document uses a custom structure"
+        )
 
-    replacements = [
-        ("# src/__init__.py", "# src/PYTHON_PROJ_NAME/__init__.py"),
-        ("from PYTHON_PROJ_NAME import subpackage", "from PYTHON_PROJ_NAME.subpackage import submodule1"),
-    ]
-    for old, new in replacements:
-        if old in updated_text:
-            updated_text = updated_text.replace(old, new, 1)
-            changed = True
-        elif new not in updated_text:
-            raise ValueError(f"Unable to find expected text in {EXTERNAL_CODE_DOC_PATH}: {old}")
+    old_init = "# src/__init__.py"
+    new_init = f"# src/{package_name}/__init__.py"
+    if old_init in updated_text:
+        updated_text = updated_text.replace(old_init, new_init, 1)
+        changed = True
+
+    old_submodule_pattern = re.compile(
+        rf"(?m)^from\s+{re.escape(package_name)}\s+import\s+subpackage\s*$"
+    )
+    new_submodule = f"from {package_name}.subpackage import submodule1"
+    if old_submodule_pattern.search(updated_text):
+        updated_text = old_submodule_pattern.sub(new_submodule, updated_text, count=1)
+        changed = True
 
     if not changed:
         return False

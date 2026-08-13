@@ -1,5 +1,8 @@
 # Check Workflow Status & Troubleshooting
 
+
+The template synchronization workflow requires the one-time [`LABCONSTRICTOR_SYNC_TOKEN` setup](template_synchronization.md). Other notebook and installer workflows continue to use GitHub's built-in credentials.
+
 When you upload a notebook or make a release, GitHub Actions starts a workflow to check your code and build the installers.
 
 ## 1. Monitor the Progress

@@ -1,5 +1,8 @@
-template_version: 0.1.9
+template_version: 0.1.13
 migrations:
+  - from: 0.0.0
+    to: 0.0.1
+    script: migrations/v0_0_0_to_v0_0_1.py
   - from: 0.0.1
     to: 0.1.0
     script: migrations/v0_0_1_to_v0_1_0.py
@@ -30,3 +33,15 @@ migrations:
   - from: 0.1.8
     to: 0.1.9
     script: migrations/v0_1_8_to_v0_1_9.py
+  - from: 0.1.9
+    to: 0.1.10
+    script: migrations/v0_1_9_to_v0_1_10.py
+  - from: 0.1.10
+    to: 0.1.11
+    script: migrations/v0_1_10_to_v0_1_11.py
+  - from: 0.1.11
+    to: 0.1.12
+    script: migrations/v0_1_11_to_v0_1_12.py
+  - from: 0.1.12
+    to: 0.1.13
+    script: migrations/v0_1_12_to_v0_1_13.py
