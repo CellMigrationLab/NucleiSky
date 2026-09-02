@@ -128,21 +128,22 @@ If you find this tool useful in your research, please cite:
 **NucleiSky enables cross-scale multimodal registration of microscopy data using nuclei constellations.** 
 
 Iván Hidalgo Cenalmor, Adán Olguín-Olguín, Carolina Prieto, Johannes Kumra Ahnlide, Pontus Nordenfelt, Ricardo Henriques, Mario Del Rosario, Guillaume Jacquemet
-bioRxiv 2026.06.29.735028; 
+Journal of Cell Science (2026), jcs.265152.
 
-doi: https://doi.org/10.64898/2026.06.29.735028
+doi: https://doi.org/10.1242/jcs.265152
 
 
 ```bibtex
-@article {Cenalmor2026,
-	author = {Cenalmor, Iv{\'a}n Hidalgo and Olgu{\'\i}n-Olgu{\'\i}n, Ad{\'a}n and Prieto, Carolina and Ahnlide, Johannes Kumra and Nordenfelt, Pontus and Henriques, Ricardo and Del Rosario, Mario and Jacquemet, Guillaume},
+@article{10.1242/jcs.265152,
+	author = {Hidalgo-Cenalmor, Iván and Olguín-Olguín, Adán and Prieto, Carolina and Ahnlide, Johannes Kumra and Nordenfelt, Pontus and Henriques, Ricardo and Del Rosario, Mario and Jacquemet, Guillaume},
 	title = {NucleiSky enables cross-scale multimodal registration of microscopy data using nuclei constellations},
-	elocation-id = {2026.06.29.735028},
+	journal = {Journal of Cell Science},
+	pages = {jcs.265152},
 	year = {2026},
-	doi = {10.64898/2026.06.29.735028},
-	publisher = {Cold Spring Harbor Laboratory},	
-	URL = {https://www.biorxiv.org/content/early/2026/06/29/2026.06.29.735028},
-	eprint = {https://www.biorxiv.org/content/early/2026/06/29/2026.06.29.735028.full.pdf},
-	journal = {bioRxiv}
+	month = {08},
+	issn = {0021-9533},
+	doi = {10.1242/jcs.265152},
+	url = {https://doi.org/10.1242/jcs.265152},
+	eprint = {https://journals.biologists.com/jcs/article-pdf/doi/10.1242/jcs.265152/3712563/jcs265152.pdf},
 }
 ```
