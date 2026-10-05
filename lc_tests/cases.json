@@ -1,0 +1,40 @@
+[
+  {
+    "tool": "relocalize",
+    "inputs": {
+      "reference": "fixtures/reference.tif",
+      "query": "fixtures/query.tif",
+      "reference_pixel_size_um": 0.65,
+      "query_pixel_size_um": 0.325
+    },
+    "expect": {
+      "max_seconds": 240,
+      "progress_events_min": 2,
+      "results": {
+        "values": {
+          "rotation_deg": {
+            "approx": 12.0,
+            "tol": 1.0
+          },
+          "scale": {
+            "approx": 1.0,
+            "tol": 0.05
+          }
+        }
+      }
+    }
+  },
+  {
+    "tool": "relocalize",
+    "inputs": {
+      "reference": "fixtures/reference.tif",
+      "query": "fixtures/query.tif",
+      "reference_pixel_size_um": -1.0
+    },
+    "expect": {
+      "status": "FAILED",
+      "code": "invalid_parameter",
+      "message_contains": "must be >="
+    }
+  }
+]

@@ -83,6 +83,17 @@ Use `pip install "nucleisky[all]"` when you also need optional segmentation, OME
 
 ---
 
+## 🧩 Napari and Fiji (experimental, branch `bridge-test`)
+
+The installer registers NucleiSky's **Relocalize 2D** tool (`src/nucleisky_lc_tools`) so that it appears in the generic
+[napari-labconstrictor](https://github.com/CellMigrationLab/napari-labconstrictor) widget and the
+[LabConstrictor-Fiji](https://github.com/CellMigrationLab/LabConstrictor-Fiji) command, with a form generated from the function signature
+(images from open layers/windows or from files, pixel sizes taken from the image calibration). The tool runs in NucleiSky's own
+environment; Napari/Fiji never import NucleiSky. Details and tests: [`lc_tests/README.md`](lc_tests/README.md) and
+[LabConstrictor-Tools](https://github.com/CellMigrationLab/LabConstrictor-Tools).
+
+---
+
 ## 📚 Documentation Index
 
 **Start Here**

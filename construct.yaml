@@ -102,6 +102,7 @@ extra_files:
 - src/nucleisky/nucleisky3d/utils.py: NucleiSky/src/nucleisky/nucleisky3d/utils.py
 - src/nucleisky/nucleisky3d/visualization.py: NucleiSky/src/nucleisky/nucleisky3d/visualization.py
 - src/nucleisky2d/segmentation.py: NucleiSky/src/nucleisky2d/segmentation.py
+- src/nucleisky_lc_tools/__init__.py: NucleiSky/src/nucleisky_lc_tools/__init__.py
 post_install: app/bash_bat_scripts/post_install.bat # [win]
 post_install: app/bash_bat_scripts/post_install.sh # [unix]
 pre_uninstall: app/bash_bat_scripts/pre_uninstall.bat # [win]
