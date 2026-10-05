@@ -29,6 +29,15 @@ from labconstrictor_tools import (
 )
 
 
+_NO_MATCH = {
+    "auto": "No match found: none of the matchers could place the query in the reference. Check the pixel sizes and that the query overlaps the reference.",
+    **{
+        m: "No match found with the '%s' matcher. This is not an error in the images: try Matcher = auto, or another matcher." % m
+        for m in ("quad", "triangles", "graph", "hashing")
+    },
+}
+
+
 @tool("Relocalize 2D")
 def relocalize(
     reference: Annotated[Image, Axes("YX"), Description("Large / full-field image")],
@@ -36,6 +45,10 @@ def relocalize(
     reference_pixel_size_um: Annotated[float, Unit("um/px"), Min(0), PixelSizeOf("reference")] = 0.65,
     query_pixel_size_um: Annotated[float, Unit("um/px"), Min(0), PixelSizeOf("query")] = 0.325,
     segmentation: Literal["threshold"] = "threshold",
+    matcher: Annotated[
+        Literal["auto", "quad", "triangles", "graph", "hashing"],
+        Description("auto = try the matchers in the order NucleiSky recommends for the number of nuclei until one succeeds; or force one"),
+    ] = "auto",
 ) -> tuple[
     Annotated[Affine, ApplyTo("query", "reference"), Name("alignment")],
     Annotated[ImageOut, Name("query_aligned")],
@@ -81,6 +94,7 @@ def relocalize(
             pixel_size_crop_um=query_pixel_size_um,
             result_dir=out,
             store_full_out=False,
+            matcher_order=None if matcher == "auto" else [matcher],
         )
         rec = save_nucleisky_transform(
             best,
@@ -92,14 +106,13 @@ def relocalize(
         )
     except Exception as e:
         shutil.rmtree(out, ignore_errors=True)
-        raise ToolError(
-            "no_match",
-            "NucleiSky could not match the images (%s: %s). Check the pixel sizes and that the query overlaps the reference."
-            % (type(e).__name__, e),
-        ) from e
+        import sys
+
+        print("NucleiSky matching did not produce a transform: %s: %s" % (type(e).__name__, e), file=sys.stderr)
+        raise ToolError("no_match", _NO_MATCH[matcher]) from e
     shutil.rmtree(out, ignore_errors=True)
     if not rec["success"]:
-        raise ToolError("no_match", "No confident match found.")
+        raise ToolError("no_match", _NO_MATCH[matcher])
     A, b = np.array(rec["A_px"]), np.array(rec["b_px"])
     Ainv = np.linalg.inv(A)
     M = np.eye(3)

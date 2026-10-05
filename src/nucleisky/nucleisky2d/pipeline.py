@@ -624,6 +624,7 @@ def run_adaptive_matching_and_export(
     labels_crop=None,
     save_segmentation_masks: bool = True,
     ij_percentile_normalize: Optional[Any] = None,
+    matcher_order: Optional[List[str]] = None,
 ) -> Tuple[Dict[str, Any], list]:
     """
     API-compatible version of adaptive matching.
@@ -644,6 +645,8 @@ def run_adaptive_matching_and_export(
         labels_full/labels_crop: Optional segmentation masks (2D label images).
         save_segmentation_masks: Save label masks (if provided) under the export directory.
         ij_percentile_normalize: Optional normalization function or parameters.
+        matcher_order: Optional explicit matcher order (e.g. ["quad"] to use one matcher only);
+            None = automatic order chosen from the number of nuclei in the crop.
 
     Returns:
         (best_result_dict, history_list)
@@ -707,7 +710,7 @@ def run_adaptive_matching_and_export(
 
         # Run adaptive matching
         best_out, history = run_adaptive_nucleisky(
-            matcher_order=None,
+            matcher_order=matcher_order,
             base_seed=int(base_seed),
             matcher_config=cfg_selected,
             store_full_out=bool(store_full_out),
