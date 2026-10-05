@@ -29,6 +29,114 @@
     "inputs": {
       "reference": "fixtures/reference.tif",
       "query": "fixtures/query.tif",
+      "reference_pixel_size_um": 0.65,
+      "query_pixel_size_um": 0.325,
+      "matcher": "auto"
+    },
+    "expect": {
+      "max_seconds": 240,
+      "progress_events_min": 2,
+      "results": {
+        "values": {
+          "rotation_deg": {
+            "approx": 12.0,
+            "tol": 1.0
+          },
+          "scale": {
+            "approx": 1.0,
+            "tol": 0.05
+          }
+        }
+      }
+    }
+  },
+  {
+    "tool": "relocalize",
+    "inputs": {
+      "reference": "fixtures/reference.tif",
+      "query": "fixtures/query.tif",
+      "reference_pixel_size_um": 0.65,
+      "query_pixel_size_um": 0.325,
+      "matcher": "quad"
+    },
+    "expect": {
+      "max_seconds": 240,
+      "progress_events_min": 2,
+      "results": {
+        "values": {
+          "rotation_deg": {
+            "approx": 12.0,
+            "tol": 1.0
+          },
+          "scale": {
+            "approx": 1.0,
+            "tol": 0.05
+          }
+        }
+      }
+    }
+  },
+  {
+    "tool": "relocalize",
+    "inputs": {
+      "reference": "fixtures/reference.tif",
+      "query": "fixtures/query.tif",
+      "reference_pixel_size_um": 0.65,
+      "query_pixel_size_um": 0.325,
+      "matcher": "triangles"
+    },
+    "expect": {
+      "status": "FAILED",
+      "code": "no_match",
+      "message_contains": "No match found with the 'triangles' matcher"
+    }
+  },
+  {
+    "tool": "relocalize",
+    "inputs": {
+      "reference": "fixtures/reference.tif",
+      "query": "fixtures/query.tif",
+      "reference_pixel_size_um": 0.65,
+      "query_pixel_size_um": 0.325,
+      "matcher": "hashing"
+    },
+    "expect": {
+      "max_seconds": 240,
+      "progress_events_min": 2,
+      "results": {
+        "values": {
+          "rotation_deg": {
+            "approx": 12.0,
+            "tol": 1.0
+          },
+          "scale": {
+            "approx": 1.0,
+            "tol": 0.05
+          }
+        }
+      }
+    }
+  },
+  {
+    "tool": "relocalize",
+    "inputs": {
+      "reference": "fixtures/reference.tif",
+      "query": "fixtures/query.tif",
+      "reference_pixel_size_um": 0.65,
+      "query_pixel_size_um": 0.325,
+      "matcher": "graph"
+    },
+    "expect": {
+      "status": "FAILED",
+      "code": "no_match",
+      "message_contains": "No match found with the 'graph' matcher"
+    }
+  },
+  {
+    "tool": "relocalize",
+    "inputs": {
+      "reference": "fixtures/reference.tif",
+      "query": "fixtures/query.tif",
       "reference_pixel_size_um": -1.0
     },
     "expect": {
