@@ -65,7 +65,7 @@ fi
 if [ -f "$PROJECT_ROOT/setup.py" ]; then
     echo "Found setup.py, installing NucleiSky package locally without build isolation" >> "$LOG_FILE"
     "$PYTHON_EXE" -m pip install --no-deps --no-build-isolation "$PROJECT_ROOT" >> "$LOG_FILE" 2>&1
-    "$PYTHON_EXE" -c "import PYTHON_PROJ_NAME; print('NucleiSky import successful:', PYTHON_PROJ_NAME.__file__)" >> "$LOG_FILE" 2>&1
+    "$PYTHON_EXE" -c "import nucleisky; print('NucleiSky import successful:', nucleisky.__file__)" >> "$LOG_FILE" 2>&1
 else
     echo "No setup.py detected; this project does not bundle an optional Python package." >> "$LOG_FILE"
 fi

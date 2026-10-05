@@ -94,9 +94,9 @@ IF EXIST "%PROJECT_ROOT%\setup.py" (
         GOTO :fail
     )
 
-    "%PYTHON_EXE%" -c "import PYTHON_PROJ_NAME; print('NucleiSky import successful:', PYTHON_PROJ_NAME.__file__)" >> "%LOG_FILE%" 2>&1
+    "%PYTHON_EXE%" -c "import nucleisky; print('NucleiSky import successful:', nucleisky.__file__)" >> "%LOG_FILE%" 2>&1
     IF ERRORLEVEL 1 (
-        SET "FAILURE_MESSAGE=Installed NucleiSky package could not be imported as PYTHON_PROJ_NAME."
+        SET "FAILURE_MESSAGE=Installed NucleiSky package could not be imported as nucleisky."
         GOTO :fail
     )
 ) ELSE (
