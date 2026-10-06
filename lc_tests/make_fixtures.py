@@ -41,6 +41,11 @@ crop = np.clip(
 ).astype(np.uint16)
 imwrite(out / "reference.tif", full)
 imwrite(out / "query.tif", crop)
+# simple label images (connected components above a fraction of the maximum), for the "existing mask" inputs
+from scipy.ndimage import label as _label
+
+imwrite(out / "reference_mask.tif", _label(full > 0.25 * full.max())[0].astype(np.int32))
+imwrite(out / "query_mask.tif", _label(crop > 0.25 * crop.max())[0].astype(np.int32))
 # ground truth: crop px (y,x) -> full px:  full = M @ (crop - ctr) + (cy,cx), M = R/zoom
 M = np.array([[c, -s], [s, c]]) / zoom
 ctr = np.array([(ph - 1) / 2, (pw - 1) / 2])

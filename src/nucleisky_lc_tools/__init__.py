@@ -8,15 +8,21 @@ many seconds. It lives in its own package (not inside `nucleisky`) for the same 
     labconstrictor-tools test  --module nucleisky_lc_tools --cases lc_tests/cases.json
 """
 
-from typing import Annotated, Literal
+from typing import Annotated, Literal, Optional
 
 from labconstrictor_tools import (
+    Advanced,
     Affine,
     ApplyTo,
     Axes,
     Description,
+    EnabledWhen,
+    Group,
     Image,
     ImageOut,
+    Label,
+    Labels,
+    Max,
     Min,
     Name,
     PixelSizeOf,
@@ -38,17 +44,68 @@ _NO_MATCH = {
 }
 
 
+_THRESHOLD = EnabledWhen("segmentation", "threshold")
+_INSTANSEG = EnabledWhen("segmentation", "instanseg")
+
+
 @tool("Relocalize 2D")
 def relocalize(
-    reference: Annotated[Image, Axes("YX"), Description("Large / full-field image")],
-    query: Annotated[Image, Axes("YX"), Description("Crop to locate inside the reference")],
-    reference_pixel_size_um: Annotated[float, Unit("um/px"), Min(0), PixelSizeOf("reference")] = 0.65,
-    query_pixel_size_um: Annotated[float, Unit("um/px"), Min(0), PixelSizeOf("query")] = 0.325,
-    segmentation: Literal["threshold"] = "threshold",
+    reference: Annotated[Image, Axes("YX"), Group("Images"), Description("Large / full-field image")],
+    query: Annotated[Image, Axes("YX"), Group("Images"), Description("Crop to locate inside the reference")],
+    reference_pixel_size_um: Annotated[
+        float, Unit("um/px"), Min(0), PixelSizeOf("reference"), Group("Images")
+    ] = 0.65,
+    query_pixel_size_um: Annotated[float, Unit("um/px"), Min(0), PixelSizeOf("query"), Group("Images")] = 0.325,
+    segmentation: Annotated[
+        Literal["threshold", "cellpose", "instanseg"],
+        Group("Segmentation"),
+        Description("Used for every image that has no mask. cellpose / instanseg need the deep-learning packages and download model weights on first use"),
+    ] = "threshold",
     matcher: Annotated[
         Literal["auto", "quad", "triangles", "graph", "hashing"],
+        Group("Matching"),
         Description("auto = try the matchers in the order NucleiSky recommends for the number of nuclei until one succeeds; or force one"),
     ] = "auto",
+    reference_mask: Annotated[
+        Optional[Labels],
+        Axes("YX"),
+        Group("Images"),
+        Description("Existing label image of the reference (same size): skips segmentation of the reference"),
+    ] = None,
+    query_mask: Annotated[
+        Optional[Labels],
+        Axes("YX"),
+        Group("Images"),
+        Description("Existing label image of the query (same size): skips segmentation of the query"),
+    ] = None,
+    threshold_method: Annotated[
+        Literal["otsu", "li", "yen", "triangle", "isodata"], Group("Segmentation"), _THRESHOLD
+    ] = "otsu",
+    blur_sigma: Annotated[
+        float, Min(0), Max(5), Unit("px"), Group("Segmentation"), _THRESHOLD, Description("Gaussian blur before thresholding")
+    ] = 1.0,
+    min_area_px: Annotated[
+        int, Min(0), Unit("px"), Label("Min area"), Group("Segmentation"), _THRESHOLD, Description("Objects smaller than this are removed")
+    ] = 5,
+    watershed_split: Annotated[
+        bool, Group("Segmentation"), _THRESHOLD, Description("Split touching nuclei with a watershed")
+    ] = True,
+    instanseg_model: Annotated[
+        Literal["brightfield_nuclei", "fluorescence_nuclei_and_cells"], Label("InstanSeg model"), Group("Segmentation"), _INSTANSEG
+    ] = "brightfield_nuclei",
+    instanseg_target: Annotated[Literal["nuclei", "cells"], Label("InstanSeg target"), Group("Segmentation"), _INSTANSEG] = "nuclei",
+    instanseg_cleanup_fragments: Annotated[
+        bool, Label("InstanSeg: clean up fragments"), Group("Segmentation"), _INSTANSEG
+    ] = True,
+    peak_distance_px: Annotated[
+        int, Min(1), Unit("px"), Label("Peak distance"), Group("Fine-tuning"), Advanced(), _THRESHOLD, Description("Minimum distance between watershed seeds (threshold segmentation)")
+    ] = 5,
+    fixed_seed: Annotated[
+        Optional[int], Group("Fine-tuning"), Advanced(), Description("Random seed for reproducible matching; unset = default seed 0")
+    ] = None,
+    max_seconds: Annotated[
+        Optional[float], Min(1), Unit("s"), Label("Time limit"), Group("Fine-tuning"), Advanced(), Description("Time limit for the whole matching; unset = no limit")
+    ] = None,
 ) -> tuple[
     Annotated[Affine, ApplyTo("query", "reference"), Name("alignment")],
     Annotated[ImageOut, Name("query_aligned")],
@@ -57,6 +114,7 @@ def relocalize(
     """Find where a rotated / rescaled query image lies in a reference image."""
     import shutil
     import tempfile
+    import sys
 
     import numpy as np
     from nucleisky.nucleisky2d.features import add_centroids_orig_px_columns, extract_nuclear_features
@@ -70,17 +128,60 @@ def relocalize(
         raise ToolError(
             "bad_input", "2D (YX) images required; got %s and %s" % (reference.shape, query.shape)
         )
-    progress(0.05, "segmenting nuclei")
+    for name, mask, image in (("Reference mask", reference_mask, reference), ("Query mask", query_mask, query)):
+        if mask is not None and tuple(mask.shape) != tuple(image.shape):
+            raise ToolError(
+                "mask_shape_mismatch",
+                "%s must have the same size as its image: mask %s, image %s" % (name, tuple(mask.shape), tuple(image.shape)),
+            )
+    needs_segmentation = reference_mask is None or query_mask is None
+    if needs_segmentation and segmentation != "threshold":
+        first_use = " (the first run downloads model weights)" if segmentation == "instanseg" else ""
+        progress(0.03, "loading %s%s" % (segmentation, first_use))
+    progress(0.05, "segmenting nuclei" if needs_segmentation else "using the given masks")
     f_seg, c_seg, ps_f, ps_c, sf, sc, _ = scale_normalize_pair_for_segmentation(
         reference, query, reference_pixel_size_um, query_pixel_size_um
     )
-    seg = {"threshold": {"threshold_method": "otsu", "min_object_size": 5, "do_watershed": True}}
-    df_f = add_centroids_orig_px_columns(
-        extract_nuclear_features(segment_nuclei_dispatch(f_seg, segmentation, ps_f, seg), None, ps_f), sf
-    )
-    df_c = add_centroids_orig_px_columns(
-        extract_nuclear_features(segment_nuclei_dispatch(c_seg, segmentation, ps_c, seg), None, ps_c), sc
-    )
+    seg = {
+        "threshold": {
+            "threshold_method": threshold_method,
+            "gaussian_sigma": blur_sigma,
+            "min_object_size": min_area_px,
+            "do_watershed": watershed_split,
+            "peak_min_distance": peak_distance_px,
+        },
+        "instanseg": {
+            "model_name": instanseg_model,
+            "target": instanseg_target,
+            "cleanup_fragments": instanseg_cleanup_fragments,
+        },
+    }
+
+    def nuclei(label, mask, image_seg, ps_seg, factor, ps_original, what):
+        """Feature table of one image: from its mask (at original resolution) or from a segmentation of the rescaled image."""
+        try:
+            if mask is not None:
+                labels, ps, scale = np.asarray(mask), ps_original, 1.0
+            else:
+                labels, ps, scale = segment_nuclei_dispatch(image_seg, segmentation, ps_seg, seg), ps_seg, factor
+        except Exception as e:
+            print("NucleiSky segmentation of the %s failed: %s: %s" % (what, type(e).__name__, e), file=sys.stderr)
+            if segmentation in ("cellpose", "instanseg"):
+                raise ToolError(
+                    "segmentation_unavailable",
+                    "%s could not run (%s). Check that its package and model weights are installed (the first run needs internet)."
+                    % (segmentation, type(e).__name__),
+                ) from e
+            raise
+        frame = add_centroids_orig_px_columns(extract_nuclear_features(labels, None, ps), scale)
+        if len(frame) == 0:
+            raise ToolError(
+                "no_nuclei", "No nuclei found in the %s%s." % (what, " mask" if mask is not None else " (try other segmentation settings)")
+            )
+        return frame
+
+    df_f = nuclei("reference", reference_mask, f_seg, ps_f, sf, reference_pixel_size_um, "reference")
+    df_c = nuclei("query", query_mask, c_seg, ps_c, sc, query_pixel_size_um, "query")
     check_cancel()
     progress(0.4, "matching %d query nuclei against %d reference nuclei" % (len(df_c), len(df_f)))
     out = tempfile.mkdtemp(prefix="nucleisky_")
@@ -95,6 +196,8 @@ def relocalize(
             result_dir=out,
             store_full_out=False,
             matcher_order=None if matcher == "auto" else [matcher],
+            base_seed=0 if fixed_seed is None else int(fixed_seed),
+            max_total_time_s=None if max_seconds is None else float(max_seconds),
         )
         rec = save_nucleisky_transform(
             best,
