@@ -6,5 +6,5 @@ Declarations: `src/nucleisky_lc_tools/__init__.py`. They run in NucleiSky's own 
     labconstrictor-tools check --module nucleisky_lc_tools
     labconstrictor-tools test  --module nucleisky_lc_tools --cases lc_tests/cases.json
 
-`cases.json` recovers the known transform (12 degrees, 2x) and checks that invalid calibrations are rejected with a readable error.
+`make_fixtures.py` also writes `reference_mask.tif` / `query_mask.tif` (simple thresholded label images) for the optional mask inputs. `cases.json` recovers the known transform (12 degrees, 2x) and checks that invalid calibrations are rejected with a readable error.
 The first run is slow (numba compiles): allow a few minutes.
