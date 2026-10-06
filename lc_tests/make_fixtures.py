@@ -46,6 +46,11 @@ from scipy.ndimage import label as _label
 
 imwrite(out / "reference_mask.tif", _label(full > 0.25 * full.max())[0].astype(np.int32))
 imwrite(out / "query_mask.tif", _label(crop > 0.25 * crop.max())[0].astype(np.int32))
+# the same masks as binary images (one value for every nucleus: the tool must label the connected objects itself) and a
+# deliberately invalid one (fractions)
+imwrite(out / "reference_mask_binary.tif", (full > 0.25 * full.max()).astype(np.uint8))
+imwrite(out / "query_mask_binary.tif", (crop > 0.25 * crop.max()).astype(np.uint8))
+imwrite(out / "query_mask_fractions.tif", (_label(crop > 0.25 * crop.max())[0] + 0.5).astype(np.float32))
 # ground truth: crop px (y,x) -> full px:  full = M @ (crop - ctr) + (cy,cx), M = R/zoom
 M = np.array([[c, -s], [s, c]]) / zoom
 ctr = np.array([(ph - 1) / 2, (pw - 1) / 2])

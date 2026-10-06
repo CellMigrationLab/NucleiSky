@@ -19,6 +19,14 @@
           "scale": {
             "approx": 1.0,
             "tol": 0.05
+          },
+          "offset_y_px": {
+            "approx": 700.06,
+            "tol": 4.0
+          },
+          "offset_x_px": {
+            "approx": 606.1,
+            "tol": 4.0
           }
         }
       }
@@ -45,6 +53,14 @@
           "scale": {
             "approx": 1.0,
             "tol": 0.05
+          },
+          "offset_y_px": {
+            "approx": 700.06,
+            "tol": 4.0
+          },
+          "offset_x_px": {
+            "approx": 606.1,
+            "tol": 4.0
           }
         }
       }
@@ -71,6 +87,14 @@
           "scale": {
             "approx": 1.0,
             "tol": 0.05
+          },
+          "offset_y_px": {
+            "approx": 700.06,
+            "tol": 4.0
+          },
+          "offset_x_px": {
+            "approx": 606.1,
+            "tol": 4.0
           }
         }
       }
@@ -112,6 +136,14 @@
           "scale": {
             "approx": 1.0,
             "tol": 0.05
+          },
+          "offset_y_px": {
+            "approx": 700.06,
+            "tol": 4.0
+          },
+          "offset_x_px": {
+            "approx": 606.1,
+            "tol": 4.0
           }
         }
       }
@@ -153,6 +185,14 @@
           "scale": {
             "approx": 1.0,
             "tol": 0.05
+          },
+          "offset_y_px": {
+            "approx": 700.06,
+            "tol": 4.0
+          },
+          "offset_x_px": {
+            "approx": 606.1,
+            "tol": 4.0
           }
         }
       }
@@ -179,6 +219,14 @@
           "scale": {
             "approx": 1.0,
             "tol": 0.05
+          },
+          "offset_y_px": {
+            "approx": 700.06,
+            "tol": 4.0
+          },
+          "offset_x_px": {
+            "approx": 606.1,
+            "tol": 4.0
           }
         }
       }
@@ -204,6 +252,14 @@
           "scale": {
             "approx": 1.0,
             "tol": 0.05
+          },
+          "offset_y_px": {
+            "approx": 700.06,
+            "tol": 4.0
+          },
+          "offset_x_px": {
+            "approx": 606.1,
+            "tol": 4.0
           }
         }
       }
@@ -230,6 +286,14 @@
           "scale": {
             "approx": 1.0,
             "tol": 0.05
+          },
+          "offset_y_px": {
+            "approx": 700.06,
+            "tol": 4.0
+          },
+          "offset_x_px": {
+            "approx": 606.1,
+            "tol": 4.0
           }
         }
       }
@@ -257,6 +321,14 @@
           "scale": {
             "approx": 1.0,
             "tol": 0.05
+          },
+          "offset_y_px": {
+            "approx": 700.06,
+            "tol": 4.0
+          },
+          "offset_x_px": {
+            "approx": 606.1,
+            "tol": 4.0
           }
         }
       }
@@ -288,6 +360,59 @@
       "status": "FAILED",
       "code": "invalid_parameter",
       "message_contains": "must be >="
+    }
+  },
+  {
+    "tool": "relocalize",
+    "inputs": {
+      "reference": "fixtures/reference.tif",
+      "query": "fixtures/query.tif",
+      "reference_pixel_size_um": 0.65,
+      "query_pixel_size_um": 0.325,
+      "reference_mask": "fixtures/reference_mask_binary.tif",
+      "query_mask": "fixtures/query_mask_binary.tif"
+    },
+    "expect": {
+      "max_seconds": 240,
+      "results": {
+        "values": {
+          "rotation_deg": {
+            "approx": 12.0,
+            "tol": 1.0
+          },
+          "scale": {
+            "approx": 1.0,
+            "tol": 0.05
+          },
+          "offset_y_px": {
+            "approx": 700.06,
+            "tol": 4.0
+          },
+          "offset_x_px": {
+            "approx": 606.1,
+            "tol": 4.0
+          },
+          "n_nuclei_reference": {
+            "approx": 300.0,
+            "tol": 200.0
+          }
+        }
+      }
+    }
+  },
+  {
+    "tool": "relocalize",
+    "inputs": {
+      "reference": "fixtures/reference.tif",
+      "query": "fixtures/query.tif",
+      "reference_pixel_size_um": 0.65,
+      "query_pixel_size_um": 0.325,
+      "query_mask": "fixtures/query_mask_fractions.tif"
+    },
+    "expect": {
+      "status": "FAILED",
+      "code": "bad_mask",
+      "message_contains": "whole-number labels"
     }
   }
 ]
