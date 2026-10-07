@@ -15,6 +15,7 @@ from labconstrictor_tools import (
     Affine,
     ApplyTo,
     Axes,
+    ChoicesFrom,
     Description,
     EnabledWhen,
     Group,
@@ -48,6 +49,7 @@ _NO_MATCH = {
 
 _THRESHOLD = EnabledWhen("segmentation", "threshold")
 _INSTANSEG = EnabledWhen("segmentation", "instanseg")
+_DEEP = EnabledWhen("segmentation", "cellpose", "instanseg")
 
 
 # Failures of the segmentation back end that mean "this machine cannot run it" (package missing, weights not downloadable or not
@@ -212,6 +214,14 @@ def _alignment_outputs(rec, query, reference, n_reference, n_query):
 
 
 
+@tool("List the devices")
+def list_devices() -> Scalars:
+    """The options of the `device` dropdown of the segmentation: the devices PyTorch can use on this machine."""
+    from labconstrictor_tools.diagnostics import torch_devices
+
+    return {"choices": ["auto"] + torch_devices()}
+
+
 @tool("Relocalize 2D")
 def relocalize(
     reference: Annotated[Image, Axes("YX"), Group("Images"), Description("Large / full-field image")],
@@ -225,6 +235,13 @@ def relocalize(
         Group("Segmentation"),
         Description("Used for every image that has no mask. cellpose / instanseg need the deep-learning packages and download model weights on first use"),
     ] = "threshold",
+    device: Annotated[
+        str,
+        Group("Segmentation"),
+        ChoicesFrom("list_devices"),
+        _DEEP,
+        Description("Where cellpose / instanseg run: auto = the GPU when there is one, cpu = never the GPU (use it when the GPU runs out of memory), cuda or mps = that device"),
+    ] = "auto",
     matcher: Annotated[
         Literal["auto", "quad", "triangles", "graph", "hashing"],
         Group("Matching"),
@@ -293,6 +310,7 @@ def relocalize(
             reference, query, reference_pixel_size_um, query_pixel_size_um
         )
     seg = {
+        "device": device,
         "threshold": {
             "threshold_method": threshold_method,
             "gaussian_sigma": blur_sigma,

@@ -65,6 +65,16 @@ class Segmentor:
         self._cellpose_model = None
         self._cellpose_backend = None
         self._instanseg_cache = {}
+        self.device = "auto"  # "auto" | "cpu" | "cuda" / "cuda:N" | "mps"
+
+    def set_device(self, device):
+        """Choose where the models run. A change drops the loaded models so the next run reloads them there."""
+        device = str(device or "auto")
+        if device != self.device:
+            self.device = device
+            self._cellpose_model = None
+            self._cellpose_backend = None
+            self._instanseg_cache = {}
 
     def get_cellpose_model(self, pretrained_model="cpsam", model_type=None):
         """Lazy loader for Cellpose model."""
@@ -81,7 +91,14 @@ class Segmentor:
         if key not in self._instanseg_cache:
             from instanseg import InstanSeg
             logger.info(f"Loading InstanSeg model: {model_name}")
-            m = InstanSeg(model_name, verbosity=int(verbosity))
+            if self.device == "auto":
+                m = InstanSeg(model_name, verbosity=int(verbosity))
+            else:
+                try:
+                    m = InstanSeg(model_name, verbosity=int(verbosity), device=self.device)
+                except TypeError:  # an InstanSeg version without a device argument: its own choice
+                    logger.warning("This InstanSeg version has no device argument; using its default device.")
+                    m = InstanSeg(model_name, verbosity=int(verbosity))
             self._instanseg_cache[key] = m
         return self._instanseg_cache[key]
 
@@ -93,13 +110,26 @@ class Segmentor:
         from cellpose.models import CellposeModel
 
         devnull = open(os.devnull, "w")
+        if self.device == "cpu":
+            try:
+                with redirect_stdout(devnull), redirect_stderr(devnull):
+                    model = CellposeModel(gpu=False, pretrained_model=pretrained_model, model_type=model_type)
+                return model, "CellposeModel(cpu)"
+            finally:
+                devnull.close()
         try:
             logger.info(f"Initializing Cellpose (GPU) model: {pretrained_model}")
             with redirect_stdout(devnull), redirect_stderr(devnull):
+                kwargs = {}
+                if self.device != "auto":  # an explicit choice: "cuda", "cuda:1" or "mps"
+                    import torch
+
+                    kwargs["device"] = torch.device(self.device)
                 model = CellposeModel(
                     gpu=True,
                     pretrained_model=pretrained_model,
                     model_type=model_type,
+                    **kwargs,
                 )
             return model, "CellposeModel(gpu)"
         except Exception as e:
@@ -410,6 +440,8 @@ def segment_nuclei_dispatch(img, method, pixel_size_um, settings=None, segmentor
     
     # Use provided segmentor or fall back to global default
     seg_impl = segmentor if segmentor is not None else _GLOBAL_SEGMENTOR
+    if "device" in settings:
+        seg_impl.set_device(settings["device"])
 
     if m == "cellpose":
         s = settings.get("cellpose", {})
