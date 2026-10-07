@@ -414,5 +414,14 @@
       "code": "bad_mask",
       "message_contains": "whole-number labels"
     }
+  },
+  {
+    "tool": "list_devices",
+    "inputs": {},
+    "expect": {
+      "results": {
+        "values": {}
+      }
+    }
   }
 ]
