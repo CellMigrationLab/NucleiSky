@@ -26,6 +26,7 @@ from labconstrictor_tools import (
     Min,
     Name,
     PixelSizeOf,
+    PointsOut,
     Replace,
     Scalars,
     ToolError,
@@ -174,6 +175,16 @@ def _match(df_f, df_c, reference, query, reference_pixel_size_um, query_pixel_si
     return rec
 
 
+def _nuclei_points(frame):
+    """The nuclei NucleiSky used, as points (pixel coordinates of the original image): the quickest way to see whether the
+    segmentation (or the mask) found the nuclei it should."""
+    points = frame[["centroid_y_px_orig", "centroid_x_px_orig"]].rename(columns={"centroid_y_px_orig": "y", "centroid_x_px_orig": "x"})
+    for column in ("label", "area"):  # properties of each point, when the feature table has them
+        if column in frame.columns:
+            points[column] = frame[column].to_numpy()
+    return points.reset_index(drop=True)
+
+
 def _alignment_outputs(rec, query, reference, n_reference, n_query):
     import numpy as np
     from scipy.ndimage import affine_transform
@@ -263,6 +274,8 @@ def relocalize(
     Annotated[Affine, ApplyTo("query", "reference"), Name("alignment"), Replace()],
     Annotated[ImageOut, Name("query_aligned"), Replace()],
     Scalars,
+    Annotated[PointsOut, Name("reference_nuclei"), ApplyTo("reference"), Replace()],
+    Annotated[PointsOut, Name("query_nuclei"), ApplyTo("query"), Replace()],
 ]:
     """Find where a rotated / rescaled query image lies in a reference image."""
     _check_images(reference, query, reference_mask, query_mask)
@@ -302,4 +315,4 @@ def relocalize(
     )
     result = _alignment_outputs(rec, query, reference, len(df_f), len(df_c))
     progress(0.95, "done")
-    return result
+    return (*result, _nuclei_points(df_f), _nuclei_points(df_c))
