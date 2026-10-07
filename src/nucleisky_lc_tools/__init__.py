@@ -26,6 +26,7 @@ from labconstrictor_tools import (
     Min,
     Name,
     PixelSizeOf,
+    Replace,
     Scalars,
     ToolError,
     Unit,
@@ -259,8 +260,8 @@ def relocalize(
         Optional[float], Min(1), Unit("s"), Label("Time limit"), Group("Fine-tuning"), Advanced(), Description("Time limit for the whole matching; unset = no limit")
     ] = None,
 ) -> tuple[
-    Annotated[Affine, ApplyTo("query", "reference"), Name("alignment")],
-    Annotated[ImageOut, Name("query_aligned")],
+    Annotated[Affine, ApplyTo("query", "reference"), Name("alignment"), Replace()],
+    Annotated[ImageOut, Name("query_aligned"), Replace()],
     Scalars,
 ]:
     """Find where a rotated / rescaled query image lies in a reference image."""
