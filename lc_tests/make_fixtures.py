@@ -68,3 +68,10 @@ json.dump(
     indent=2,
 )
 print("ok", full.shape, crop.shape)
+
+# regions for the RegionOf inputs: a generous box around where the query lies (a tight one leaves too few nuclei to match), an empty one, and one of the wrong size
+region = np.zeros(full.shape, np.int32)
+region[300:1500, 300:1500] = 1
+imwrite(out / "reference_region.tif", region)
+imwrite(out / "empty_region.tif", np.zeros(full.shape, np.int32))
+imwrite(out / "wrong_size_region.tif", np.ones((100, 100), np.int32))

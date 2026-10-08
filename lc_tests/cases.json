@@ -423,5 +423,87 @@
         "values": {}
       }
     }
+  },
+  {
+    "tool": "relocalize",
+    "inputs": {
+      "reference": "fixtures/reference.tif",
+      "query": "fixtures/query.tif",
+      "reference_pixel_size_um": 0.65,
+      "query_pixel_size_um": 0.325,
+      "reference_region": "fixtures/reference_region.tif"
+    },
+    "expect": {
+      "max_seconds": 240,
+      "results": {
+        "values": {
+          "rotation_deg": {
+            "approx": 12.0,
+            "tol": 1.0
+          },
+          "n_nuclei_reference": 266
+        },
+        "reference_nuclei": {
+          "rows": 266
+        },
+        "reference_outlines": {
+          "features": 266
+        }
+      }
+    }
+  },
+  {
+    "tool": "relocalize",
+    "inputs": {
+      "reference": "fixtures/reference.tif",
+      "query": "fixtures/query.tif",
+      "reference_pixel_size_um": 0.65,
+      "query_pixel_size_um": 0.325
+    },
+    "expect": {
+      "max_seconds": 240,
+      "results": {
+        "values": {
+          "n_nuclei_reference": 429,
+          "n_nuclei_query": 9
+        },
+        "reference_outlines": {
+          "features": 429
+        },
+        "query_outlines": {
+          "features": 9
+        }
+      }
+    }
+  },
+  {
+    "tool": "relocalize",
+    "inputs": {
+      "reference": "fixtures/reference.tif",
+      "query": "fixtures/query.tif",
+      "reference_pixel_size_um": 0.65,
+      "query_pixel_size_um": 0.325,
+      "reference_region": "fixtures/empty_region.tif"
+    },
+    "expect": {
+      "status": "FAILED",
+      "code": "empty_region",
+      "message_contains": "empty"
+    }
+  },
+  {
+    "tool": "relocalize",
+    "inputs": {
+      "reference": "fixtures/reference.tif",
+      "query": "fixtures/query.tif",
+      "reference_pixel_size_um": 0.65,
+      "query_pixel_size_um": 0.325,
+      "reference_region": "fixtures/wrong_size_region.tif"
+    },
+    "expect": {
+      "status": "FAILED",
+      "code": "bad_input",
+      "message_contains": "size of the image"
+    }
   }
 ]
