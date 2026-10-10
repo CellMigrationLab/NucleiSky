@@ -1,0 +1,22 @@
+# yaml-language-server: $schema=https://labconstrictor.cellmig.org/schema/labconstrictor-app.schema.json
+schema: 1
+name: NucleiSky
+summary: Align microscopy images in 2D and 3D by matching the geometry of nuclei, like stars in a constellation.
+description: |-
+  Instead of relying on pixel intensity, NucleiSky matches the geometry of the cells. It finds the calibrated similarity transform that best overlaps two landmark constellations, so a high-magnification region can be located in a whole slide or a thick tissue volume.
+kind: analysis
+hosts: [notebook]
+distribution:
+  installer: true
+  colab:
+    - label: 2D app
+      url: https://colab.research.google.com/github/cellmigrationlab/NucleiSky/blob/main/notebooks/NucleiSky2DApp/NucleiSky2DApp.ipynb
+    - label: 3D app
+      url: https://colab.research.google.com/github/cellmigrationlab/NucleiSky/blob/main/notebooks/NucleiSky3DApp/NucleiSky3DApp.ipynb
+  pip: nucleisky
+license: MIT
+categories: [registration, ROI matching]
+doi: 10.1242/jcs.265152
+screenshots:
+  - path: docs/assets/banner.jpg
+    caption: NucleiSky banner.
