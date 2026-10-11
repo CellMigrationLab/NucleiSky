@@ -17,6 +17,8 @@ distribution:
       url: https://colab.research.google.com/github/CellMigrationLab/NucleiSky/blob/main/notebooks/NucleiSky2D_API_Workflow_Example/NucleiSky2D_API_Workflow_Example.ipynb
     - label: 3D Python API example (synthetic demo or your data)
       url: https://colab.research.google.com/github/CellMigrationLab/NucleiSky/blob/main/notebooks/NucleiSky3D_API_Workflow_Example/NucleiSky3D_API_Workflow_Example.ipynb
+    - label: 2D benchmarking (requires reference image)
+      url: https://colab.research.google.com/github/CellMigrationLab/NucleiSky/blob/main/notebooks/NucleiSky2DBenchmarking/NucleiSky2DBenchmarking.ipynb
     - label: 3D benchmarking (requires reference volume)
       url: https://colab.research.google.com/github/CellMigrationLab/NucleiSky/blob/main/notebooks/NucleiSky3DBenchmarking/NucleiSky3DBenchmarking.ipynb
   pip: nucleisky
