@@ -17,6 +17,29 @@ distribution:
 license: MIT
 categories: [registration, ROI matching]
 doi: 10.1242/jcs.265152
+inputs:
+  - "2D app: two 2D images, a reference image and a partial view (ROI) to place into it"
+  - "Pixel size (µm/px) of each image: read from TIFF metadata, otherwise you must enter it"
+  - "Image files: TIFF / OME-TIFF, NPY, Zarr / OME-Zarr, or standard image formats such as PNG / JPEG"
+  - "Nuclei label masks: built-in segmentation (threshold, Cellpose, InstanSeg) or your own masks"
+outputs:
+  - "The saved transform (JSON / JSONL): scale, rotation and translation, with the match quality"
+  - "The aligned image, exported as TIFF (aligned_on_full_px.tif) or OME-Zarr (aligned_on_full_px.zarr)"
+  - "A quality-control overlay figure with an error map (1-SSIM)"
+  - "Optional nuclei segmentation masks (TIFF)"
+limitations:
+  - "Only a similarity transform (one uniform scale, one rotation, one translation); no shear, non-uniform scaling or local elastic warping"
+  - "2D: the input must be a single 2D plane; Z-stacks and time series raise an error, RGB is converted to grayscale"
+  - "Needs enough nuclei: in practice at least about 10 points to overcome spatial ambiguity"
+  - "The crop and the full image must truly overlap; without overlap the matching fails"
+  - "Repetitive patterns (for example muscle fibers) can give a high inlier score but a wrong location"
+  - "3D: a single uniform scale factor, so it cannot correct anisotropic tissue shrinkage; at least 4 non-degenerate nuclei are needed"
+quickstart:
+  - "2D app notebook, Step 0: run the first cell to initialize the environment (Google Colab installs the libraries automatically)"
+  - "Step 1: choose the reference image and a partial view; enter the pixel size if the metadata has none"
+  - "Step 1: segment the nuclei (or load existing masks) to extract the nuclei centroids"
+  - "Step 2: run adaptive matching, the recommended starting point for most datasets, or a single matcher"
+  - "Step 3: reuse the saved transform to align other channels or other images of the same dataset"
 screenshots:
-  - path: docs/assets/banner.jpg
-    caption: NucleiSky banner.
+  - path: docs/assets/2D_QC.jpg
+    caption: "2D quality-control figure: the crop, the matching region of the full image, their overlay and an error map (1-SSIM), both ways"
