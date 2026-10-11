@@ -36,13 +36,13 @@ In [Step 3](#step-3-adjust-it-to-your-microscope-and-camera-settings), we will s
 
 Click the buttons below to download the files, then take them to the computer where you have NIS-Elements AR installed.
 
-<a href="https://github.com/CellMigrationLab/NucleiSky/raw/main/smart_microscopy/NucleiSky_JOBS.bin" target="_blank">
+<a href="https://github.com/CellMigrationLab/NucleiSky/raw/main/smart_microscopy/NucleiSky_JOBS.bin" target="_blank" rel="noopener">
     <img src="https://img.shields.io/badge/Download JOBS file-gray?logo=nikon&style=for-the-badge" alt="Download JOBS file" width="250">
 </a>
 
 > You can interactively take a look at the NucleiSky JOBS in the following [website](https://htmlpreview.github.io/?https://github.com/CellMigrationLab/NucleiSky/blob/main/docs/smart_microscopy/assets/JOBS_HTML.html)
 
-<a href="https://github.com/CellMigrationLab/NucleiSky/raw/main/smart_microscopy/NucleiSky_GA3.ga3" target="_blank">
+<a href="https://github.com/CellMigrationLab/NucleiSky/raw/main/smart_microscopy/NucleiSky_GA3.ga3" target="_blank" rel="noopener">
     <img src="https://img.shields.io/badge/Download GA3 file-gray?logo=nikon&style=for-the-badge" alt="Download GA3 file" width="250">
 </a>
 
@@ -111,7 +111,7 @@ In our case, we had a Plan Apo $\lambda D$ $4 \times$ OFN25. But in your microsc
 
 The simple autofocus settings are used for large-area scanning. For that reason, this is just a simple autofocus configuration with a $300 \mu m$ range. 
 
-Here, in the `Use OC` section, you should select the optical configuration you defined [here](#1-define-the-optical-configuration-of-your-experiment) for scanning the nuclei in the large area. The other parameters can be left as they are.
+Here, in the `Use OC` section, you should select the optical configuration you defined in [Define the optical configuration](#1-define-the-optical-configuration-of-your-experiment) for scanning the nuclei in the large area. The other parameters can be left as they are.
 
 ![Auto Focus Settings Simple JOBS step](https://raw.githubusercontent.com/CellMigrationLab/NucleiSky/main/docs/smart_microscopy/assets/Config_AFSettings_Simple.png)
 
@@ -119,7 +119,7 @@ Here, in the `Use OC` section, you should select the optical configuration you d
 
 The expert auto focus settings are used for the final acquisition of the high-resolution image. For that reason, this is a double-pass autofocus with a longer $500 \mu m$ range.
 
-Here on the `Use OC` section, you should select the optical configuration you defined [here](#1-define-the-optical-configuration-of-your-experiment) for the final acquisition of the high-resolution image. The other parameters can be left as they are.
+Here on the `Use OC` section, you should select the optical configuration you defined in [Define the optical configuration](#1-define-the-optical-configuration-of-your-experiment) for the final acquisition of the high-resolution image. The other parameters can be left as they are.
 
 ![Auto Focus Settings Expert JOBS step](https://raw.githubusercontent.com/CellMigrationLab/NucleiSky/main/docs/smart_microscopy/assets/Config_AFSettings_Expert.png)
 
@@ -194,7 +194,7 @@ In our case, we chose a higher magnification objective. Be sure that it is an ai
 If NucleiSky has detected a match and it has declared that some rotation is needed for this acquisition, a $3\times3$ grid will be used to acquire the final high-resolution image. 
 
 Here, first, you would need to go to the 
-λ tab (1). There, you will need to ensure that the optical configuration for Final Acquisition is defined [here](#1-define-the-optical-configuration-of-your-experiment) with all the channels you want to acquire (2). Then, you will need to ensure that your microscope is correctly selected (3). Leave the other parameters as they are unless you want to change the Z-Stack or Large Image settings.
+λ tab (1). There, you will need to ensure that the optical configuration for Final Acquisition is defined in [Define the optical configuration](#1-define-the-optical-configuration-of-your-experiment) with all the channels you want to acquire (2). Then, you will need to ensure that your microscope is correctly selected (3). Leave the other parameters as they are unless you want to change the Z-Stack or Large Image settings.
 
 ![Acquire NDExperiment1 JOBS step](https://raw.githubusercontent.com/CellMigrationLab/NucleiSky/main/docs/smart_microscopy/assets/Config_NDExperiment1.png)
 
