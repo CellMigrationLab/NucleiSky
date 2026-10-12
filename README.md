@@ -83,7 +83,7 @@ Use `pip install "nucleisky[all]"` when you also need optional segmentation, OME
 
 ---
 
-## 🧩 Napari and Fiji (experimental, branch `bridge-test`)
+## 🧩 Napari and Fiji (experimental)
 
 The installer registers NucleiSky's **Relocalize 2D** tool (`src/nucleisky_lc_tools`) so that it appears in the generic
 [napari-labconstrictor](https://github.com/CellMigrationLab/napari-labconstrictor) widget and the

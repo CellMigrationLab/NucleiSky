@@ -22,4 +22,12 @@ def test_declarations_are_valid_and_light():
     assert inputs["reference_region"]["region_of"] == "reference" and inputs["query_region"]["region_of"] == "query"
     assert inputs["device"]["choices_from"]["tool"] == "list_devices"
     assert {"cellpose_diameter_px", "cellpose_flow_threshold", "instanseg_mode", "instanseg_pixel_size_um"} <= set(inputs)
-    assert "nucleisky" not in sys.modules, "importing the declarations must not import the (slow) NucleiSky package"
+
+
+def test_declarations_do_not_import_nucleisky():
+    # a fresh interpreter: other tests in the same session import nucleisky and would make this check order dependent
+    import subprocess
+
+    code = "import sys, nucleisky_lc_tools; sys.exit(1 if 'nucleisky' in sys.modules else 0)"
+    done = subprocess.run([sys.executable, "-c", code], capture_output=True, text=True)
+    assert done.returncode == 0, "importing the declarations must not import the (slow) NucleiSky package\n" + done.stderr
