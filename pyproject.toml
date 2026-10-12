@@ -45,6 +45,9 @@ notebooks = [
   "PyYAML>=6.0",
   "requests>=2.32",
 ]
+tools = [
+  "labconstrictor-tools",
+]
 all = [
   "cellpose==4.1.1",
   "zarr==3.2.1",
