@@ -1,0 +1,509 @@
+[
+  {
+    "tool": "relocalize",
+    "inputs": {
+      "reference": "fixtures/reference.tif",
+      "query": "fixtures/query.tif",
+      "reference_pixel_size_um": 0.65,
+      "query_pixel_size_um": 0.325
+    },
+    "expect": {
+      "max_seconds": 240,
+      "progress_events_min": 2,
+      "results": {
+        "values": {
+          "rotation_deg": {
+            "approx": 12.0,
+            "tol": 1.0
+          },
+          "scale": {
+            "approx": 1.0,
+            "tol": 0.05
+          },
+          "offset_y_px": {
+            "approx": 700.06,
+            "tol": 4.0
+          },
+          "offset_x_px": {
+            "approx": 606.1,
+            "tol": 4.0
+          }
+        }
+      }
+    }
+  },
+  {
+    "tool": "relocalize",
+    "inputs": {
+      "reference": "fixtures/reference.tif",
+      "query": "fixtures/query.tif",
+      "reference_pixel_size_um": 0.65,
+      "query_pixel_size_um": 0.325,
+      "matcher": "auto"
+    },
+    "expect": {
+      "max_seconds": 240,
+      "progress_events_min": 2,
+      "results": {
+        "values": {
+          "rotation_deg": {
+            "approx": 12.0,
+            "tol": 1.0
+          },
+          "scale": {
+            "approx": 1.0,
+            "tol": 0.05
+          },
+          "offset_y_px": {
+            "approx": 700.06,
+            "tol": 4.0
+          },
+          "offset_x_px": {
+            "approx": 606.1,
+            "tol": 4.0
+          }
+        }
+      }
+    }
+  },
+  {
+    "tool": "relocalize",
+    "inputs": {
+      "reference": "fixtures/reference.tif",
+      "query": "fixtures/query.tif",
+      "reference_pixel_size_um": 0.65,
+      "query_pixel_size_um": 0.325,
+      "matcher": "quad"
+    },
+    "expect": {
+      "max_seconds": 240,
+      "progress_events_min": 2,
+      "results": {
+        "values": {
+          "rotation_deg": {
+            "approx": 12.0,
+            "tol": 1.0
+          },
+          "scale": {
+            "approx": 1.0,
+            "tol": 0.05
+          },
+          "offset_y_px": {
+            "approx": 700.06,
+            "tol": 4.0
+          },
+          "offset_x_px": {
+            "approx": 606.1,
+            "tol": 4.0
+          }
+        }
+      }
+    }
+  },
+  {
+    "tool": "relocalize",
+    "inputs": {
+      "reference": "fixtures/reference.tif",
+      "query": "fixtures/query.tif",
+      "reference_pixel_size_um": 0.65,
+      "query_pixel_size_um": 0.325,
+      "matcher": "triangles"
+    },
+    "expect": {
+      "status": "FAILED",
+      "code": "no_match",
+      "message_contains": "No match found with the 'triangles' matcher"
+    }
+  },
+  {
+    "tool": "relocalize",
+    "inputs": {
+      "reference": "fixtures/reference.tif",
+      "query": "fixtures/query.tif",
+      "reference_pixel_size_um": 0.65,
+      "query_pixel_size_um": 0.325,
+      "matcher": "hashing"
+    },
+    "expect": {
+      "max_seconds": 240,
+      "progress_events_min": 2,
+      "results": {
+        "values": {
+          "rotation_deg": {
+            "approx": 12.0,
+            "tol": 1.0
+          },
+          "scale": {
+            "approx": 1.0,
+            "tol": 0.05
+          },
+          "offset_y_px": {
+            "approx": 700.06,
+            "tol": 4.0
+          },
+          "offset_x_px": {
+            "approx": 606.1,
+            "tol": 4.0
+          }
+        }
+      }
+    }
+  },
+  {
+    "tool": "relocalize",
+    "inputs": {
+      "reference": "fixtures/reference.tif",
+      "query": "fixtures/query.tif",
+      "reference_pixel_size_um": 0.65,
+      "query_pixel_size_um": 0.325,
+      "matcher": "graph"
+    },
+    "expect": {
+      "status": "FAILED",
+      "code": "no_match",
+      "message_contains": "No match found with the 'graph' matcher"
+    }
+  },
+  {
+    "tool": "relocalize",
+    "inputs": {
+      "reference": "fixtures/reference.tif",
+      "query": "fixtures/query.tif",
+      "reference_pixel_size_um": 0.65,
+      "query_pixel_size_um": 0.325,
+      "threshold_method": "li",
+      "min_area_px": 80
+    },
+    "expect": {
+      "max_seconds": 240,
+      "results": {
+        "values": {
+          "rotation_deg": {
+            "approx": 12.0,
+            "tol": 1.0
+          },
+          "scale": {
+            "approx": 1.0,
+            "tol": 0.05
+          },
+          "offset_y_px": {
+            "approx": 700.06,
+            "tol": 4.0
+          },
+          "offset_x_px": {
+            "approx": 606.1,
+            "tol": 4.0
+          }
+        }
+      }
+    }
+  },
+  {
+    "tool": "relocalize",
+    "inputs": {
+      "reference": "fixtures/reference.tif",
+      "query": "fixtures/query.tif",
+      "reference_pixel_size_um": 0.65,
+      "query_pixel_size_um": 0.325,
+      "reference_mask": "fixtures/reference_mask.tif",
+      "query_mask": "fixtures/query_mask.tif"
+    },
+    "expect": {
+      "max_seconds": 240,
+      "results": {
+        "values": {
+          "rotation_deg": {
+            "approx": 12.0,
+            "tol": 1.0
+          },
+          "scale": {
+            "approx": 1.0,
+            "tol": 0.05
+          },
+          "offset_y_px": {
+            "approx": 700.06,
+            "tol": 4.0
+          },
+          "offset_x_px": {
+            "approx": 606.1,
+            "tol": 4.0
+          }
+        }
+      }
+    }
+  },
+  {
+    "tool": "relocalize",
+    "inputs": {
+      "reference": "fixtures/reference.tif",
+      "query": "fixtures/query.tif",
+      "reference_pixel_size_um": 0.65,
+      "query_pixel_size_um": 0.325,
+      "reference_mask": "fixtures/reference_mask.tif"
+    },
+    "expect": {
+      "max_seconds": 240,
+      "results": {
+        "values": {
+          "rotation_deg": {
+            "approx": 12.0,
+            "tol": 1.0
+          },
+          "scale": {
+            "approx": 1.0,
+            "tol": 0.05
+          },
+          "offset_y_px": {
+            "approx": 700.06,
+            "tol": 4.0
+          },
+          "offset_x_px": {
+            "approx": 606.1,
+            "tol": 4.0
+          }
+        }
+      }
+    }
+  },
+  {
+    "tool": "relocalize",
+    "inputs": {
+      "reference": "fixtures/reference.tif",
+      "query": "fixtures/query.tif",
+      "reference_pixel_size_um": 0.65,
+      "query_pixel_size_um": 0.325,
+      "fixed_seed": 3,
+      "max_seconds": 60
+    },
+    "expect": {
+      "max_seconds": 240,
+      "results": {
+        "values": {
+          "rotation_deg": {
+            "approx": 12.0,
+            "tol": 1.0
+          },
+          "scale": {
+            "approx": 1.0,
+            "tol": 0.05
+          },
+          "offset_y_px": {
+            "approx": 700.06,
+            "tol": 4.0
+          },
+          "offset_x_px": {
+            "approx": 606.1,
+            "tol": 4.0
+          }
+        }
+      }
+    }
+  },
+  {
+    "tool": "relocalize",
+    "inputs": {
+      "reference": "fixtures/reference.tif",
+      "query": "fixtures/query.tif",
+      "reference_pixel_size_um": 0.65,
+      "query_pixel_size_um": 0.325,
+      "blur_sigma": 0.0,
+      "watershed_split": false,
+      "peak_distance_px": 9
+    },
+    "expect": {
+      "max_seconds": 240,
+      "results": {
+        "values": {
+          "rotation_deg": {
+            "approx": 12.0,
+            "tol": 1.0
+          },
+          "scale": {
+            "approx": 1.0,
+            "tol": 0.05
+          },
+          "offset_y_px": {
+            "approx": 700.06,
+            "tol": 4.0
+          },
+          "offset_x_px": {
+            "approx": 606.1,
+            "tol": 4.0
+          }
+        }
+      }
+    }
+  },
+  {
+    "tool": "relocalize",
+    "inputs": {
+      "reference": "fixtures/reference.tif",
+      "query": "fixtures/query.tif",
+      "reference_pixel_size_um": 0.65,
+      "query_pixel_size_um": 0.325,
+      "reference_mask": "fixtures/query_mask.tif"
+    },
+    "expect": {
+      "status": "FAILED",
+      "code": "mask_shape_mismatch",
+      "message_contains": "same size"
+    }
+  },
+  {
+    "tool": "relocalize",
+    "inputs": {
+      "reference": "fixtures/reference.tif",
+      "query": "fixtures/query.tif",
+      "reference_pixel_size_um": -1.0
+    },
+    "expect": {
+      "status": "FAILED",
+      "code": "invalid_parameter",
+      "message_contains": "must be >="
+    }
+  },
+  {
+    "tool": "relocalize",
+    "inputs": {
+      "reference": "fixtures/reference.tif",
+      "query": "fixtures/query.tif",
+      "reference_pixel_size_um": 0.65,
+      "query_pixel_size_um": 0.325,
+      "reference_mask": "fixtures/reference_mask_binary.tif",
+      "query_mask": "fixtures/query_mask_binary.tif"
+    },
+    "expect": {
+      "max_seconds": 240,
+      "results": {
+        "values": {
+          "rotation_deg": {
+            "approx": 12.0,
+            "tol": 1.0
+          },
+          "scale": {
+            "approx": 1.0,
+            "tol": 0.05
+          },
+          "offset_y_px": {
+            "approx": 700.06,
+            "tol": 4.0
+          },
+          "offset_x_px": {
+            "approx": 606.1,
+            "tol": 4.0
+          },
+          "n_nuclei_reference": {
+            "approx": 300.0,
+            "tol": 200.0
+          }
+        }
+      }
+    }
+  },
+  {
+    "tool": "relocalize",
+    "inputs": {
+      "reference": "fixtures/reference.tif",
+      "query": "fixtures/query.tif",
+      "reference_pixel_size_um": 0.65,
+      "query_pixel_size_um": 0.325,
+      "query_mask": "fixtures/query_mask_fractions.tif"
+    },
+    "expect": {
+      "status": "FAILED",
+      "code": "bad_mask",
+      "message_contains": "whole-number labels"
+    }
+  },
+  {
+    "tool": "list_devices",
+    "inputs": {},
+    "expect": {
+      "results": {
+        "values": {}
+      }
+    }
+  },
+  {
+    "tool": "relocalize",
+    "inputs": {
+      "reference": "fixtures/reference.tif",
+      "query": "fixtures/query.tif",
+      "reference_pixel_size_um": 0.65,
+      "query_pixel_size_um": 0.325,
+      "reference_region": "fixtures/reference_region.tif"
+    },
+    "expect": {
+      "max_seconds": 240,
+      "results": {
+        "values": {
+          "rotation_deg": {
+            "approx": 12.0,
+            "tol": 1.0
+          },
+          "n_nuclei_reference": 266
+        },
+        "reference_nuclei": {
+          "rows": 266
+        },
+        "reference_outlines": {
+          "features": 266
+        }
+      }
+    }
+  },
+  {
+    "tool": "relocalize",
+    "inputs": {
+      "reference": "fixtures/reference.tif",
+      "query": "fixtures/query.tif",
+      "reference_pixel_size_um": 0.65,
+      "query_pixel_size_um": 0.325
+    },
+    "expect": {
+      "max_seconds": 240,
+      "results": {
+        "values": {
+          "n_nuclei_reference": 429,
+          "n_nuclei_query": 9
+        },
+        "reference_outlines": {
+          "features": 429
+        },
+        "query_outlines": {
+          "features": 9
+        }
+      }
+    }
+  },
+  {
+    "tool": "relocalize",
+    "inputs": {
+      "reference": "fixtures/reference.tif",
+      "query": "fixtures/query.tif",
+      "reference_pixel_size_um": 0.65,
+      "query_pixel_size_um": 0.325,
+      "reference_region": "fixtures/empty_region.tif"
+    },
+    "expect": {
+      "status": "FAILED",
+      "code": "empty_region",
+      "message_contains": "empty"
+    }
+  },
+  {
+    "tool": "relocalize",
+    "inputs": {
+      "reference": "fixtures/reference.tif",
+      "query": "fixtures/query.tif",
+      "reference_pixel_size_um": 0.65,
+      "query_pixel_size_um": 0.325,
+      "reference_region": "fixtures/wrong_size_region.tif"
+    },
+    "expect": {
+      "status": "FAILED",
+      "code": "bad_input",
+      "message_contains": "size of the image"
+    }
+  }
+]

@@ -1,5 +1,5 @@
 @ECHO OFF
-SETLOCAL EnableExtensions
+SETLOCAL EnableExtensions DisableDelayedExpansion
 
 SET "LOG_FILE=%PREFIX%\menuinst_debug.log"
 SET "PYTHON_EXE=%PREFIX%\python.exe"
@@ -94,13 +94,34 @@ IF EXIST "%PROJECT_ROOT%\setup.py" (
         GOTO :fail
     )
 
-    "%PYTHON_EXE%" -c "import PYTHON_PROJ_NAME; print('NucleiSky import successful:', PYTHON_PROJ_NAME.__file__)" >> "%LOG_FILE%" 2>&1
+    "%PYTHON_EXE%" -c "import nucleisky; print('NucleiSky import successful:', nucleisky.__file__)" >> "%LOG_FILE%" 2>&1
     IF ERRORLEVEL 1 (
-        SET "FAILURE_MESSAGE=Installed NucleiSky package could not be imported as PYTHON_PROJ_NAME."
+        SET "FAILURE_MESSAGE=Installed NucleiSky package could not be imported as nucleisky."
         GOTO :fail
     )
 ) ELSE (
     echo No setup.py detected; this project does not bundle an optional Python package. >> "%LOG_FILE%"
+)
+
+REM Optional: expose the app's tools to Napari, Fiji and the command line (LabConstrictor tools bridge).
+REM If the app's package ships a module named <package>_lc_tools, install labconstrictor-tools and register that module.
+REM This step must never fail the installation. LC_TOOLS_SPEC can point to another source (wheel, git URL, mirror).
+REM Default source: the GitHub archive of labconstrictor-tools (a plain zip: no git needed on the user's computer), because the package
+REM is not on PyPI yet. Once it is, use "labconstrictor-tools" here.
+IF NOT DEFINED LC_TOOLS_SPEC SET "LC_TOOLS_SPEC=https://github.com/CellMigrationLab/LabConstrictor-Tools/archive/refs/heads/main.zip"
+SET "LC_APP_VERSION="
+IF EXIST "%PROJECT_ROOT%\construct.yaml" FOR /F "usebackq tokens=1,* delims=: " %%A IN (`findstr /B /C:"version:" "%PROJECT_ROOT%\construct.yaml"`) DO SET "LC_APP_VERSION=%%~B"
+IF NOT DEFINED LC_APP_VERSION (
+    SET "LC_APP_VERSION=0"
+    echo WARNING: no version: line at the start of a line in construct.yaml - registering the tools with version 0. >> "%LOG_FILE%"
+)
+"%PYTHON_EXE%" -c "import importlib.util, sys; sys.exit(0 if importlib.util.find_spec('nucleisky_lc_tools') else 1)" >> "%LOG_FILE%" 2>&1
+IF NOT ERRORLEVEL 1 (
+    echo Found nucleisky_lc_tools: registering the tools of NucleiSky for Napari and Fiji. >> "%LOG_FILE%"
+    REM LC_TOOLS_SPEC goes to pip as one argument through Python: cmd.exe never re-parses it (a quote or & in it cannot run anything).
+    "%PYTHON_EXE%" -c "import os, subprocess, sys; sys.exit(subprocess.call([sys.executable, '-m', 'pip', 'install', os.environ['LC_TOOLS_SPEC']]))" >> "%LOG_FILE%" 2>&1
+    IF NOT ERRORLEVEL 1 "%PYTHON_EXE%" -m labconstrictor_tools register --name "NucleiSky" --prefix "%PREFIX%" --module nucleisky_lc_tools --version "%LC_APP_VERSION%" --display-name "NucleiSky" >> "%LOG_FILE%" 2>&1
+    IF ERRORLEVEL 1 echo WARNING: tool registration failed - see the pip and register output above in this file; NucleiSky itself is installed. >> "%LOG_FILE%"
 )
 
 "%PYTHON_EXE%" "%PROJECT_ROOT%\include_path.py" --path "%PREFIX%" --files "%PROJECT_ROOT%\notebook_launcher.json" --keyword "BASE_PATH_KEYWORD" >> "%LOG_FILE%" 2>&1
