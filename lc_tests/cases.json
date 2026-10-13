@@ -354,7 +354,8 @@
     "inputs": {
       "reference": "fixtures/reference.tif",
       "query": "fixtures/query.tif",
-      "reference_pixel_size_um": -1.0
+      "reference_pixel_size_um": -1.0,
+      "query_pixel_size_um": 0.325
     },
     "expect": {
       "status": "FAILED",
@@ -504,6 +505,120 @@
       "status": "FAILED",
       "code": "bad_input",
       "message_contains": "size of the image"
+    }
+  },
+  {
+    "tool": "relocalize",
+    "inputs": {
+      "reference": "fixtures/reference.tif",
+      "query": "fixtures/query.tif",
+      "query_pixel_size_um": 0.325
+    },
+    "expect": {
+      "status": "FAILED",
+      "code": "missing_parameter",
+      "message_contains": "reference image has no calibration"
+    }
+  },
+  {
+    "tool": "relocalize",
+    "inputs": {
+      "reference": "fixtures/reference.tif",
+      "query": "fixtures/query.tif",
+      "reference_pixel_size_um": 0.65
+    },
+    "expect": {
+      "status": "FAILED",
+      "code": "missing_parameter",
+      "message_contains": "query image has no calibration"
+    }
+  },
+  {
+    "tool": "relocalize",
+    "inputs": {
+      "reference": "fixtures/reference.tif",
+      "query": "fixtures/query.tif"
+    },
+    "expect": {
+      "status": "FAILED",
+      "code": "missing_parameter",
+      "message_contains": "reference image and the query image have no calibration"
+    }
+  },
+  {
+    "tool": "relocalize",
+    "inputs": {
+      "reference": "fixtures/reference.tif",
+      "query": "fixtures/query.tif",
+      "reference_pixel_size_um": 0.0,
+      "query_pixel_size_um": 0.325
+    },
+    "expect": {
+      "status": "FAILED",
+      "code": "invalid_parameter",
+      "message_contains": "reference pixel size must be a number above 0"
+    }
+  },
+  {
+    "tool": "relocalize",
+    "inputs": {
+      "reference": "fixtures/reference.tif",
+      "query": "fixtures/query.tif",
+      "reference_pixel_size_um": 0.65,
+      "query_pixel_size_um": 0.0
+    },
+    "expect": {
+      "status": "FAILED",
+      "code": "invalid_parameter",
+      "message_contains": "query pixel size must be a number above 0"
+    }
+  },
+  {
+    "tool": "relocalize",
+    "inputs": {
+      "reference": "fixtures/reference.tif",
+      "query": "fixtures/query.tif",
+      "reference_pixel_size_um": 0.65,
+      "query_pixel_size_um": -0.325
+    },
+    "expect": {
+      "status": "FAILED",
+      "code": "invalid_parameter",
+      "message_contains": "must be >="
+    }
+  },
+  {
+    "tool": "relocalize",
+    "inputs": {
+      "reference": "fixtures/reference.tif",
+      "query": "fixtures/query.tif",
+      "reference_pixel_size_um": 1.3,
+      "query_pixel_size_um": 0.65,
+      "reference_mask": "fixtures/reference_mask.tif",
+      "query_mask": "fixtures/query_mask.tif"
+    },
+    "expect": {
+      "max_seconds": 240,
+      "results": {
+        "values": {
+          "rotation_deg": {
+            "approx": 12.0,
+            "tol": 1.0
+          },
+          "scale": {
+            "approx": 1.0,
+            "tol": 0.05
+          },
+          "offset_y_px": {
+            "approx": 700.06,
+            "tol": 4.0
+          },
+          "offset_x_px": {
+            "approx": 606.1,
+            "tol": 4.0
+          }
+        }
+      }
     }
   }
 ]

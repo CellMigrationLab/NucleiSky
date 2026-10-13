@@ -61,6 +61,46 @@ _CELLPOSE = EnabledWhen("segmentation", "cellpose")
 _SEGMENTATION_UNAVAILABLE = (ImportError, OSError)
 
 
+# Where a person gives a pixel size: said in every refusal. There is deliberately no default: a pixel size written for one
+# data set silently gives a wrong (or failed) match on any other.
+_PIXEL_SIZE_FIELD = {
+    "reference": ("reference_pixel_size_um", "Reference pixel size"),
+    "query": ("query_pixel_size_um", "Query pixel size"),
+}
+def _how_to_enter(which):
+    """How to supply the pixel size of the images in `which` ("reference" / "query"), naming the exact fields and parameters."""
+    fields = " and ".join("'%s' (parameter %s)" % (_PIXEL_SIZE_FIELD[w][1], _PIXEL_SIZE_FIELD[w][0]) for w in which)
+    return (
+        "Enter it in micrometres per pixel in %s of the Images group: napari and Fiji fill it from the image's calibration "
+        "when the image has a pixel size with a length unit (napari: the layer's scale and units; Fiji: Image > Properties, "
+        "pixel width and unit), otherwise type it. In a notebook or on the command line pass %s."
+        % (fields, " and ".join("%s=<um per pixel>" % _PIXEL_SIZE_FIELD[w][0] for w in which))
+    )
+
+
+def _require_pixel_sizes(reference_pixel_size_um, query_pixel_size_um):
+    """Both pixel sizes (um/px) as floats, or a ToolError saying which image has no calibration. Never guesses a value."""
+    import math
+
+    given = (("reference", reference_pixel_size_um), ("query", query_pixel_size_um))
+    missing = [which for which, value in given if value is None]
+    if missing:
+        what = " and ".join("the %s image" % w for w in missing)
+        raise ToolError(
+            "missing_parameter",
+            "Pixel size missing: %s ha%s no calibration (no pixel size from the host and none entered), and NucleiSky does not "
+            "guess it. %s" % (what, "s" if len(missing) == 1 else "ve", _how_to_enter(missing)),
+        )
+    for which, value in given:
+        number = value if isinstance(value, (int, float)) and not isinstance(value, bool) else float("nan")
+        if not math.isfinite(number) or number <= 0:
+            raise ToolError(
+                "invalid_parameter",
+                "The %s pixel size must be a number above 0 (micrometres per pixel); got %r. %s" % (which, value, _how_to_enter([which])),
+            )
+    return float(reference_pixel_size_um), float(query_pixel_size_um)
+
+
 def _check_images(reference, query, reference_mask, query_mask):
     if reference.ndim != 2 or query.ndim != 2:
         raise ToolError("bad_input", "2D (YX) images required; got %s and %s" % (reference.shape, query.shape))
@@ -300,9 +340,13 @@ def relocalize(
     reference: Annotated[Image, Axes("YX"), Group("Images"), Description("Large / full-field image")],
     query: Annotated[Image, Axes("YX"), Group("Images"), Description("Crop to locate inside the reference")],
     reference_pixel_size_um: Annotated[
-        float, Unit("um/px"), Min(0), PixelSizeOf("reference"), Group("Images")
-    ] = 0.65,
-    query_pixel_size_um: Annotated[float, Unit("um/px"), Min(0), PixelSizeOf("query"), Group("Images")] = 0.325,
+        Optional[float], Unit("um/px"), Min(0), PixelSizeOf("reference"), Group("Images"),
+        Description("Required. Filled from the reference image's calibration (length unit needed); type it when the image has none"),
+    ] = None,
+    query_pixel_size_um: Annotated[
+        Optional[float], Unit("um/px"), Min(0), PixelSizeOf("query"), Group("Images"),
+        Description("Required. Filled from the query image's calibration (length unit needed); type it when the image has none"),
+    ] = None,
     segmentation: Annotated[
         Literal["threshold", "cellpose", "instanseg"],
         Group("Segmentation"),
@@ -416,6 +460,7 @@ def relocalize(
     Annotated[ShapesOut, Name("query_outlines"), ApplyTo("query"), Replace()],
 ]:
     """Find where a rotated / rescaled query image lies in a reference image."""
+    reference_pixel_size_um, query_pixel_size_um = _require_pixel_sizes(reference_pixel_size_um, query_pixel_size_um)
     _check_images(reference, query, reference_mask, query_mask)
     needs_segmentation = reference_mask is None or query_mask is None
     if needs_segmentation and segmentation != "threshold":
