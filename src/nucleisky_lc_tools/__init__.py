@@ -67,11 +67,15 @@ _PIXEL_SIZE_FIELD = {
     "reference": ("reference_pixel_size_um", "Reference pixel size"),
     "query": ("query_pixel_size_um", "Query pixel size"),
 }
-_PIXEL_SIZE_HOW = (
-    "Enter it in micrometres per pixel in the field '%s' (parameter %s) of the Images group: napari and Fiji fill it from the "
-    "image's calibration when the image has a pixel size with a length unit (napari: the layer's scale and units; Fiji: "
-    "Image > Properties, pixel width and unit), otherwise type it. In a notebook or on the command line pass %s=<um per pixel>."
-)
+def _how_to_enter(which):
+    """How to supply the pixel size of the images in `which` ("reference" / "query"), naming the exact fields and parameters."""
+    fields = " and ".join("'%s' (parameter %s)" % (_PIXEL_SIZE_FIELD[w][1], _PIXEL_SIZE_FIELD[w][0]) for w in which)
+    return (
+        "Enter it in micrometres per pixel in %s of the Images group: napari and Fiji fill it from the image's calibration "
+        "when the image has a pixel size with a length unit (napari: the layer's scale and units; Fiji: Image > Properties, "
+        "pixel width and unit), otherwise type it. In a notebook or on the command line pass %s."
+        % (fields, " and ".join("%s=<um per pixel>" % _PIXEL_SIZE_FIELD[w][0] for w in which))
+    )
 
 
 def _require_pixel_sizes(reference_pixel_size_um, query_pixel_size_um):
@@ -82,19 +86,17 @@ def _require_pixel_sizes(reference_pixel_size_um, query_pixel_size_um):
     missing = [which for which, value in given if value is None]
     if missing:
         what = " and ".join("the %s image" % w for w in missing)
-        how = " ".join(_PIXEL_SIZE_HOW % (_PIXEL_SIZE_FIELD[w][1], _PIXEL_SIZE_FIELD[w][0], _PIXEL_SIZE_FIELD[w][0]) for w in missing)
         raise ToolError(
             "missing_parameter",
             "Pixel size missing: %s ha%s no calibration (no pixel size from the host and none entered), and NucleiSky does not "
-            "guess it. %s" % (what, "s" if len(missing) == 1 else "ve", how),
+            "guess it. %s" % (what, "s" if len(missing) == 1 else "ve", _how_to_enter(missing)),
         )
     for which, value in given:
         number = value if isinstance(value, (int, float)) and not isinstance(value, bool) else float("nan")
         if not math.isfinite(number) or number <= 0:
             raise ToolError(
                 "invalid_parameter",
-                "The %s pixel size must be a number above 0 (micrometres per pixel); got %r. %s"
-                % (which, value, _PIXEL_SIZE_HOW % (_PIXEL_SIZE_FIELD[which][1], _PIXEL_SIZE_FIELD[which][0], _PIXEL_SIZE_FIELD[which][0])),
+                "The %s pixel size must be a number above 0 (micrometres per pixel); got %r. %s" % (which, value, _how_to_enter([which])),
             )
     return float(reference_pixel_size_um), float(query_pixel_size_um)
 
