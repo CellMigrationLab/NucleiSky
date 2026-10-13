@@ -18,9 +18,15 @@ command line, with forms generated automatically from the function signatures. N
    ```
 
    Keep the module light: it is imported to read the tool list, so heavy imports at the top slow every start.
+   **Import `labconstrictor_tools` only in the tools module if you can.** Since template 0.1.17 the installer installs `labconstrictor-tools` *before* it checks that
+   your package can be imported, so a package that imports `labconstrictor_tools` at module level no longer stops the installation. It is still better practice to import it lazily (inside functions)
+   or only in `<your_package>_lc_tools`: the rest of your package then also works where Tools is not installed (a notebook run on Colab, a copy of the package used elsewhere, a failed Tools install).
 2. The installer (`post_install`) detects the module, installs `labconstrictor-tools` and registers the app
    (`labconstrictor-tools register ...`). `pre_uninstall` unregisters it. A failure in this step is logged to
    `menuinst_debug.log` and never fails the installation.
+   **Order in `post_install`.** (1) your package is installed, (2) if it ships `<your_package>_lc_tools`, `labconstrictor-tools` is installed, (3) the package import check runs, (4) the app is registered.
+   Installing Tools before the import check is what lets your package import `labconstrictor_tools` at module level. A failed Tools install is a `WARNING` in `menuinst_debug.log`
+   and the registration is skipped; the installation continues, unless your package needs Tools to be imported (then the import check fails, as it should).
    **Where `labconstrictor-tools` comes from.** It is not on PyPI yet, so by default the installer downloads the GitHub archive of a **pinned release tag**,
    `https://github.com/CellMigrationLab/LabConstrictor-Tools/archive/refs/tags/v0.2.0-rc.1.zip` (a plain zip: git is not needed on the user's computer).
    Set the environment variable `LC_TOOLS_SPEC` when the installer runs to install it from somewhere else (a wheel, a git URL, a mirror, or the
