@@ -96,6 +96,8 @@ The tool runs in NucleiSky's own environment; Napari/Fiji never import NucleiSky
 [LabConstrictor-Tools](https://github.com/CellMigrationLab/LabConstrictor-Tools). To try it by hand on your computer (all systems), follow the
 [human test protocol](https://github.com/CellMigrationLab/LabConstrictor-Tools/blob/main/docs/HUMAN_TEST_PROTOCOL.md).
 
+**Pixel sizes are required.** *Reference pixel size* and *Query pixel size* (micrometres per pixel) have no default value: the form fills each one from its image's calibration (napari: the layer's scale together with a length unit; Fiji: Image > Properties, pixel width and unit), and when an image has no calibration (including a bare scale without a length unit) you must type the value yourself. If one is missing, the tool stops with a message that names the image and the field instead of guessing. In a notebook or on the command line pass `reference_pixel_size_um` and `query_pixel_size_um`. The notebooks are unchanged.
+
 ---
 
 ## 📚 Documentation Index
