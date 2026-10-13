@@ -94,6 +94,10 @@ IF EXIST "%PROJECT_ROOT%\setup.py" (
         GOTO :fail
     )
 
+    REM Tools first, only for an app whose package ships a tools module: the package may import labconstrictor_tools at module level,
+    REM so labconstrictor-tools is installed BEFORE the import check below. A failed install is only a WARNING, see :install_lc_tools at the end of this file.
+    CALL :install_lc_tools
+
     "%PYTHON_EXE%" -c "import nucleisky; print('NucleiSky import successful:', nucleisky.__file__)" >> "%LOG_FILE%" 2>&1
     IF ERRORLEVEL 1 (
         SET "FAILURE_MESSAGE=Installed NucleiSky package could not be imported as nucleisky."
@@ -106,11 +110,7 @@ IF EXIST "%PROJECT_ROOT%\setup.py" (
 REM Optional: expose the app's tools to Napari, Fiji and the command line (LabConstrictor tools bridge).
 REM If the app's package ships a module named <package>_lc_tools, install labconstrictor-tools and register that module.
 REM This step must never fail the installation. LC_TOOLS_SPEC can point to another source (wheel, git URL, mirror).
-REM Default source: the GitHub archive of labconstrictor-tools (a plain zip: no git needed on the user's computer), because the package
-REM is not on PyPI yet. Once it is, use "labconstrictor-tools" here.
-REM Pinned release tag of labconstrictor-tools (moving the pin: change only this tag).
-SET "LC_TOOLS_PIN=v0.2.0-rc.1"
-IF NOT DEFINED LC_TOOLS_SPEC SET "LC_TOOLS_SPEC=https://github.com/CellMigrationLab/LabConstrictor-Tools/archive/refs/tags/%LC_TOOLS_PIN%.zip"
+REM labconstrictor-tools is installed by :install_lc_tools, called above before the import check of the package (it sets LC_TOOLS_PIN, LC_TOOLS_SPEC and LC_TOOLS_READY).
 SET "LC_APP_VERSION="
 IF EXIST "%PROJECT_ROOT%\construct.yaml" FOR /F "usebackq tokens=1,* delims=: " %%A IN (`findstr /B /C:"version:" "%PROJECT_ROOT%\construct.yaml"`) DO SET "LC_APP_VERSION=%%~B"
 IF NOT DEFINED LC_APP_VERSION (
@@ -120,8 +120,8 @@ IF NOT DEFINED LC_APP_VERSION (
 "%PYTHON_EXE%" -c "import importlib.util, sys; sys.exit(0 if importlib.util.find_spec('nucleisky_lc_tools') else 1)" >> "%LOG_FILE%" 2>&1
 IF NOT ERRORLEVEL 1 (
     echo Found nucleisky_lc_tools: registering the tools of NucleiSky for Napari and Fiji. >> "%LOG_FILE%"
-    REM LC_TOOLS_SPEC goes to pip as one argument through Python: cmd.exe never re-parses it (a quote or & in it cannot run anything).
-    "%PYTHON_EXE%" -c "import os, subprocess, sys; sys.exit(subprocess.call([sys.executable, '-m', 'pip', 'install', os.environ['LC_TOOLS_SPEC']]))" >> "%LOG_FILE%" 2>&1
+    REM labconstrictor-tools was installed before the import check (:install_lc_tools): register only if that worked (errorlevel 1 otherwise).
+    "%PYTHON_EXE%" -c "import sys; sys.exit(0 if sys.argv[1] == '1' else 1)" "%LC_TOOLS_READY%" >> "%LOG_FILE%" 2>&1
     IF NOT ERRORLEVEL 1 "%PYTHON_EXE%" -m labconstrictor_tools register --name "NucleiSky" --prefix "%PREFIX%" --module nucleisky_lc_tools --version "%LC_APP_VERSION%" --display-name "NucleiSky" >> "%LOG_FILE%" 2>&1
     IF ERRORLEVEL 1 echo WARNING: tool registration failed - see the pip and register output above in this file; NucleiSky itself is installed. >> "%LOG_FILE%"
 )
@@ -211,4 +211,26 @@ IF DEFINED NVIDIA_SMI GOTO :EOF
 FOR /F "delims=" %%I IN ('where.exe nvidia-smi.exe 2^>NUL') DO (
     IF NOT DEFINED NVIDIA_SMI SET "NVIDIA_SMI=%%~fI"
 )
+GOTO :EOF
+
+:install_lc_tools
+REM Optional (LabConstrictor tools bridge): install labconstrictor-tools when the app's package ships a module named <package>_lc_tools.
+REM Called before the import check of the package, which may import labconstrictor_tools at module level.
+REM This step must never fail the installation: a failure is logged as a WARNING and LC_TOOLS_READY stays 0 (no registration later).
+REM LC_TOOLS_SPEC can point to another source (wheel, git URL, mirror).
+REM Default source: the GitHub archive of the labconstrictor-tools release TAG below (a plain zip: no git needed on the user's computer),
+REM because the package is not on PyPI yet. Once it is, use "labconstrictor-tools" here. To move the pin, change only this tag.
+SET "LC_TOOLS_PIN=v0.2.0-rc.1"
+IF NOT DEFINED LC_TOOLS_SPEC SET "LC_TOOLS_SPEC=https://github.com/CellMigrationLab/LabConstrictor-Tools/archive/refs/tags/%LC_TOOLS_PIN%.zip"
+SET "LC_TOOLS_READY=0"
+"%PYTHON_EXE%" -c "import importlib.util, sys; sys.exit(0 if importlib.util.find_spec('nucleisky_lc_tools') else 1)" >> "%LOG_FILE%" 2>&1
+IF ERRORLEVEL 1 GOTO :EOF
+echo Found nucleisky_lc_tools: installing labconstrictor-tools before the import check of NucleiSky. >> "%LOG_FILE%"
+REM LC_TOOLS_SPEC goes to pip as one argument through Python: cmd.exe never re-parses it (a quote or & in it cannot run anything).
+"%PYTHON_EXE%" -c "import os, subprocess, sys; sys.exit(subprocess.call([sys.executable, '-m', 'pip', 'install', os.environ['LC_TOOLS_SPEC']]))" >> "%LOG_FILE%" 2>&1
+IF ERRORLEVEL 1 (
+    echo WARNING: labconstrictor-tools could not be installed - see the pip output above in this file; the tools of NucleiSky will not be registered ^(the import check fails only if the package needs labconstrictor-tools at import time^). >> "%LOG_FILE%"
+    GOTO :EOF
+)
+SET "LC_TOOLS_READY=1"
 GOTO :EOF
