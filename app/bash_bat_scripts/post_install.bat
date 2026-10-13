@@ -108,7 +108,9 @@ REM If the app's package ships a module named <package>_lc_tools, install labcon
 REM This step must never fail the installation. LC_TOOLS_SPEC can point to another source (wheel, git URL, mirror).
 REM Default source: the GitHub archive of labconstrictor-tools (a plain zip: no git needed on the user's computer), because the package
 REM is not on PyPI yet. Once it is, use "labconstrictor-tools" here.
-IF NOT DEFINED LC_TOOLS_SPEC SET "LC_TOOLS_SPEC=https://github.com/CellMigrationLab/LabConstrictor-Tools/archive/refs/heads/main.zip"
+REM Pinned release tag of labconstrictor-tools (moving the pin: change only this tag).
+SET "LC_TOOLS_PIN=v0.2.0-rc.1"
+IF NOT DEFINED LC_TOOLS_SPEC SET "LC_TOOLS_SPEC=https://github.com/CellMigrationLab/LabConstrictor-Tools/archive/refs/tags/%LC_TOOLS_PIN%.zip"
 SET "LC_APP_VERSION="
 IF EXIST "%PROJECT_ROOT%\construct.yaml" FOR /F "usebackq tokens=1,* delims=: " %%A IN (`findstr /B /C:"version:" "%PROJECT_ROOT%\construct.yaml"`) DO SET "LC_APP_VERSION=%%~B"
 IF NOT DEFINED LC_APP_VERSION (
