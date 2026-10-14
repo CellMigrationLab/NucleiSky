@@ -220,7 +220,7 @@ REM This step must never fail the installation: a failure is logged as a WARNING
 REM LC_TOOLS_SPEC can point to another source (wheel, git URL, mirror).
 REM Default source: the GitHub archive of the labconstrictor-tools release TAG below (a plain zip: no git needed on the user's computer),
 REM because the package is not on PyPI yet. Once it is, use "labconstrictor-tools" here. To move the pin, change only this tag.
-SET "LC_TOOLS_PIN=v0.2.0-rc.1"
+SET "LC_TOOLS_PIN=v0.3.0-alpha.1"
 IF NOT DEFINED LC_TOOLS_SPEC SET "LC_TOOLS_SPEC=https://github.com/CellMigrationLab/LabConstrictor-Tools/archive/refs/tags/%LC_TOOLS_PIN%.zip"
 SET "LC_TOOLS_READY=0"
 "%PYTHON_EXE%" -c "import importlib.util, sys; sys.exit(0 if importlib.util.find_spec('nucleisky_lc_tools') else 1)" >> "%LOG_FILE%" 2>&1
