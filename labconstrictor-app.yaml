@@ -5,7 +5,7 @@ summary: Align microscopy images in 2D and 3D by matching the geometry of nuclei
 description: |-
   Instead of relying on pixel intensity, NucleiSky matches the geometry of the cells. It finds the calibrated similarity transform that best overlaps two landmark constellations, so a high-magnification region can be located in a whole slide or a thick tissue volume.
 kind: analysis
-hosts: [notebook, napari, fiji]
+hosts: [notebook, napari, fiji, qupath]
 distribution:
   installer: true
   colab:
