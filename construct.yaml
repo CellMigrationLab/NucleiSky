@@ -1,16 +1,17 @@
 name: NucleiSky
-version: 0.1.3
+version: 0.1.4
 environment_file: environment.yaml
 installer_type: all
 license_file: LICENSE
 welcome_image: app/logo/Gemini_Generated_Image_fga0qrfga0qrfga0.png
 header_image: app/logo/Gemini_Generated_Image_27i68r27i68r27i6.png
 icon_image: app/logo/Gemini_Generated_Image_kc5ezfkc5ezfkc5e.png
-conclusion_text: Thank you! You have successfully installed NucleiSky 0.1.3.
+conclusion_text: Thank you! You have successfully installed NucleiSky 0.1.4.
 keep_pkgs: false
 register_python: false
 initialize_conda: false
 extra_files:
+- .tools/meta/src_change.yaml: NucleiSky/src_change.yaml
 - app/bash_bat_scripts/pre_uninstall.sh: pre_uninstall.sh
 - app/bash_bat_scripts/uninstall.sh: uninstall.sh
 - app/logo/Gemini_Generated_Image_kc5ezfkc5ezfkc5e.icns: NucleiSky/Gemini_Generated_Image_kc5ezfkc5ezfkc5e.icns
@@ -22,6 +23,7 @@ extra_files:
 - app/python_scripts/include_path.py: NucleiSky/include_path.py
 - app/python_scripts/launch_jupyter.py: NucleiSky/launch_jupyter.py
 - construct.yaml: NucleiSky/construct.yaml
+- labconstrictor-app.yaml: NucleiSky/labconstrictor-app.yaml
 - notebooks/NucleiSky2DApp/NucleiSky2DApp.ipynb: NucleiSky/notebooks/NucleiSky2DApp/NucleiSky2DApp.ipynb
 - notebooks/NucleiSky2DBenchmarking/NucleiSky2DBenchmarking.ipynb: NucleiSky/notebooks/NucleiSky2DBenchmarking/NucleiSky2DBenchmarking.ipynb
 - notebooks/NucleiSky2D_API_Workflow_Example/NucleiSky2D_API_Workflow_Example.ipynb: NucleiSky/notebooks/NucleiSky2D_API_Workflow_Example/NucleiSky2D_API_Workflow_Example.ipynb
@@ -71,7 +73,6 @@ extra_files:
 - src/nucleisky2d/segmentation.py: NucleiSky/src/nucleisky2d/segmentation.py
 - src/nucleisky3d/__init__.py: NucleiSky/src/nucleisky3d/__init__.py
 - src/nucleisky_lc_tools/__init__.py: NucleiSky/src/nucleisky_lc_tools/__init__.py
-- labconstrictor-app.yaml: NucleiSky/labconstrictor-app.yaml
 
 - src/nucleisky/nucleisky2d/config.py: NucleiSky/src/nucleisky/nucleisky2d/config.py
 - src/nucleisky/nucleisky2d/demo_utils.py: NucleiSky/src/nucleisky/nucleisky2d/demo_utils.py
