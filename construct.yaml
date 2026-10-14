@@ -71,6 +71,7 @@ extra_files:
 - src/nucleisky2d/segmentation.py: NucleiSky/src/nucleisky2d/segmentation.py
 - src/nucleisky3d/__init__.py: NucleiSky/src/nucleisky3d/__init__.py
 - src/nucleisky_lc_tools/__init__.py: NucleiSky/src/nucleisky_lc_tools/__init__.py
+- labconstrictor-app.yaml: NucleiSky/labconstrictor-app.yaml
 
 - src/nucleisky/nucleisky2d/config.py: NucleiSky/src/nucleisky/nucleisky2d/config.py
 - src/nucleisky/nucleisky2d/demo_utils.py: NucleiSky/src/nucleisky/nucleisky2d/demo_utils.py

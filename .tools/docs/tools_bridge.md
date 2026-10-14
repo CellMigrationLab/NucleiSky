@@ -28,13 +28,13 @@ command line, with forms generated automatically from the function signatures. N
    Installing Tools before the import check is what lets your package import `labconstrictor_tools` at module level. A failed Tools install is a `WARNING` in `menuinst_debug.log`
    and the registration is skipped; the installation continues, unless your package needs Tools to be imported (then the import check fails, as it should).
    **Where `labconstrictor-tools` comes from.** It is not on PyPI yet, so by default the installer downloads the GitHub archive of a **pinned release tag**,
-   `https://github.com/CellMigrationLab/LabConstrictor-Tools/archive/refs/tags/v0.2.0-rc.1.zip` (a plain zip: git is not needed on the user's computer).
+   `https://github.com/CellMigrationLab/LabConstrictor-Tools/archive/refs/tags/v0.3.0-alpha.1.zip` (a plain zip: git is not needed on the user's computer).
    Set the environment variable `LC_TOOLS_SPEC` when the installer runs to install it from somewhere else (a wheel, a git URL, a mirror, or the
    name `labconstrictor-tools` once it is published on PyPI); it overrides the pin completely.
    **Pinned (important).** Two installers built from the same app release get the same version of the tools package, and a change to Tools `main`
    does not reach new installations until the pin is moved on purpose.
-   **How to move the pin.** The tag name is written in one place per script: the variable `LC_TOOLS_PIN` (`LC_TOOLS_PIN="v0.2.0-rc.1"` in
-   `app/bash_bat_scripts/post_install.sh`, `SET "LC_TOOLS_PIN=v0.2.0-rc.1"` in `post_install.bat`). To use a new release: create and test the tag in
+   **How to move the pin.** The tag name is written in one place per script: the variable `LC_TOOLS_PIN` (`LC_TOOLS_PIN="v0.3.0-alpha.1"` in
+   `app/bash_bat_scripts/post_install.sh`, `SET "LC_TOOLS_PIN=v0.3.0-alpha.1"` in `post_install.bat`). To use a new release: create and test the tag in
    LabConstrictor-Tools (procedure in its `docs/OPERATIONS.md`), change that string in both scripts and in the copies under
    `.template_sync/resources/` of the latest migration (the test `test_resources_are_identical_to_the_template_files` fails when they differ),
    update the tag in this paragraph, and bump `template_version` so apps receive the change. Apps already migrated need a new migration to change the
