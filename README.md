@@ -83,20 +83,21 @@ Use `pip install "nucleisky[all]"` when you also need optional segmentation, OME
 
 ---
 
-## 🧩 Napari and Fiji (experimental)
+## 🧩 Napari, Fiji and QuPath (experimental)
 
 The installer registers NucleiSky's **Relocalize 2D** tool (`src/nucleisky_lc_tools`) so that it appears in the generic
-[napari-labconstrictor](https://github.com/CellMigrationLab/napari-labconstrictor) widget and the
-[LabConstrictor-Fiji](https://github.com/CellMigrationLab/LabConstrictor-Fiji) command, with a form generated from the function signature
-(images from open layers/windows or from files, pixel sizes taken from the image calibration). Besides the two images and their pixel sizes the form offers:
+[LabConstrictor-napari](https://github.com/CellMigrationLab/LabConstrictor-napari) widget, the
+[LabConstrictor-Fiji](https://github.com/CellMigrationLab/LabConstrictor-Fiji) command and the
+[LabConstrictor-QuPath](https://github.com/CellMigrationLab/LabConstrictor-QuPath) extension, with a form generated from the function signature
+(images from open layers/windows/images or from files, pixel sizes taken from the image calibration). Besides the two images and their pixel sizes the form offers:
 the **segmentation** (threshold with method, blur, minimum area, watershed and peak distance; Cellpose; InstanSeg), **existing masks** for either image,
 the **matcher** (`auto` = NucleiSky's own order, or `quad`, `triangles`, `graph`, `hashing`; a forced matcher that finds nothing says "No match found"),
 and, under advanced settings, a fixed seed and a time limit. Defaults reproduce the threshold workflow with a minimum area of 5 px.
-The tool runs in NucleiSky's own environment; Napari/Fiji never import NucleiSky. Details and tests: [`lc_tests/README.md`](lc_tests/README.md) and
-[LabConstrictor-Tools](https://github.com/CellMigrationLab/LabConstrictor-Tools). To try it by hand on your computer (all systems), follow the
-[human test protocol](https://github.com/CellMigrationLab/LabConstrictor-Tools/blob/main/docs/HUMAN_TEST_PROTOCOL.md).
+The tool runs in NucleiSky's own environment; Napari, Fiji and QuPath never import NucleiSky. Details and tests: [`lc_tests/README.md`](lc_tests/README.md) and
+[LabConstrictor-Tools](https://github.com/CellMigrationLab/LabConstrictor-Tools). How to install and use the three host plugins is described in the
+[LabConstrictor-Tools documentation](https://github.com/CellMigrationLab/LabConstrictor-Tools/tree/main/docs) and in the README of each host repository.
 
-**Pixel sizes are required.** *Reference pixel size* and *Query pixel size* (micrometres per pixel) have no default value: the form fills each one from its image's calibration (napari: the layer's scale together with a length unit; Fiji: Image > Properties, pixel width and unit), and when an image has no calibration (including a bare scale without a length unit) you must type the value yourself. If one is missing, the tool stops with a message that names the image and the field instead of guessing. In a notebook or on the command line pass `reference_pixel_size_um` and `query_pixel_size_um`. The notebooks are unchanged.
+**Pixel sizes are required.** *Reference pixel size* and *Query pixel size* (micrometres per pixel) have no default value: the form fills each one from its image's calibration (napari: the layer's scale together with a length unit; Fiji: Image > Properties, pixel width and unit; QuPath: the image's pixel size), and when an image has no calibration (including a bare scale without a length unit) you must type the value yourself. If one is missing, the tool stops with a message that names the image and the field instead of guessing. In a notebook or on the command line pass `reference_pixel_size_um` and `query_pixel_size_um`. The notebooks are unchanged.
 
 ---
 
