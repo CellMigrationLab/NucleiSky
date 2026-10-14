@@ -1,0 +1,74 @@
+name: Tests
+
+# Runs the app's own pytest suite, then the LabConstrictor tools checks (declaration check and the lc_tests cases).
+# LabConstrictor-Tools is installed from the tag in LC_TOOLS_PIN of app/bash_bat_scripts/post_install.sh, the tag the installers
+# use, so this workflow follows the pin and holds no second copy of it.
+# Pull requests: Linux only. Pushes to main: Linux, macOS (Apple silicon) and Windows.
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: tests-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}   # never cancel a run on main
+
+permissions:
+  contents: read
+
+jobs:
+  tests:
+    name: tests (${{ matrix.os }}, python ${{ matrix.python }})
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        os: ${{ fromJSON(github.event_name == 'pull_request' && '["ubuntu-latest"]' || '["ubuntu-latest","macos-latest","windows-latest"]') }}
+        python: ['3.12']
+    env:
+      PYTHONUTF8: "1"
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+
+      - name: Set up Python
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with:
+          python-version: ${{ matrix.python }}
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Read the Tools pin from post_install.sh
+        run: |
+          pin="$(sed -n 's/^ *LC_TOOLS_PIN="\(v[^"]*\)".*$/\1/p' app/bash_bat_scripts/post_install.sh)"
+          if [ "$(printf '%s\n' "$pin" | grep -c .)" != "1" ]; then
+            echo "::error::expected exactly one LC_TOOLS_PIN=\"v...\" line in app/bash_bat_scripts/post_install.sh, found: '$pin'"
+            exit 1
+          fi
+          echo "LC_TOOLS_PIN=$pin" >> "$GITHUB_ENV"
+          echo "Tools pin: $pin"
+
+      - name: Install NucleiSky and the Tools
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install pytest "https://github.com/CellMigrationLab/LabConstrictor-Tools/archive/refs/tags/${LC_TOOLS_PIN}.zip"
+          python -m pip install -e .
+
+      - name: Run the tests
+        run: python -m pytest tests -v
+
+      - name: Check the tools declaration
+        if: ${{ !cancelled() }}  # also when pytest failed, so one run shows everything
+        run: labconstrictor-tools check --module nucleisky_lc_tools
+
+      - name: Run the tool test cases
+        if: ${{ !cancelled() }}
+        run: |
+          python lc_tests/make_fixtures.py lc_tests/fixtures
+          labconstrictor-tools test --module nucleisky_lc_tools --cases lc_tests/cases.json
