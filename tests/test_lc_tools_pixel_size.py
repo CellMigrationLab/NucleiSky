@@ -66,3 +66,26 @@ def test_explicit_pixel_sizes_pass_the_calibration_check():
     with pytest.raises(ToolError) as caught:
         _run(reference_pixel_size_um=0.65, query_pixel_size_um=0.325)
     assert caught.value.code != "missing_parameter" and "calibration" not in str(caught.value)
+
+
+@pytest.mark.parametrize("which", ["reference", "query"])
+@pytest.mark.parametrize("bad", [np.nan, np.inf, -np.inf])
+def test_an_image_with_nan_or_infinite_pixels_is_refused_not_silently_repaired(which, bad):
+    damaged = np.zeros((16, 16), dtype=np.float32)
+    damaged[3, 4] = bad
+    clean = np.zeros((16, 16), dtype=np.float32)
+    reference, query = (damaged, clean) if which == "reference" else (clean, damaged)
+    with pytest.raises(ToolError) as caught:
+        relocalize(reference, query, reference_pixel_size_um=0.65, query_pixel_size_um=0.325)
+    assert caught.value.code == "non_finite_pixels" and which in str(caught.value)
+
+
+def test_the_3d_notebook_imports_every_name_it_calls():
+    import json
+    import re
+
+    path = Path(__file__).resolve().parents[1] / "notebooks" / "NucleiSky3DApp" / "NucleiSky3DApp.ipynb"
+    code = "\n".join("".join(cell["source"]) for cell in json.loads(path.read_text(encoding="utf-8"))["cells"] if cell["cell_type"] == "code")
+    imported = set(re.findall(r"import\s+[^\n]*", code)) and " ".join(re.findall(r"from nucleisky[^\n]*import[^\n]*", code))
+    for name in set(re.findall(r"\b(plot_warp_overlay3[dD])\(", code)):
+        assert name in imported, "the notebook calls %s but does not import it (NameError at run time)" % name

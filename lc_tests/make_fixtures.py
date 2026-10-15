@@ -41,6 +41,9 @@ crop = np.clip(
 ).astype(np.uint16)
 imwrite(out / "reference.tif", full)
 imwrite(out / "query.tif", crop)
+nan_reference = full.copy()
+nan_reference[700:760, 700:760] = np.nan  # a damaged block: the tool must refuse, not repair it
+imwrite(out / "reference_nan.tif", nan_reference)
 # simple label images (connected components above a fraction of the maximum), for the "existing mask" inputs
 from scipy.ndimage import label as _label
 

@@ -102,8 +102,17 @@ def _require_pixel_sizes(reference_pixel_size_um, query_pixel_size_um):
 
 
 def _check_images(reference, query, reference_mask, query_mask):
+    import numpy as np
+
     if reference.ndim != 2 or query.ndim != 2:
         raise ToolError("bad_input", "2D (YX) images required; got %s and %s" % (reference.shape, query.shape))
+    for name, image in (("reference", reference), ("query", query)):  # NaN or infinite pixels would be replaced or ignored without a word: the nuclei found would not be the nuclei of the image
+        bad = int(np.size(image) - np.count_nonzero(np.isfinite(image)))
+        if bad:
+            raise ToolError(
+                "non_finite_pixels",
+                "The %s image has %d pixel(s) that are NaN or infinite, so the nuclei found would not be those of the image. Clean the image first (replace or crop out those pixels)." % (name, bad),
+            )
     for name, mask, image in (("Reference mask", reference_mask, reference), ("Query mask", query_mask, query)):
         if mask is not None and tuple(mask.shape) != tuple(image.shape):
             raise ToolError(

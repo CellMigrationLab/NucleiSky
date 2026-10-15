@@ -620,5 +620,19 @@
         }
       }
     }
+  },
+  {
+    "tool": "relocalize",
+    "inputs": {
+      "reference": "fixtures/reference_nan.tif",
+      "query": "fixtures/query.tif",
+      "reference_pixel_size_um": 0.65,
+      "query_pixel_size_um": 0.325
+    },
+    "expect": {
+      "status": "FAILED",
+      "code": "non_finite_pixels",
+      "message_contains": "NaN"
+    }
   }
 ]
