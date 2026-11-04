@@ -15,7 +15,14 @@
       ],
       "platforms": {
         "win": {
-          "icon": "BASE_PATH_KEYWORD/NucleiSky/Gemini_Generated_Image_kc5ezfkc5ezfkc5e.ico"
+          "icon": "BASE_PATH_KEYWORD/NucleiSky/Gemini_Generated_Image_kc5ezfkc5ezfkc5e.ico",
+          "command": [
+            "{{ PYTHON }}",
+            "{{ PREFIX }}/NucleiSky/launch_jupyter.py",
+            "{{ PREFIX }}/NucleiSky/notebooks/Welcome.ipynb",
+            "&",
+            "exit"
+          ]
         },
         "linux": {
           "icon": "BASE_PATH_KEYWORD/NucleiSky/Gemini_Generated_Image_kc5ezfkc5ezfkc5e.png"
