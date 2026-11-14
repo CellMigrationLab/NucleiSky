@@ -1,12 +1,12 @@
 name: NucleiSky
-version: 0.1.5
+version: 0.1.6
 environment_file: environment.yaml
 installer_type: all
 license_file: LICENSE
 welcome_image: app/logo/Gemini_Generated_Image_fga0qrfga0qrfga0.png
 header_image: app/logo/Gemini_Generated_Image_27i68r27i68r27i6.png
 icon_image: app/logo/Gemini_Generated_Image_kc5ezfkc5ezfkc5e.png
-conclusion_text: Thank you! You have successfully installed NucleiSky 0.1.5.
+conclusion_text: Thank you! You have successfully installed NucleiSky 0.1.6.
 keep_pkgs: false
 register_python: false
 initialize_conda: false
