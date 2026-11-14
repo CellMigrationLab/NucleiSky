@@ -6,6 +6,13 @@ description: |-
   Instead of relying on pixel intensity, NucleiSky matches the geometry of the cells. It finds the calibrated similarity transform that best overlaps two landmark constellations, so a high-magnification region can be located in a whole slide or a thick tissue volume.
 kind: analysis
 hosts: [notebook, napari, fiji, qupath]
+host_requirements:   # the oldest LabConstrictor plugins this app needs (LabConstrictor-Tools #155)
+  napari:
+    min_version: 0.1.0-alpha.5
+  fiji:
+    min_version: 0.1.0-alpha.7
+  qupath:
+    min_version: 0.1.0-alpha.7
 distribution:
   installer: true
   colab:
