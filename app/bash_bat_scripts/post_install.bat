@@ -130,7 +130,7 @@ SET "LC_APP_MANIFEST="
 IF EXIST "%PROJECT_ROOT%\labconstrictor-app.yaml" SET "LC_APP_MANIFEST=%PROJECT_ROOT%\labconstrictor-app.yaml"
 "%PYTHON_EXE%" -c "import importlib.util, sys; sys.exit(0 if importlib.util.find_spec('nucleisky_lc_tools') else 1)" >> "%LOG_FILE%" 2>&1
 IF NOT ERRORLEVEL 1 (
-    echo Found nucleisky_lc_tools: registering the tools of NucleiSky for Napari and Fiji. >> "%LOG_FILE%"
+    echo Found nucleisky_lc_tools: registering the tools of NucleiSky for Napari, Fiji and QuPath. >> "%LOG_FILE%"
     REM Which hosts list the app (the sentence is the one Tools uses for an app without hosts). Logged before the READY check, which sets the errorlevel.
     IF NOT DEFINED LC_APP_MANIFEST echo WARNING: labconstrictor-app.yaml was not found in "%PROJECT_ROOT%" ^(add it to extra_files in construct.yaml^), so NucleiSky is registered without hosts. 'NucleiSky' declares no hosts, so it is listed in every host; register it with --app-manifest ^(or --hosts^) to choose >> "%LOG_FILE%"
     IF DEFINED LC_APP_MANIFEST echo Passing the hosts of "%LC_APP_MANIFEST%" to Tools ^(--app-manifest^); Tools logs the same sentence if the file declares no hosts. >> "%LOG_FILE%"

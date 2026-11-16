@@ -1,7 +1,7 @@
-# Expose your app's tools to Napari and Fiji (optional, experimental)
+# Expose your app's tools to Napari, Fiji and QuPath (optional, experimental)
 
 If your repository ships Python code (see [Upload external code](external_code_upload.md)), you can declare some of its functions
-as **tools**. After installation they appear in a generic **Napari** widget and a generic **Fiji** command, and work from the
+as **tools**. After installation they appear in a generic **Napari** widget, a generic **Fiji** command and a generic **QuPath** command, and work from the
 command line, with forms generated automatically from the function signatures. Nothing changes for apps that do not declare tools.
 
 1. Add a module named `<your_package>_lc_tools` next to your package under `src/` (so `src/mytool_lc_tools/__init__.py` for
@@ -41,8 +41,9 @@ command line, with forms generated automatically from the function signatures. N
    string in their own scripts.
 3. Test your tools before releasing: `labconstrictor-tools check --module mytool_lc_tools` and
    `labconstrictor-tools test --module mytool_lc_tools --cases lc_tests/cases.json`.
-4. Install the Napari plugin (`napari-labconstrictor`) or the Fiji plugin (`labconstrictor-fiji`) once per machine. Neither is on PyPI or a Fiji update site yet: see the READMEs of
-   [napari-labconstrictor](https://github.com/CellMigrationLab/napari-labconstrictor) and [LabConstrictor-Fiji](https://github.com/CellMigrationLab/LabConstrictor-Fiji) for the install commands.
+4. Install the Napari plugin (`napari-labconstrictor`), the Fiji plugin (`labconstrictor-fiji`) or the QuPath extension once per machine. None of them is on PyPI or an update site yet:
+   see the READMEs of [LabConstrictor-napari](https://github.com/CellMigrationLab/LabConstrictor-napari),
+   [LabConstrictor-Fiji](https://github.com/CellMigrationLab/LabConstrictor-Fiji) and [LabConstrictor-QuPath](https://github.com/CellMigrationLab/LabConstrictor-QuPath) for the install steps.
 5. Optional: make a long form readable and rich with markers (the authoring guide in the Tools repository lists them all):
    - layout: `Group("...")`, `Advanced()`, `Collapsed()`, `EnabledWhen(...)`;
    - input widgets: `Widget("slider")` for a bounded number and `Widget("radio")` for a short list of choices;
@@ -53,6 +54,6 @@ command line, with forms generated automatically from the function signatures. N
    - say "nothing found" with `ToolError("no_match", ...)`.
    Napari, Fiji and QuPath do not support every feature in the same way: the table "What each host does with each feature" in `docs/HOST_FEATURES.md` of the Tools repository is the reference.
 Documentation and source: https://github.com/CellMigrationLab/LabConstrictor-Tools.
-The registered version is read from the `version:` line of `construct.yaml`. The Windows hook (`post_install.bat`) has not yet been run on a real Windows computer; if you can help, follow the
-[human test protocol](https://github.com/CellMigrationLab/LabConstrictor-Tools/blob/main/docs/HUMAN_TEST_PROTOCOL.md).
+The registered version is read from the `version:` line of `construct.yaml`. The Windows hook (`post_install.bat`) runs in the template's automated tests on a Windows
+machine, and people have installed apps on Windows and macOS from a clean system.
 Troubleshooting: `labconstrictor-tools doctor`, `labconstrictor-tools logs`, and `~/.labconstrictor/logs/labconstrictor.log`.

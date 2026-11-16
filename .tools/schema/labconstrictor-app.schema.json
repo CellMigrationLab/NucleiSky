@@ -1,8 +1,8 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://labconstrictor.cellmig.org/schema/labconstrictor-app.schema.json",
+  "$id": "https://cellmigrationlab.github.io/LabConstrictor-Site/schema/labconstrictor-app.schema.json",
   "title": "labconstrictor-app.yaml",
-  "description": "Manifest that an app keeps in the root of its own repository so that it can be listed in the LabConstrictor App Centre. Edit it with schema support: add `# yaml-language-server: $schema=https://labconstrictor.cellmig.org/schema/labconstrictor-app.schema.json` as the first line.",
+  "description": "Manifest that an app keeps in the root of its own repository so that it can be listed in the LabConstrictor App Centre. Edit it with schema support: add `# yaml-language-server: $schema=https://cellmigrationlab.github.io/LabConstrictor-Site/schema/labconstrictor-app.schema.json` as the first line.",
   "type": "object",
   "additionalProperties": false,
   "required": ["schema", "name", "summary", "kind", "distribution"],

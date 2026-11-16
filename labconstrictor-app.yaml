@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=https://labconstrictor.cellmig.org/schema/labconstrictor-app.schema.json
+# yaml-language-server: $schema=https://cellmigrationlab.github.io/LabConstrictor-Site/schema/labconstrictor-app.schema.json
 schema: 1
 name: NucleiSky
 summary: Align microscopy images in 2D and 3D by matching the geometry of nuclei, like stars in a constellation.
