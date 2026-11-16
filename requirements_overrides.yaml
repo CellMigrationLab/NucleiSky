@@ -1,0 +1,23 @@
+# Decisions for packages that the notebooks pin to different versions (template 0.1.31, CellMigrationLab/LabConstrictor#48).
+# The requirements merge (.tools/python/merge_requirements.py) stops when notebooks disagree and no entry here decides. Each entry
+# gives the requirement every notebook gets (use) and why (reason); both are written at the top of the generated requirements files.
+# See https://github.com/CellMigrationLab/LabConstrictor/blob/main/.tools/docs/migration_0_1_31.md
+overrides:
+  cellpose:
+    use: "==4.1.1"
+    reason: "Recorded by the template 0.1.31 migration: the version the requirements merge chose until then (the newest pin), so the app installs what it installed before. The notebooks ask for: notebooks/NucleiSky2DApp/requirements.yaml ==4.1.1, notebooks/NucleiSky2DBenchmarking/requirements.yaml ==4.0.8, notebooks/NucleiSky2D_API_Workflow_Example/requirements.yaml ==4.1.1, notebooks/NucleiSky3DApp/requirements.yaml ==4.1.1, notebooks/NucleiSky3DBenchmarking/requirements.yaml ==4.0.8, notebooks/NucleiSky3D_API_Workflow_Example/requirements.yaml ==4.1.1. Check every notebook with this version, then write here why it is right."
+  ipywidgets:
+    use: "==8.1.7"
+    reason: "Recorded by the template 0.1.31 migration: the version the requirements merge chose until then (the newest pin), so the app installs what it installed before. The notebooks ask for: notebooks/NucleiSky2DApp/requirements.yaml ==8.1.7, notebooks/NucleiSky2DBenchmarking/requirements.yaml ==8.1.1, notebooks/NucleiSky2D_API_Workflow_Example/requirements.yaml ==8.1.7, notebooks/NucleiSky3DApp/requirements.yaml ==8.1.7, notebooks/NucleiSky3DBenchmarking/requirements.yaml ==8.1.1, notebooks/NucleiSky3D_API_Workflow_Example/requirements.yaml ==8.1.7. Check every notebook with this version, then write here why it is right."
+  scikit-image:
+    use: "==0.26.0"
+    reason: "Recorded by the template 0.1.31 migration: the version the requirements merge chose until then (the newest pin), so the app installs what it installed before. The notebooks ask for: notebooks/NucleiSky2DApp/requirements.yaml ==0.26.0, notebooks/NucleiSky2DBenchmarking/requirements.yaml ==0.25.2, notebooks/NucleiSky2D_API_Workflow_Example/requirements.yaml ==0.26.0, notebooks/NucleiSky3DApp/requirements.yaml ==0.26.0, notebooks/NucleiSky3DBenchmarking/requirements.yaml ==0.25.2, notebooks/NucleiSky3D_API_Workflow_Example/requirements.yaml ==0.26.0. Check every notebook with this version, then write here why it is right."
+  tifffile:
+    use: "==2026.4.11"
+    reason: "Recorded by the template 0.1.31 migration: the version the requirements merge chose until then (the newest pin), so the app installs what it installed before. The notebooks ask for: notebooks/NucleiSky2DApp/requirements.yaml ==2026.4.11, notebooks/NucleiSky2DBenchmarking/requirements.yaml ==2026.1.28, notebooks/NucleiSky2D_API_Workflow_Example/requirements.yaml ==2026.4.11, notebooks/NucleiSky3DApp/requirements.yaml ==2026.4.11, notebooks/NucleiSky3DBenchmarking/requirements.yaml ==2026.1.28, notebooks/NucleiSky3D_API_Workflow_Example/requirements.yaml ==2026.4.11. Check every notebook with this version, then write here why it is right."
+  torch:
+    use: "==2.10.0"
+    reason: "Recorded by the template 0.1.31 migration: the version the requirements merge chose until then (the newest pin), so the app installs what it installed before. The notebooks ask for: notebooks/NucleiSky2DApp/requirements.yaml ==2.10.0, notebooks/NucleiSky2DBenchmarking/requirements.yaml ==2.9.0, notebooks/NucleiSky2D_API_Workflow_Example/requirements.yaml ==2.10.0, notebooks/NucleiSky3DApp/requirements.yaml ==2.10.0, notebooks/NucleiSky3DBenchmarking/requirements.yaml ==2.9.0, notebooks/NucleiSky3D_API_Workflow_Example/requirements.yaml ==2.10.0. Check every notebook with this version, then write here why it is right."
+  zarr:
+    use: "==3.2.1"
+    reason: "Recorded by the template 0.1.31 migration: the version the requirements merge chose until then (the newest pin), so the app installs what it installed before. The notebooks ask for: notebooks/NucleiSky2DApp/requirements.yaml ==3.2.1, notebooks/NucleiSky2DBenchmarking/requirements.yaml ==3.1.5, notebooks/NucleiSky2D_API_Workflow_Example/requirements.yaml ==3.2.1, notebooks/NucleiSky3DApp/requirements.yaml ==3.2.1, notebooks/NucleiSky3DBenchmarking/requirements.yaml ==3.1.5, notebooks/NucleiSky3D_API_Workflow_Example/requirements.yaml ==3.2.1. Check every notebook with this version, then write here why it is right."

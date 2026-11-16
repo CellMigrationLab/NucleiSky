@@ -99,7 +99,7 @@ fi
 # labconstrictor-tools is installed above, before the import check of the package (LC_TOOLS_PIN, LC_TOOLS_MODULE and LC_TOOLS_READY are set there).
 if [ -f "$PROJECT_ROOT/setup.py" ] && "$PYTHON_EXE" -c "import importlib.util, sys; sys.exit(0 if importlib.util.find_spec('$LC_TOOLS_MODULE') else 1)" >> "$LOG_FILE" 2>&1; then
     lc_note() { echo "$*" >> "$LOG_FILE" || :; }  # a full or unwritable log must not fail the installation
-    lc_note "Found $LC_TOOLS_MODULE: registering the tools of NucleiSky for Napari and Fiji"
+    lc_note "Found $LC_TOOLS_MODULE: registering the tools of NucleiSky for Napari, Fiji and QuPath"
     LC_APP_VERSION="$(sed -n 's/^version: *//p' "$PROJECT_ROOT/construct.yaml" 2>/dev/null | head -1 | tr -d "\"'\r" || true)"
     if [ -z "$LC_APP_VERSION" ]; then
         lc_note "WARNING: no version: line at the start of a line in construct.yaml - registering the tools with version 0."
