@@ -16,7 +16,7 @@ Thanks to [LabConstrictor](https://github.com/CellMigrationLab/LabConstrictor), 
 
 #### 1. Install NucleiSky on a USB stick
 
-In order to achieve this, you can follow the regular [installation instructions](https://github.com/CellMigrationLab/LabConstrictor/blob/main/.tools/docs/download_executable.md), BUT on the step where you are asked to select the installation folder, you should select the USB stick instead of your computer: 
+In order to achieve this, you can follow the regular [installation instructions](https://cellmigrationlab.github.io/LabConstrictor-Site/guides/install/), BUT on the step where you are asked to select the installation folder, you should select the USB stick instead of your computer: 
 
 ![LabConstrictor installation folder selection](https://raw.githubusercontent.com/CellMigrationLab/NucleiSky/main/docs/smart_microscopy/assets/USB_Path.png)
 
