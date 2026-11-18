@@ -1,4 +1,6 @@
-# Connect NucleiSky to a microscope
+# Example: connect NucleiSky to a microscope
+
+> **This is a worked example**, written for one setup: a Nikon microscope with NIS-Elements AR 6.20 and its JOBS module. On another microscope the steps differ, but the idea is the same: install the app's environment where the microscope software can reach it, and point the software's Python step at it.
 
 This is an example of how NucleiSky can be integrated into a smart microscopy workflow to enable the scanning and re-localisation of a query image across a large scanned area. For this use case and this tutorial, we will show how to integrate it with a Nikon microscope using NIS-Elements AR v6.20 software, but the same principles apply to other microscopes and software. NIS-Elements AR includes [JOBS](https://www.microscope.healthcare.nikon.com/en_EU/products/software/nis-elements/nis-elements-jobs) as a feature to automate image acquisition and analysis, enabling integration with Python and, therefore, NucleiSky. 
 
@@ -25,8 +27,8 @@ In order to achieve this, you can follow the regular [installation instructions]
 #### 2. Include NIS-Elements packages in the USB NucleiSky environment
 
  - Take the USB stick and connect it to the microscope computer where NIS-Elements AR is installed. 
- - In the File Explorer, go to `C:\Program Files\NIS Elements\Python\Lib\site-packages`. There, copy `limnode.py` and `limtabletabledata.py`.
- - Paste those files into the `site-packages` folder of the NucleiSky environment in the USB stick. The path should look like this: `USB:\nucleisky\Lib\site-packages`.
+ - In the File Explorer, go to `C:\Program Files\NIS Elements\Python\Lib\site-packages`. There, copy `limnode.py` and `limtabledata.py`.
+ - Paste those files into the `site-packages` folder of the NucleiSky environment in the USB stick. The path should look like this: `<drive>:\nucleisky\Lib\site-packages`, where `<drive>` is the letter Windows gave the USB stick (for example `E`).
 
 In [Step 3](#step-3-adjust-it-to-your-microscope-and-camera-settings), we will show you how to configure the NucleiSky environment as the Python interpreter for the JOBS GA3 workflow. 
 
@@ -34,19 +36,22 @@ In [Step 3](#step-3-adjust-it-to-your-microscope-and-camera-settings), we will s
 
 #### 1. Download the JOBS and GA3 files
 
-Click the buttons below to download the files, then take them to the computer where you have NIS-Elements AR installed.
+Download the two files below, then take them to the computer where you have NIS-Elements AR installed:
+
+- JOBS file: [NucleiSky_JOBS.bin](https://github.com/CellMigrationLab/NucleiSky/raw/main/smart_microscopy/NucleiSky_JOBS.bin)
+- GA3 file: [NucleiSky_GA3.ga3](https://github.com/CellMigrationLab/NucleiSky/raw/main/smart_microscopy/NucleiSky_GA3.ga3)
 
 <a href="https://github.com/CellMigrationLab/NucleiSky/raw/main/smart_microscopy/NucleiSky_JOBS.bin" target="_blank" rel="noopener">
     <img src="https://img.shields.io/badge/Download JOBS file-gray?logo=nikon&style=for-the-badge" alt="Download JOBS file" width="250">
 </a>
 
-> You can interactively take a look at the NucleiSky JOBS in the following [website](https://htmlpreview.github.io/?https://github.com/CellMigrationLab/NucleiSky/blob/main/docs/smart_microscopy/assets/JOBS_HTML.html)
+> To look at the JOBS workflow before you import it, open its [interactive preview](https://htmlpreview.github.io/?https://github.com/CellMigrationLab/NucleiSky/blob/main/docs/smart_microscopy/assets/JOBS_HTML.html) (a third-party page that displays the HTML file from this repository).
 
 <a href="https://github.com/CellMigrationLab/NucleiSky/raw/main/smart_microscopy/NucleiSky_GA3.ga3" target="_blank" rel="noopener">
     <img src="https://img.shields.io/badge/Download GA3 file-gray?logo=nikon&style=for-the-badge" alt="Download GA3 file" width="250">
 </a>
 
-> You can interactively take a look into the NucleiSky GA3 in the following [website](https://htmlpreview.github.io/?https://github.com/CellMigrationLab/NucleiSky/blob/main/docs/smart_microscopy/assets/GA3_HTML.html)
+> To look at the GA3 workflow, open its [interactive preview](https://htmlpreview.github.io/?https://github.com/CellMigrationLab/NucleiSky/blob/main/docs/smart_microscopy/assets/GA3_HTML.html).
 
 #### 2. Open NIS-Elements AR and go to the JOBS tab
 
@@ -56,7 +61,7 @@ On the top menu of the NIS-Elements AR software, click on the JOBS tab and click
 This should open a new window with an empty JOB like this:
 ![JOBS window in NIS-Elements AR](https://raw.githubusercontent.com/CellMigrationLab/NucleiSky/main/docs/smart_microscopy/assets/JOBS_Window.png)
 
-### 3. Import the downloaded JOBS file
+#### 3. Import the downloaded JOBS file
 
 On the JOB window, click on the `Import` button and select the downloaded JOBS file:
 
@@ -64,12 +69,12 @@ On the JOB window, click on the `Import` button and select the downloaded JOBS f
 
 This should load the JOBS file, and you should see the following window:
 
-![Import button in the JOBS window](https://raw.githubusercontent.com/CellMigrationLab/NucleiSky/main/docs/smart_microscopy/assets/JOBS_NucleiSky.png)
+![The imported NucleiSky JOB](https://raw.githubusercontent.com/CellMigrationLab/NucleiSky/main/docs/smart_microscopy/assets/JOBS_NucleiSky.png)
 
 
-### 4. Import the downloaded GA3 file
+#### 4. Import the downloaded GA3 file
 
-Once the JOBS files are correctly loaded, go to `Run GA3 (Ivan_GA3) on ...` and click on it to display the following window:
+Once the JOBS files are correctly loaded, click the `Run GA3 (...) on ...` step (the name in brackets is the GA3 analysis it currently uses) to display the following window:
 
 ![GA3 window in the JOBS window](https://raw.githubusercontent.com/CellMigrationLab/NucleiSky/main/docs/smart_microscopy/assets/JOBS_GA3.png)
 
@@ -147,15 +152,18 @@ There, as indicated with the red arrow in the previous screenshot, you would nee
 
 ![Python window in GA3](https://raw.githubusercontent.com/CellMigrationLab/NucleiSky/main/docs/smart_microscopy/assets/GA3_Python_Overview.png)
 
-There, the first thing you will need to do is point the Python interpreter to the one in the NucleiSky environment on the USB stick. Remember to follow the instructions on [Step 1](#step-1-install-the-nucleisky-environment). To do that, as indicated in the following screenshot, enable the `Run out of process` toggle (1) and select the Python executable in the NucleiSky environment in the USB stick (2). The path should look like this: `USB:\nucleisky\pythonw.exe`.
+There, the first thing you will need to do is point the Python interpreter to the one in the NucleiSky environment on the USB stick. Remember to follow the instructions on [Step 1](#step-1-install-the-nucleisky-environment). To do that, as indicated in the following screenshot, enable the `Run out of process` toggle (1) and select the Python executable in the NucleiSky environment in the USB stick (2). The path should look like this: `<drive>:\nucleisky\pythonw.exe`.
 
 ![Python interpreter selection in GA3](https://raw.githubusercontent.com/CellMigrationLab/NucleiSky/main/docs/smart_microscopy/assets/GA3_Choose_Interpreter.png)
 
 Once that is done, you will need to include the Python code. Most probably, the code will be already loaded, but in case it is not, you can copy and paste the code from the [GA3_Python.py](https://github.com/CellMigrationLab/NucleiSky/blob/main/smart_microscopy/GA3_Python.py) file. 
 
-Once loaded, there are some lines that you will need to adjust:
- - [`sys.path.insert(0, r"H:\github\nucleisky-main\src")`](https://github.com/CellMigrationLab/NucleiSky/blob/cfa172d7980446db51224423d896746d75dd88e7/smart_microscopy/GA3_Python.py#L14): Download the NucleiSky repository into the USB and point to the `src` folder in your computer.
- - [output_path = r"G:"](https://github.com/CellMigrationLab/NucleiSky/blob/cfa172d7980446db51224423d896746d75dd88e7/smart_microscopy/GA3_Python.py#L25): Replace the path with the one where you want to save the results of the NucleiSky run. This should be a folder in your computer or in the USB stick.
+Once loaded, adjust two lines:
+
+- [`sys.path.insert(0, r"H:\github\nucleisky-main\src")`](https://github.com/CellMigrationLab/NucleiSky/blob/cfa172d7980446db51224423d896746d75dd88e7/smart_microscopy/GA3_Python.py#L14): download the NucleiSky repository to the USB stick and put the path of its `src` folder here, for example `r"<drive>:\nucleisky-main\src"`.
+- [`output_path = r"G:"`](https://github.com/CellMigrationLab/NucleiSky/blob/cfa172d7980446db51224423d896746d75dd88e7/smart_microscopy/GA3_Python.py#L25): the folder where the results of each run are saved, on the computer or on the USB stick, for example `r"<drive>:\nucleisky_results"`.
+
+> **Use the same `output_path` in all four scripts.** `PythonScript.py`, `PythonScript1.py` and `PythonScript2.py` (the PythonScript steps below) read the results from that folder, and each has its own `output_path = r"G:"` line. If one of them points elsewhere, the JOB cannot find NucleiSky's answer.
 
 Finally, remember to save it. In order to do that, you will need to save it in three different places: 
 
@@ -171,11 +179,14 @@ Finally, remember to save it. In order to do that, you will need to save it in t
 
 This step extracts information from NucleiSky's run and makes it available to the rest of the JOBS workflow. 
 
-Here, as indicated in the following screenshot, you will need to use the `Task Parameters` tab (1) and ensure that the following parameters are correctly set (2) with their corresponding types (it is important that the names are exactly the same as indicated here):
- - Success_flag: Integer
- - Rotated_flag: Integer
- - X_coord: Double
- - Y_coord: Double
+Here, as indicated in the following screenshot, you will need to use the `Task Parameters` tab (1) and ensure that these parameters exist (2), with exactly these names and types:
+
+| Name | Type |
+|---|---|
+| `Success_flag` | Integer |
+| `Rotated_flag` | Integer |
+| `X_coord` | Double |
+| `Y_coord` | Double |
 
 Then, in the `Script` section (3), the code will most likely already be loaded; if not, you can copy and paste it from the [PythonScript.py](https://github.com/CellMigrationLab/NucleiSky/blob/main/smart_microscopy/PythonScript.py) file. Finally, remember to click on the save button (indicated with the red arrow) to save the changes in the PythonScript block.
 
@@ -193,8 +204,7 @@ In our case, we chose a higher magnification objective. Be sure that it is an ai
 
 If NucleiSky has detected a match and it has declared that some rotation is needed for this acquisition, a $3\times3$ grid will be used to acquire the final high-resolution image. 
 
-Here, first, you would need to go to the 
-λ tab (1). There, you will need to ensure that the optical configuration for Final Acquisition is defined in [Define the optical configuration](#1-define-the-optical-configuration-of-your-experiment) with all the channels you want to acquire (2). Then, you will need to ensure that your microscope is correctly selected (3). Leave the other parameters as they are unless you want to change the Z-Stack or Large Image settings.
+Here, first, you would need to go to the $\lambda$ tab (1). There, you will need to ensure that the optical configuration for Final Acquisition is defined in [Define the optical configuration](#1-define-the-optical-configuration-of-your-experiment) with all the channels you want to acquire (2). Then, you will need to ensure that your microscope is correctly selected (3). Leave the other parameters as they are unless you want to change the Z-Stack or Large Image settings.
 
 ![Acquire NDExperiment1 JOBS step](https://raw.githubusercontent.com/CellMigrationLab/NucleiSky/main/docs/smart_microscopy/assets/Config_NDExperiment1.png)
 
@@ -210,7 +220,6 @@ Ensure that the code in the Script section is the same as in [PythonScript2.py](
 
 **PythonScript1:**
 
-
 Ensure that the code in the Script section is the same as in [PythonScript1.py](https://github.com/CellMigrationLab/NucleiSky/blob/main/smart_microscopy/PythonScript1.py) and otherwise copy and paste it. Then, remember to click on the save button (indicated with the red arrow) to save the changes in the PythonScript1 block.
 
 ## Run the JOBS
@@ -219,7 +228,7 @@ Ensure that the code in the Script section is the same as in [PythonScript1.py](
 
 ![Select area to scan GIF](https://raw.githubusercontent.com/CellMigrationLab/NucleiSky/main/docs/smart_microscopy/assets/Select_Preview.gif)
 
-1) Open the Stage Navigator by clicking on `Window > `.
+1) Open the Stage Navigator from the `Window` menu.<!-- TODO(NucleiSky authors): give the full menu path in NIS-Elements AR 6.20. -->
 
 2) Select the stage that you are using by clicking on the `Stage` option in the bottom right corner of the Stage Navigator window.
 
@@ -233,16 +242,29 @@ Ensure that the code in the Script section is the same as in [PythonScript1.py](
 
 ![JOBS Wizard Inputs GIF](https://raw.githubusercontent.com/CellMigrationLab/NucleiSky/main/docs/smart_microscopy/assets/Wizard_Inputs.gif)
 
-There are four input parameters that you will need to set on the JOBS wizard before running it:
+Set these five inputs in the JOBS wizard before you run it:
 
-1) **Select Objective**: Select the objective that you want to use for scanning the large area. As long as nuclei can be detected, we recommend using a low-magnification objective to speed up scanning.
-2) **Variables**: only one variable is defined `AutoFocus_Count`. This variable is used to define, every few passes, how many times the autofocus will run. The default value is 1, which means the autofocus will run at every scanning position. If you want to speed up the process at the cost of possibly not being in focus on some scanning points, increase the values in `Initial Value` and `Current Value`.
-3) **NDAcquisition**: If you followed previous instructions, this should already be set up, and you could skip it.
-4) **GeneralAnalysis3**: You will need to point to the Query image that you want to re-localise in the scanned area. You should point to a Z-Stack of the nuclei channel that you want to re-localise. 
-5) **Alternative Storage Location**: If you want to save the results in a different location than the default one, you can set it here. Otherwise, you can skip it.
+| Input | What to set |
+|---|---|
+| **Select Objective** | The objective for scanning the large area. A low magnification scans faster, as long as the nuclei can still be detected. |
+| **Variables** | One variable, `AutoFocus_Count`: how often the autofocus runs. The default, 1, focuses at every scanning position. A higher value (set both `Initial Value` and `Current Value`) is faster, but some positions may be out of focus. |
+| **NDAcquisition** | Already set if you followed the setup; leave it. |
+| **GeneralAnalysis3** | The query image to find in the scanned area: a Z-stack of the nuclei channel. |
+| **Alternative Storage Location** | Optional: where JOBS stores its images, if not in the default place. |
 
 #### 2. Let the JOBS workflow run and wait for the results
 
 After setting the input parameters, click on `Run` to start the JOBS workflow. The process will go as follows and you would not need to do anything else:
 
 ![Image Acquisition](https://raw.githubusercontent.com/CellMigrationLab/NucleiSky/main/docs/smart_microscopy/assets/Acquisition.gif)
+
+#### 3. Check the result
+
+When the JOB has finished, open the folder you set as `output_path`. Each finished run has a folder `<date>_Experiment\<time>` (a run that stopped early leaves `<date>_Experiment\local_logging` instead) with:
+
+- `running.log`: what NucleiSky did, ending with a line like `Output values are: Success=1, Rotated=0, BBox Centroid=(...)`. `Success=1` means the query image was found; the stage then moved there and acquired the high-resolution image. `Success=0` means no match was found and no final image was taken.
+- `input_full_img.tif` and `input_crop_img.tif`: the scanned area and the query image as NucleiSky received them, with `full_mask.tif` and `crop_mask.tif` (the segmented nuclei) and the tables `full_df.csv` and `crop_df.csv`. The images are written while `debug = True` in `GA3_Python.py` (as shipped).
+
+The final high-resolution images are saved by NIS-Elements, in the JOB's storage location.
+
+If there is no `running.log` at all, NIS-Elements could not start the NucleiSky environment: check the interpreter path from [Run GA3](#2-adjust-the-jobs-parameters-to-point-to-your-settings) and that `limnode.py` and `limtabledata.py` are in its `site-packages` folder.
