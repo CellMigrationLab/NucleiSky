@@ -2,7 +2,7 @@
 
 > **This is a worked example**, written for one setup: a Nikon microscope with NIS-Elements AR 6.20 and its JOBS module. On another microscope the steps differ, but the idea is the same: install the app's environment where the microscope software can reach it, and point the software's Python step at it.
 
-This is an example of how NucleiSky can be integrated into a smart microscopy workflow to enable the scanning and re-localisation of a query image across a large scanned area. For this use case and this tutorial, we will show how to integrate it with a Nikon microscope using NIS-Elements AR v6.20 software, but the same principles apply to other microscopes and software. NIS-Elements AR includes [JOBS](https://www.microscope.healthcare.nikon.com/en_EU/products/software/nis-elements/nis-elements-jobs) as a feature to automate image acquisition and analysis, enabling integration with Python and, therefore, NucleiSky. 
+The microscope scans a large area, NucleiSky finds where a query image sits in it, and the microscope then acquires that place at high resolution. NIS-Elements AR includes [JOBS](https://www.microscope.healthcare.nikon.com/en_EU/products/software/nis-elements/nis-elements-jobs) as a feature to automate image acquisition and analysis, enabling integration with Python and, therefore, NucleiSky. 
 
 This tutorial is divided into two main sections. The [first section](#setup) covers the setup of the JOBS workflow, which only needs to be done once. The [second section](#run-the-jobs) explains how to run the workflow, which must be done each time you use it.
 
