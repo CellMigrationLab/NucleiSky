@@ -20,6 +20,9 @@ from nucleisky2d.config import DEFAULT_MATCHER_CONFIG
 from nucleisky2d.features import extract_nuclear_features,add_centroids_orig_px_columns, extract_centroids_um
 from nucleisky2d.preprocess import ij_percentile_normalize, scale_normalize_pair_for_segmentation
         
+# A match counts as rotated when |sin(angle)| exceeds this (about 5.7 degrees); see run() below.
+ROTATION_SIN_THRESHOLD = 0.1
+
 # Get today's date for output directory naming
 today = datetime.now().strftime("%Y%m%d")
 output_path = r"G:"
@@ -222,13 +225,13 @@ def run(inp: tuple[limnode.AnyInData], out: tuple[limnode.AnyOutData], ctx: limn
     if best_result_adaptive['success']:
         success = 1 
         
-        # Get the best rotation matrix and flatten it to a list for output
-        best_rotation = best_result_adaptive['best_R']
-        best_rotation_flat = best_rotation.flatten().tolist()
-        if any([np.abs(val) > 0.1 for val in best_rotation_flat]):
-            rotated = 1
-        else:
-            rotated = 0
+        # Rotation angle of the match, from the 2D rotation matrix [[cos, -sin], [sin, cos]].
+        # (Testing every matrix element against 0.1 always reported a rotation, because cos is about 1 on the diagonal.)
+        best_rotation = np.asarray(best_result_adaptive['best_R'], dtype=float)
+        rotation_deg = float(np.degrees(np.arctan2(best_rotation[1, 0], best_rotation[0, 0])))
+        # Rotated when |sin(angle)| > 0.1, i.e. more than about 5.7 degrees: the 3x3 grid then covers the rotated region.
+        rotated = 1 if abs(np.sin(np.radians(rotation_deg))) > ROTATION_SIN_THRESHOLD else 0
+        _log(output_dir, f"Rotation of the match: {rotation_deg:.2f} degrees (rotated={rotated})")
         
         # Get the centroid from the bounding box of the matched crop in the full image (if available)
         bbox = best_result_adaptive['bbox_full_px']
